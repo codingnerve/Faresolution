@@ -38,7 +38,12 @@ export function TopProducts({
                   <Link href={href} className="rounded-xs hover:text-blue-ink">
                     {p.name}
                   </Link>
-                  {vendor && <span className="type-meta ml-2 font-normal">by {vendor}</span>}
+                  {vendor && (
+                    <>
+                      {" "}
+                      <span className="type-meta ml-1 font-normal">by {vendor}</span>
+                    </>
+                  )}
                 </h3>
                 <p className="mt-0.5 text-sm leading-5 text-ink">{p.tagline}</p>
               </div>

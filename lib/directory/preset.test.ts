@@ -24,7 +24,7 @@ describe("effectiveQuery", () => {
 });
 
 describe("effectiveQuery with allowedCategories (category pages)", () => {
-  const allowed = ["crm-software", "sales-software"];
+  const allowed = ["sales-software"];
 
   it("keeps a category inside the scope", () => {
     const query = effectiveQuery(parseQuery({ category: "sales-software" }), undefined, {
@@ -32,6 +32,14 @@ describe("effectiveQuery with allowedCategories (category pages)", () => {
       allowedCategories: allowed,
     });
     expect(query.category).toBe("sales-software");
+  });
+
+  it("drops the scope category itself (it is the whole listing, not a filter)", () => {
+    const query = effectiveQuery(parseQuery({ category: "crm-software" }), undefined, {
+      ratingsAvailable: true,
+      allowedCategories: allowed,
+    });
+    expect(query.category).toBeUndefined();
   });
 
   it("drops a category outside the scope so users cannot filter out of the page", () => {

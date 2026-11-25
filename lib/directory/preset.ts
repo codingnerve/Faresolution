@@ -14,7 +14,8 @@ export interface DirectoryPreset {
   /**
    * Narrows the listing to one category (and its subcategories, R10), as on a
    * category page. The category filter then only offers its subcategories, and
-   * a `category` URL value outside the scope is ignored.
+   * a `category` URL value other than one of its subcategories (including the
+   * category itself, which is already the whole listing) is ignored.
    */
   scope?: { category: string; name: string };
 }

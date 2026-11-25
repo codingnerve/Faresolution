@@ -12,7 +12,7 @@ import { Container } from "@/components/ui/Container";
 import { DemoDataNotice } from "@/components/ui/DemoDataNotice";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Faq } from "@/components/ui/Faq";
-import { getCategoryPageData } from "@/lib/categories/page-data";
+import { TOP_PRODUCT_LIMIT, getCategoryPageData } from "@/lib/categories/page-data";
 import { getCategories, getVendors } from "@/lib/data";
 import { getDirectoryData } from "@/lib/directory/data";
 import { faqJsonLd, safeJsonLd } from "@/lib/jsonld";
@@ -139,23 +139,26 @@ export default async function CategoryPage({ params }: PageProps<"/categories/[s
         </Container>
       ) : (
         <>
-          <section aria-labelledby="top-products-title" className="py-12 sm:py-16">
-            <Container>
-              <div className="grid gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,5fr)] lg:gap-12">
-                <div>
-                  <p className="type-label mb-3">Our shortlist</p>
-                  <h2 id="top-products-title" className="type-h2 text-navy">
-                    Top products in {category.name}
-                  </h2>
-                  <p className="type-body mt-3 text-subtle">
-                    Ordered by editorial pick, then by our trending order. Reviews are not open yet, so this
-                    is not a ranking by user ratings.
-                  </p>
+          {/* Skipped when the shortlist would just repeat the whole listing. */}
+          {count > TOP_PRODUCT_LIMIT && (
+            <section aria-labelledby="top-products-title" className="py-12 sm:py-16">
+              <Container>
+                <div className="grid gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,5fr)] lg:gap-12">
+                  <div>
+                    <p className="type-label mb-3">Our shortlist</p>
+                    <h2 id="top-products-title" className="type-h2 text-navy">
+                      Top products in {category.name}
+                    </h2>
+                    <p className="type-body mt-3 text-subtle">
+                      Ordered by editorial pick, then by our trending order. Reviews are not open yet, so this is not a
+                      ranking by user ratings.
+                    </p>
+                  </div>
+                  <TopProducts products={topProducts} vendorNames={vendorNames} labelledBy="top-products-title" />
                 </div>
-                <TopProducts products={topProducts} vendorNames={vendorNames} labelledBy="top-products-title" />
-              </div>
-            </Container>
-          </section>
+              </Container>
+            </section>
+          )}
 
           <section aria-labelledby="listing-title" className="border-y border-line bg-surface-alt py-12 sm:py-16">
             <Container>
@@ -163,11 +166,12 @@ export default async function CategoryPage({ params }: PageProps<"/categories/[s
                 All {category.name} products
               </h2>
               <p className="type-body mb-8 max-w-2xl text-subtle">
-                Filter {count} {count === 1 ? "product" : "products"} by pricing, company size, deployment,
-                industry, features and integrations.
+                Filter {count} {count === 1 ? "product" : "products"} by pricing, company size, deployment, industry,
+                features and integrations.
               </p>
               <DemoDataNotice className="mb-8" />
               <DirectoryListing
+                headingLevel={3}
                 data={directory}
                 preset={{ basePath: categoryHref(slug), scope: { category: slug, name: category.name } }}
               />

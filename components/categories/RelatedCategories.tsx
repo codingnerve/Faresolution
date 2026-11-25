@@ -1,4 +1,4 @@
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { categoryHref } from "@/components/layout/navigation";
 import type { CategoryCount } from "@/lib/categories/page-data";
@@ -16,7 +16,7 @@ export function RelatedCategories({ items }: { items: readonly CategoryCount[] }
             <span className="font-medium">{category.name}</span>
             <span className="flex items-center gap-2 text-sm text-subtle tabular-nums">
               {count} {count === 1 ? "product" : "products"}
-              <ArrowUpRight aria-hidden="true" className="size-4 text-muted group-hover:text-blue-ink" strokeWidth={1.75} />
+              <ArrowRight aria-hidden="true" className="size-4 text-muted group-hover:text-blue-ink" strokeWidth={1.75} />
             </span>
           </Link>
         </li>

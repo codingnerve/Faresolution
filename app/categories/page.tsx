@@ -22,6 +22,8 @@ const productCount = (n: number) => `${n} ${n === 1 ? "product" : "products"}`;
 
 export default async function CategoriesPage() {
   const roots = await getCategoryIndexData();
+  const withChildren = roots.filter((r) => r.children.length > 0);
+  const standalone = roots.filter((r) => r.children.length === 0);
   const subcategories = roots.reduce((n, r) => n + r.children.length, 0);
 
   return (
@@ -50,7 +52,7 @@ export default async function CategoriesPage() {
       <Container className="py-10 sm:py-14">
         <DemoDataNotice className="mb-10" />
         <ol className="border-t-2 border-navy">
-          {roots.map(({ category, count, children }) => (
+          {withChildren.map(({ category, count, children }) => (
             <li
               key={category.slug}
               className="grid gap-x-12 gap-y-4 border-b border-line py-7 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:py-8"
@@ -65,33 +67,50 @@ export default async function CategoriesPage() {
                 <p className="mt-3 max-w-md text-sm leading-6 text-ink">{category.seoDescription}</p>
               </div>
               <div className="min-w-0 lg:pt-1.5">
-                {children.length > 0 ? (
-                  <>
-                    <p className="type-label mb-2">Subcategories</p>
-                    <ul className="grid gap-x-8 sm:grid-cols-2">
-                      {children.map(({ category: child, count: n }) => (
-                        <li key={child.slug} className="border-t border-line first:border-t-0 sm:[&:nth-child(2)]:border-t-0">
-                          <Link
-                            href={categoryHref(child.slug)}
-                            className="flex items-baseline justify-between gap-3 rounded-xs py-2.5 text-ink hover:text-blue-ink"
-                          >
-                            <span className="font-medium">{child.name}</span>
-                            <span className="text-sm text-subtle tabular-nums">
-                              {n}
-                              <span className="sr-only"> products</span>
-                            </span>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </>
-                ) : (
-                  <p className="type-meta lg:pt-1">No subcategories.</p>
-                )}
+                <p className="type-label mb-2">Subcategories</p>
+                <ul className="grid gap-x-8 sm:grid-cols-2">
+                  {children.map(({ category: child, count: n }) => (
+                    <li key={child.slug} className="border-t border-line first:border-t-0 sm:[&:nth-child(2)]:border-t-0">
+                      <Link
+                        href={categoryHref(child.slug)}
+                        className="flex items-baseline justify-between gap-3 rounded-xs py-2.5 text-ink hover:text-blue-ink"
+                      >
+                        <span className="font-medium">{child.name}</span>
+                        <span className="text-sm text-subtle tabular-nums">
+                          {n}
+                          <span className="sr-only"> products</span>
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </li>
           ))}
         </ol>
+
+        {standalone.length > 0 && (
+          <section aria-labelledby="standalone-title" className="mt-12">
+            <h2 id="standalone-title" className="type-h2 text-navy">
+              More categories
+            </h2>
+            <p className="type-body mt-2 max-w-2xl text-subtle">Categories without subcategories.</p>
+            <ul className="mt-5 grid gap-x-10 border-t-2 border-navy sm:grid-cols-2 lg:grid-cols-3">
+              {standalone.map(({ category, count }) => (
+                <li key={category.slug} className="border-b border-line">
+                  <Link
+                    href={categoryHref(category.slug)}
+                    className="flex items-baseline justify-between gap-4 rounded-xs py-3.5 text-ink hover:text-blue-ink"
+                  >
+                    <span className="font-medium">{category.name}</span>
+                    <span className="text-sm text-subtle tabular-nums">{productCount(count)}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
         <p className="type-meta mt-6 max-w-2xl">
           Counts include products in subcategories, and a product tagged with several categories is counted once
           in each category it appears in.

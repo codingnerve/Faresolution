@@ -88,13 +88,16 @@ export function ActiveFilters({
   onRemove,
   onClearAll,
   fallbackFocusRef,
+  headingLevel = 2,
 }: {
   chips: Chip[];
   onRemove: (patch: QueryPatch) => void;
   onClearAll: () => void;
   /** Focused when the last chip is removed or everything is cleared. */
   fallbackFocusRef: RefObject<HTMLElement | null>;
+  headingLevel?: 2 | 3;
 }) {
+  const Heading = `h${headingLevel}` as const;
   const listRef = useRef<HTMLUListElement>(null);
   const clearRef = useRef<HTMLButtonElement>(null);
   // Set on click; applied once the URL update has re-rendered the chips.
@@ -114,7 +117,7 @@ export function ActiveFilters({
   if (chips.length === 0) return null;
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <h2 className="sr-only">Active filters</h2>
+      <Heading className="sr-only">Active filters</Heading>
       <ul ref={listRef} className="flex flex-wrap items-center gap-2">
         {chips.map((chip, index) => (
           <li key={chip.key} className="max-w-full">

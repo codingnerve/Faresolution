@@ -33,6 +33,8 @@ export interface DirectoryViewProps {
   preset: DirectoryPreset;
   /** URL query params (from `useSearchParams`, or `{}` for the static fallback). */
   params: RawParams;
+  /** Level of the visually hidden "Filters" / "Results" headings (2 on /software, 3 under a page section). Cards sit one level below. */
+  headingLevel?: 2 | 3;
 }
 
 /**
@@ -40,7 +42,9 @@ export interface DirectoryViewProps {
  * pagination, all derived from `params`. Changes are written back to the URL
  * with `router.replace`, so every state is a shareable link.
  */
-export function DirectoryView({ data, preset, params }: DirectoryViewProps) {
+export function DirectoryView({ data, preset, params, headingLevel = 2 }: DirectoryViewProps) {
+  const Heading = `h${headingLevel}` as const;
+  const cardHeading = `h${headingLevel + 1}` as "h3" | "h4";
   const router = useRouter();
   const searchIndex = useSearchIndex();
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -53,7 +57,7 @@ export function DirectoryView({ data, preset, params }: DirectoryViewProps) {
 
   const scope = preset.scope;
   const allowedCategories = useMemo(
-    () => (scope ? [scope.category, ...(categoryChildren[scope.category] ?? [])] : undefined),
+    () => (scope ? [...(categoryChildren[scope.category] ?? [])] : undefined),
     [scope, categoryChildren],
   );
   const query = useMemo(
@@ -150,7 +154,7 @@ export function DirectoryView({ data, preset, params }: DirectoryViewProps) {
       {current.page > 1 && <meta name="robots" content="noindex,follow" />}
 
       <aside aria-label="Filters" className="hidden lg:block">
-        <h2 className="sr-only">Filters</h2>
+        <Heading className="sr-only">Filters</Heading>
         {panel}
       </aside>
 
@@ -188,11 +192,12 @@ export function DirectoryView({ data, preset, params }: DirectoryViewProps) {
             onRemove={(patch) => update(patch)}
             onClearAll={clearAll}
             fallbackFocusRef={resultsRef}
+            headingLevel={headingLevel}
           />
         </div>
 
         <div ref={resultsRef} tabIndex={-1} className="scroll-mt-24 pt-6 focus:outline-none">
-          <h2 className="sr-only">Results</h2>
+          <Heading className="sr-only">Results</Heading>
           {current.total === 0 ? (
             <EmptyState
               icon={SearchX}
@@ -214,7 +219,7 @@ export function DirectoryView({ data, preset, params }: DirectoryViewProps) {
             <ul className="space-y-4">
               {current.items.map((p) => (
                 <li key={p.slug}>
-                  <ProductRow product={p} vendorName={p.vendorName} />
+                  <ProductRow product={p} vendorName={p.vendorName} headingLevel={cardHeading} />
                 </li>
               ))}
             </ul>
@@ -222,7 +227,7 @@ export function DirectoryView({ data, preset, params }: DirectoryViewProps) {
             <ul className="grid gap-4 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3">
               {current.items.map((p) => (
                 <li key={p.slug}>
-                  <ProductTile product={p} vendorName={p.vendorName} />
+                  <ProductTile product={p} vendorName={p.vendorName} headingLevel={cardHeading} />
                 </li>
               ))}
             </ul>

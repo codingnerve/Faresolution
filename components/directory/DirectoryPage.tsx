@@ -83,10 +83,18 @@ export function DirectoryHeader({
  * unfiltered first page (the fallback), and the browser re-renders it for the
  * URL's query params.
  */
-export function DirectoryListing({ data, preset }: { data: DirectoryData; preset: DirectoryPreset }) {
+export function DirectoryListing({
+  data,
+  preset,
+  headingLevel,
+}: {
+  data: DirectoryData;
+  preset: DirectoryPreset;
+  headingLevel?: 2 | 3;
+}) {
   return (
-    <Suspense fallback={<DirectoryView data={data} preset={preset} params={{}} />}>
-      <DirectoryClient data={data} preset={preset} />
+    <Suspense fallback={<DirectoryView data={data} preset={preset} params={{}} headingLevel={headingLevel} />}>
+      <DirectoryClient data={data} preset={preset} headingLevel={headingLevel} />
     </Suspense>
   );
 }

@@ -25,7 +25,7 @@ export const bestSoftwareArticles: Article[] = [
       ),
       h2("The criteria we used"),
       p(
-        "A small team has different priorities from a large enterprise. We looked for products that meet most of the following, judged from what each vendor publicly documents:",
+        "A small team has different priorities from a large enterprise. We looked for products that meet most of the following, judged from each product's publicly known positioning:",
       ),
       ul(
         "A way to start without a large commitment, such as a free plan or free trial.",

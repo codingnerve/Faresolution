@@ -94,8 +94,8 @@ export const researchArticles: Article[] = [
     categoryLabel: "Methodology",
     publishedAt: "2026-09-16",
     updatedAt: "2026-09-16",
-    relatedProductSlugs: ["hubspot-crm", "zoho-crm", "notion"],
-    relatedCategorySlugs: ["crm-software", "collaboration-software"],
+    relatedProductSlugs: [],
+    relatedCategorySlugs: [],
     featured: false,
     body: [
       p(

@@ -505,6 +505,6 @@ export const industries: Industry[] = [
       { q: "What if a vendor claims to be the best?", a: "Treat superlatives as marketing. Faresolution shows no ratings in this build, so compare on your own criteria and trial each tool." },
     ],
     seoTitle: "Software for Consultancies and Professional Services Firms",
-    seoDescription: "Choose CRM, project, accounting, collaboration and document tools for professional services firms, with advice on time tracking, billing and client collaboration.",
+    seoDescription: "Choose CRM, project, accounting, collaboration and document tools for professional services firms, with advice on time tracking, billing and client work.",
   },
 ];

@@ -200,7 +200,7 @@ export const guideArticles: Article[] = [
       ),
       h2("Access control questions"),
       p(
-        "Most real-world incidents involve stolen or reused credentials rather than clever exploits, so access features deserve the most attention.",
+        "Stolen, phished or reused credentials are among the most common ways accounts are compromised, so access features deserve the most attention.",
       ),
       ul(
         "Does the product support multi-factor authentication, and can an administrator require it for everyone?",

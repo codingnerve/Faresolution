@@ -150,9 +150,9 @@ describe("taxonomy", () => {
   it("keeps SEO strings within search-result length limits", () => {
     for (const item of [...categories, ...industries]) {
       expect(item.seoTitle.length, `${item.slug} seoTitle`).toBeGreaterThan(10);
-      expect(item.seoTitle.length, `${item.slug} seoTitle`).toBeLessThanOrEqual(70);
+      expect(item.seoTitle.length, `${item.slug} seoTitle`).toBeLessThanOrEqual(60);
       expect(item.seoDescription.length, `${item.slug} seoDescription`).toBeGreaterThan(40);
-      expect(item.seoDescription.length, `${item.slug} seoDescription`).toBeLessThanOrEqual(165);
+      expect(item.seoDescription.length, `${item.slug} seoDescription`).toBeLessThanOrEqual(160);
     }
   });
 
@@ -331,6 +331,8 @@ describe("articles", () => {
     for (const a of articles.filter((x) => x.kind === "best-software")) {
       const text = JSON.stringify(a.body).toLowerCase();
       expect(text, a.slug).toContain("not based on user reviews");
+      expect(text, a.slug).toMatch(/hands-on/);
+      expect(text, a.slug).not.toMatch(/#\d|\bno\. ?\d|ranked \d/i);
     }
   });
 });

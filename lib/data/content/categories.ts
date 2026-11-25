@@ -201,7 +201,7 @@ export const categories: Category[] = [
     ],
     relatedSlugs: ["hr-software", "payroll-software", "sales-software", "workflow-automation"],
     seoTitle: "Recruiting Software: Compare Applicant Tracking Systems",
-    seoDescription: "Compare applicant tracking and recruiting software for job posting, candidate pipelines and interview feedback, with buying advice on data protection and integrations.",
+    seoDescription: "Compare applicant tracking and recruiting software for job posting, candidate pipelines and interview feedback, with advice on data protection and integrations.",
   },
   {
     slug: "marketing-automation",
@@ -244,7 +244,7 @@ export const categories: Category[] = [
       { q: "What is A/B testing in email?", a: "Sending two variants, for example different subject lines, to portions of your list and comparing results before sending the winner to the rest." },
     ],
     relatedSlugs: ["marketing-automation", "crm-software", "ecommerce", "website-builders"],
-    seoTitle: "Email Marketing Software: Compare Newsletter and Campaign Tools",
+    seoTitle: "Email Marketing Software: Compare Campaign Tools",
     seoDescription: "Compare email marketing tools for newsletters, segmentation and deliverability, with advice on list pricing, consent and editor quality.",
   },
   {
@@ -354,7 +354,7 @@ export const categories: Category[] = [
       { q: "Can spreadsheets be enough?", a: "For small, stable reporting needs, yes. BI tools earn their cost when you need automated refresh, shared dashboards and combined sources." },
     ],
     relatedSlugs: ["analytics", "database-software", "erp-software", "workflow-automation"],
-    seoTitle: "Business Intelligence Software: Compare Dashboard and Reporting Tools",
+    seoTitle: "Business Intelligence Software: Compare BI Tools",
     seoDescription: "Compare business intelligence tools for dashboards and reporting, with advice on data connectors, user skills, permissions and governance.",
   },
   {
@@ -420,7 +420,7 @@ export const categories: Category[] = [
       { q: "Can software guarantee I will not be breached?", a: "No. Security tools reduce risk but cannot eliminate it. Backups, training and an incident plan are also essential." },
     ],
     relatedSlugs: ["cloud-management", "document-management", "collaboration-software", "database-software"],
-    seoTitle: "Cybersecurity Software: Compare Identity, Password and Endpoint Tools",
+    seoTitle: "Cybersecurity Software: Identity and Endpoint Tools",
     seoDescription: "Compare cybersecurity software for identity, passwords and endpoint protection, with advice on priorities, alert handling and independent assurance.",
   },
   {
@@ -464,7 +464,7 @@ export const categories: Category[] = [
       { q: "What happens if an employee leaves?", a: "Ensure files are owned by the organisation, not individuals, and that access can be revoked and ownership transferred in one step." },
     ],
     relatedSlugs: ["collaboration-software", "cybersecurity", "workflow-automation", "video-conferencing"],
-    seoTitle: "Document Management Software: Compare File Storage and Sharing Tools",
+    seoTitle: "Document Management Software: Compare Tools",
     seoDescription: "Compare document management and file-sharing software, with advice on permissions, version history, retention and external sharing.",
   },
   {
@@ -508,7 +508,7 @@ export const categories: Category[] = [
       { q: "Is a suite or a set of separate tools better?", a: "A suite offers simplicity and unified billing. Separate tools may be stronger in each area but need more integration work." },
     ],
     relatedSlugs: ["project-management", "video-conferencing", "document-management", "workflow-automation"],
-    seoTitle: "Collaboration Software: Compare Team Chat, Wiki and Workspace Tools",
+    seoTitle: "Collaboration Software: Chat, Wiki and Workspace Tools",
     seoDescription: "Compare collaboration software for team chat, wikis and shared workspaces, with advice on information structure, search limits and guest access.",
   },
   {
@@ -530,7 +530,7 @@ export const categories: Category[] = [
       { q: "Do small teams need these tools?", a: "Often the provider's built-in tools are enough at first. Dedicated products become useful as complexity and spend grow." },
     ],
     relatedSlugs: ["database-software", "cybersecurity", "workflow-automation", "business-intelligence"],
-    seoTitle: "Cloud Management Software: Compare Monitoring and Infrastructure Tools",
+    seoTitle: "Cloud Management Software: Monitoring and Infrastructure",
     seoDescription: "Compare cloud management tools for monitoring, cost visibility and infrastructure automation, with advice on coverage, alert noise and pricing drivers.",
   },
   {
@@ -552,7 +552,7 @@ export const categories: Category[] = [
       { q: "Is self-hosted automation worthwhile?", a: "It can offer cost control and data control for high volumes or sensitive data, but you take responsibility for hosting and upgrades." },
     ],
     relatedSlugs: ["collaboration-software", "project-management", "crm-software", "document-management"],
-    seoTitle: "Workflow Automation Software: Compare App Integration and Automation Tools",
+    seoTitle: "Workflow Automation Software: Compare Platforms",
     seoDescription: "Compare workflow automation platforms that connect apps and run multi-step processes, with advice on connectors, pricing units and error handling.",
   },
 ];

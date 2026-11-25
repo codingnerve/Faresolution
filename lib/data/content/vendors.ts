@@ -15,7 +15,7 @@ export const vendors: Vendor[] = [
   { slug: "xero", name: "Xero", website: "https://www.xero.com", description: "Provider of cloud accounting software for small and medium-sized businesses and their advisers.", headquarters: "Wellington, New Zealand" },
   { slug: "freshbooks", name: "FreshBooks", website: "https://www.freshbooks.com", description: "Provider of cloud accounting and invoicing software aimed at small businesses and freelancers.", headquarters: "Toronto, Canada" },
   { slug: "oracle-netsuite", name: "Oracle NetSuite", website: "https://www.netsuite.com", description: "Cloud business-management suite combining ERP, financials, CRM and commerce, offered by Oracle.", headquarters: null },
-  { slug: "odoo", name: "Odoo", website: "https://www.odoo.com", description: "Publisher of a modular business application suite with an open-source community edition.", headquarters: "Belgium" },
+  { slug: "odoo", name: "Odoo", website: "https://www.odoo.com", description: "Publisher of a modular business application suite with an open-source community edition.", headquarters: "Grand-Rosière, Belgium" },
   { slug: "bamboohr", name: "BambooHR", website: "https://www.bamboohr.com", description: "Provider of human-resources software for small and medium-sized businesses.", headquarters: null },
   { slug: "gusto", name: "Gusto", website: "https://gusto.com", description: "Provider of cloud payroll, benefits and HR tools for small businesses in the United States.", headquarters: "San Francisco, California, USA" },
   { slug: "adp", name: "ADP", website: "https://www.adp.com", description: "Provider of payroll, human-capital management and related outsourcing services.", headquarters: "Roseland, New Jersey, USA" },

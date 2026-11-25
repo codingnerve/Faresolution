@@ -1203,7 +1203,7 @@ export const products: Product[] = [
     faq: [
       { q: "What is a Zap?", a: "A Zap is an automated workflow made of a trigger (an event in one app) and one or more actions in other apps." },
       { q: "Does Zapier have a free plan?", a: "Yes. The free plan supports simple automations with a monthly task limit." },
-      { q: "Zapier, Make or n8n?", a: "Zapier offers the broadest app coverage and simplest setup; Make offers a visual canvas for complex scenarios; n8n can be self-hosted and suits technical teams. Compare them side by side." },
+      { q: "Zapier, Make or n8n?", a: "Zapier is known for a very large catalogue of prebuilt app connectors and a simple setup; Make offers a visual canvas for complex scenarios; n8n can be self-hosted and suits technical teams. Compare them side by side." },
     ],
     ...unrated,
     addedAt: "2025-04-21",

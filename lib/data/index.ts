@@ -3,6 +3,10 @@
  * from the raw content arrays, so a real API can replace this module later.
  *
  * All functions are async and return `null` / `[]` for unknown input.
+ *
+ * Results are shared read-only references to the underlying content: callers
+ * must not mutate returned objects or their nested arrays. (List accessors
+ * return a fresh outer array, but the items inside are the shared objects.)
  */
 import { articles } from "./content/articles";
 import { authors } from "./content/authors";

@@ -43,7 +43,7 @@ export const industries: Industry[] = [
       { q: "Is Faresolution able to tell me whether a product is compliant?", a: "No. Faresolution is a discovery and comparison site using sample data, and it does not certify compliance. Always verify with the vendor and your own advisers." },
     ],
     seoTitle: "Software for Healthcare Organisations",
-    seoDescription: "How healthcare practices and care organisations can choose business software, with guidance on data protection, access controls and the categories worth shortlisting.",
+    seoDescription: "How healthcare practices and care organisations can choose business software, with guidance on data protection, access controls and categories to shortlist.",
   },
   {
     slug: "education",

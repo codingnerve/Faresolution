@@ -3,7 +3,7 @@
  * Every href is a route from the site plan (some are built by later tasks).
  * Plain data only, so it can be passed from server to client components.
  */
-import type { CategoryNode, Industry } from "@/lib/data";
+import type { ArticleKind, CategoryNode, Industry } from "@/lib/data";
 
 export interface NavLink {
   label: string;
@@ -46,6 +46,18 @@ export const industryHref = (slug: string) => `/industries/${slug}`;
 export const productHref = (slug: string) => `/products/${slug}`;
 export const softwareSearchHref = (query: string) =>
   `/software?q=${encodeURIComponent(query.trim())}`;
+/** Comparison URL; popular comparisons already list slugs in canonical order. */
+export const compareHref = (slugs: string[]) => `/compare/${slugs.join("-vs-")}`;
+
+/** Index route for each kind of editorial article. */
+export const articleIndexHref: Record<ArticleKind, string> = {
+  blog: "/blog",
+  guide: "/guides",
+  "best-software": "/best-software",
+  research: "/research",
+  "buying-guide": "/software-buying-guides",
+};
+export const articleHref = (kind: ArticleKind, slug: string) => `${articleIndexHref[kind]}/${slug}`;
 
 export function buildNavModel(tree: CategoryNode[], industries: Industry[]): NavModel {
   return {

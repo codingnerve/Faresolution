@@ -1,7 +1,7 @@
 /**
  * Server-side assembly of the search index from the static catalogue. Built
- * once per server process and shared by the root layout (header search), the
- * 404 page and any other page that embeds a SearchBox.
+ * once per server process. The root layout passes it to SearchIndexProvider,
+ * so every SearchBox (header, 404 page, homepage hero) reads the same copy.
  */
 import {
   getCategories,

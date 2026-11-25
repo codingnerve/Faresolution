@@ -26,6 +26,7 @@ import {
 } from "@/lib/search";
 import { cn } from "@/lib/utils";
 import { categoryHref, productHref, softwareSearchHref } from "./navigation";
+import { useSearchIndex } from "./SearchIndexProvider";
 
 const LIMITS = { products: 6, categories: 4, vendors: 3 } as const;
 
@@ -108,13 +109,18 @@ function buildGroups(index: SearchIndex, rawQuery: string): Group[] {
 const countLabel = (n: number) => `${n} ${n === 1 ? "product" : "products"}`;
 
 export interface SearchBoxProps {
-  /** Serialised index built on the server with `getSearchIndex()`. */
-  index: SearchIndex;
+  /**
+   * Serialised index built on the server with `getSearchIndex()`. Defaults to
+   * the shared index from `SearchIndexProvider` (set up in the root layout).
+   */
+  index?: SearchIndex;
   /**
    * `overlay`: results always shown below the input (header search panel).
    * `inline`: a search field whose results open in a dropdown while focused.
    */
   variant?: "overlay" | "inline";
+  /** Input height for the `inline` variant; `lg` is the homepage hero field. */
+  size?: "md" | "lg";
   placeholder?: string;
   /** Visually hidden label for the input. */
   label?: string;
@@ -128,8 +134,9 @@ export interface SearchBoxProps {
 }
 
 export function SearchBox({
-  index,
+  index: indexProp,
   variant = "inline",
+  size = "md",
   placeholder = "Search software, categories or brands",
   label = "Search software",
   autoFocus = false,
@@ -137,6 +144,9 @@ export function SearchBox({
   onEscape,
   className,
 }: SearchBoxProps) {
+  const sharedIndex = useSearchIndex();
+  const index = indexProp ?? sharedIndex;
+  if (!index) throw new Error("SearchBox needs an `index` prop or a <SearchIndexProvider>.");
   const router = useRouter();
   const baseId = useId();
   const inputId = `${baseId}-input`;
@@ -238,6 +248,7 @@ export function SearchBox({
   }
 
   const overlay = variant === "overlay";
+  const large = !overlay && size === "lg";
 
   return (
     <div className={cn("relative", className)} onBlur={onBlur}>
@@ -249,7 +260,7 @@ export function SearchBox({
           aria-hidden="true"
           className={cn(
             "pointer-events-none absolute top-1/2 -translate-y-1/2 text-muted",
-            overlay ? "left-0 size-5" : "left-4 size-[1.125rem]",
+            overlay ? "left-0 size-5" : large ? "left-5 size-5" : "left-4 size-[1.125rem]",
           )}
           strokeWidth={2}
         />
@@ -278,7 +289,10 @@ export function SearchBox({
             "w-full bg-transparent text-ink placeholder:text-subtle focus-visible:outline-none",
             overlay
               ? "h-14 pr-10 pl-8 text-lg"
-              : "h-12 rounded-md border border-line-strong bg-surface pr-11 pl-11 text-[0.9375rem] shadow-card transition-colors hover:border-muted/60 focus-visible:border-blue focus-visible:ring-2 focus-visible:ring-blue/25",
+              : cn(
+                  "rounded-md border border-line-strong bg-surface shadow-card transition-colors hover:border-muted/60 focus-visible:border-blue focus-visible:ring-2 focus-visible:ring-blue/25",
+                  large ? "h-14 pr-12 pl-13 text-base shadow-raised" : "h-12 pr-11 pl-11 text-[0.9375rem]",
+                ),
           )}
         />
         {query !== "" && (
@@ -291,7 +305,7 @@ export function SearchBox({
             }}
             className={cn(
               "absolute top-1/2 inline-flex size-8 -translate-y-1/2 items-center justify-center rounded-md text-subtle hover:bg-surface-alt hover:text-ink",
-              overlay ? "right-0" : "right-2",
+              overlay ? "right-0" : large ? "right-3" : "right-2",
             )}
           >
             <X aria-hidden="true" className="size-4" strokeWidth={2} />

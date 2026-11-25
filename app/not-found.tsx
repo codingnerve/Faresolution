@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SearchBox } from "@/components/layout/SearchBox";
 import { Container } from "@/components/ui/Container";
-import { getSearchIndex } from "@/lib/search/get-index";
 
 // Next.js adds `noindex` to not-found responses itself.
 export const metadata: Metadata = {
@@ -16,8 +15,7 @@ const destinations = [
   { label: "Read buying guides", href: "/software-buying-guides" },
 ];
 
-export default async function NotFound() {
-  const searchIndex = await getSearchIndex();
+export default function NotFound() {
   return (
     <Container width="narrow" className="py-16 sm:py-24">
       <p className="type-label">Error 404</p>
@@ -27,7 +25,7 @@ export default async function NotFound() {
         directory or start from one of the sections below.
       </p>
 
-      <SearchBox index={searchIndex} variant="inline" label="Search the directory" className="mt-8" />
+      <SearchBox variant="inline" label="Search the directory" className="mt-8" />
 
       <ul className="mt-10 grid gap-x-6 gap-y-3 border-t border-line pt-6 sm:grid-cols-2">
         {destinations.map((d) => (

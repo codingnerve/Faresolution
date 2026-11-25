@@ -4,7 +4,6 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Search, X } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 import { Container } from "@/components/ui/Container";
-import type { SearchIndex } from "@/lib/search";
 import { SearchBox } from "./SearchBox";
 
 /**
@@ -12,7 +11,7 @@ import { SearchBox } from "./SearchBox";
  * the sticky header. Must sit inside the header without a positioned parent
  * in between, so the panel spans the header's full width.
  */
-export function HeaderSearch({ index }: { index: SearchIndex }) {
+export function HeaderSearch() {
   const [open, setOpen] = useState(false);
   const reduceMotion = useReducedMotion();
   const panelId = useId();
@@ -81,7 +80,6 @@ export function HeaderSearch({ index }: { index: SearchIndex }) {
           >
             <Container width="narrow" className="py-4 sm:py-6">
               <SearchBox
-                index={index}
                 variant="overlay"
                 label="Search Faresolution"
                 autoFocus

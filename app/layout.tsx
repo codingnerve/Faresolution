@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
+import { SearchIndexProvider } from "@/components/layout/SearchIndexProvider";
 import { getSearchIndex } from "@/lib/search/get-index";
 import { SITE_NAME, SITE_URL } from "@/lib/utils";
 import "./globals.css";
@@ -41,6 +42,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   // Built once from static data; no request-time APIs, so the shell prerenders.
+  // Shared through context so every SearchBox reuses one serialised copy.
   const searchIndex = await getSearchIndex();
   return (
     <html
@@ -48,11 +50,13 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-surface font-sans text-ink">
-        <Header searchIndex={searchIndex} />
-        <main id="main-content" tabIndex={-1} className="flex flex-1 flex-col focus:outline-none">
-          {children}
-        </main>
-        <Footer />
+        <SearchIndexProvider index={searchIndex}>
+          <Header />
+          <main id="main-content" tabIndex={-1} className="flex flex-1 flex-col focus:outline-none">
+            {children}
+          </main>
+          <Footer />
+        </SearchIndexProvider>
       </body>
     </html>
   );

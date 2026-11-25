@@ -1,5 +1,6 @@
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { safeJsonLd } from "@/lib/jsonld";
 import { absoluteUrl, cn } from "@/lib/utils";
 
 export type BreadcrumbItem = { label: string; href?: string };
@@ -8,11 +9,6 @@ type BreadcrumbsProps = {
   items: BreadcrumbItem[];
   className?: string;
 };
-
-/** JSON for an inline script; `<` is escaped so text can never close the tag. */
-function toJsonLd(data: unknown): string {
-  return JSON.stringify(data).replace(/</g, "\\u003c");
-}
 
 /**
  * Visible breadcrumb trail plus a matching schema.org BreadcrumbList.
@@ -63,7 +59,7 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
       </ol>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: toJsonLd(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
     </nav>
   );

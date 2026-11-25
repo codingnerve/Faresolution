@@ -2,7 +2,6 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Logo } from "@/components/ui/Logo";
 import { getCategoryTree, getIndustries } from "@/lib/data";
-import type { SearchIndex } from "@/lib/search";
 import { DesktopNav } from "./DesktopNav";
 import { HeaderSearch } from "./HeaderSearch";
 import { MobileNav } from "./MobileNav";
@@ -13,7 +12,7 @@ import { buildNavModel, vendorsLink } from "./navigation";
  * full-width mega menu and search panel, so nothing between it and those
  * panels may be positioned. No account links: sign-in is not part of this build.
  */
-export async function Header({ searchIndex }: { searchIndex: SearchIndex }) {
+export async function Header() {
   const [tree, industries] = await Promise.all([getCategoryTree(), getIndustries()]);
   const nav = buildNavModel(tree, industries);
 
@@ -31,7 +30,7 @@ export async function Header({ searchIndex }: { searchIndex: SearchIndex }) {
         </Link>
         <DesktopNav nav={nav} className="hidden lg:block" />
         <div className="ml-auto flex items-center gap-1">
-          <HeaderSearch index={searchIndex} />
+          <HeaderSearch />
           <Link
             href={vendorsLink.href}
             className="ml-2 hidden h-9 items-center rounded-md border border-line-strong px-3.5 text-sm font-medium text-ink shadow-card transition-colors hover:border-muted/60 hover:bg-surface-alt lg:inline-flex"

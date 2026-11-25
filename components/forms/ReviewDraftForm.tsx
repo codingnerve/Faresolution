@@ -11,17 +11,21 @@ import { draftNotice } from "@/lib/reviews/draft-notice";
 import { companySizeLabel } from "@/lib/directory/labels";
 import {
   SUBMISSION_NOTICE,
+  isPersisted,
   listSubmissions,
-  removeSubmission,
+  removeSubmissionsWhere,
   saveSubmission,
   type Submission,
 } from "@/lib/submissions";
 import { cn } from "@/lib/utils";
 import {
   COMPANY_SIZE_VALUES,
+  HONEYPOT_ERROR,
+  HONEYPOT_FIELD,
   REVIEW_EXPERIENCE_MAX,
   REVIEW_EXPERIENCE_MIN,
   USAGE_LENGTH_OPTIONS,
+  isHoneypotOnly,
   reviewDraftSchema,
   type ReviewDraftInput,
   type ReviewDraftValues,
@@ -92,7 +96,7 @@ const EMPTY_VALUES: ReviewDraftInput = {
   jobTitle: "",
   companySize: "" as ReviewDraftInput["companySize"],
   industry: "",
-  website: "",
+  [HONEYPOT_FIELD]: "",
 };
 
 interface StoredDraft {
@@ -129,8 +133,8 @@ export function ReviewDraftForm({ product, industries, className }: ReviewDraftF
   // Set after a save or clear; until then the draft found in storage is used.
   const [latest, setLatest] = useState<{ draft: StoredDraft | null } | null>(null);
   const [editing, setEditing] = useState(false);
-  // False when the last save could not reach browser storage (draft lives in memory only).
-  const [persisted, setPersisted] = useState(true);
+  // Set when the hidden field was filled: a neutral error is shown and the next attempt is a plain retry.
+  const [retryNeeded, setRetryNeeded] = useState(false);
   const [cleared, setCleared] = useState<"idle" | "cleared" | "failed">("idle");
   // True once the visitor has saved, edited or cleared, so focus follows those actions and never moves on page load.
   const [interacted, setInteracted] = useState(false);
@@ -146,7 +150,6 @@ export function ReviewDraftForm({ product, industries, className }: ReviewDraftF
     handleSubmit,
     reset,
     control,
-    getValues,
     setValue,
     formState: { errors, isSubmitted, isSubmitting },
   } = useForm<ReviewDraftInput, unknown, ReviewDraftValues>({
@@ -167,16 +170,16 @@ export function ReviewDraftForm({ product, industries, className }: ReviewDraftF
 
   const onSubmit = (values: ReviewDraftValues) => {
     const draft: Partial<ReviewDraftValues> = { ...values };
-    delete draft.website;
+    delete draft[HONEYPOT_FIELD];
     // One draft per product: the new save replaces the earlier one, but only
     // once it has really been stored (the earlier draft is kept otherwise).
-    const result = saveSubmission(
+    saveSubmission(
       "review-draft",
       { ...draft, product: product.slug, productName: product.name, status: "draft" },
       { replaceWhere: (entry) => entry.payload.product === product.slug },
     );
-    setPersisted(result.persisted);
     setCleared("idle");
+    setRetryNeeded(false);
     setEditing(false);
     setLatest({ draft: findDraft(product.slug) });
     setInteracted(true);
@@ -185,29 +188,30 @@ export function ReviewDraftForm({ product, industries, className }: ReviewDraftF
   const onInvalid = (invalid: FieldErrors<ReviewDraftInput>) => {
     const first = FIELD_ORDER.find((name) => invalid[name]);
     if (first) {
+      setRetryNeeded(false);
       focusField(first);
       return;
     }
-    // Only the honeypot failed: a bot (or odd autofill). Do not say so and do
-    // not store anything; show the normal outcome without persisting.
-    const parsed = reviewDraftSchema.safeParse({ ...getValues(), website: "" });
-    if (!parsed.success) return;
-    setPersisted(true);
-    setCleared("idle");
-    setEditing(false);
-    setLatest({ draft: { id: "", savedAt: new Date().toISOString(), values: parsed.data } });
-    setInteracted(true);
+    if (isHoneypotOnly(invalid)) {
+      // The hidden field was filled (a bot, or browser autofill). Nothing is
+      // stored and success is not claimed: show a neutral error and clear the
+      // field so the visitor's next attempt goes through.
+      setValue(HONEYPOT_FIELD, "");
+      setRetryNeeded(true);
+    }
   };
 
   const editDraft = () => {
     if (!stored) return;
-    reset({ ...stored.values, website: "" });
+    reset({ ...stored.values, [HONEYPOT_FIELD]: "" });
     setEditing(true);
     setInteracted(true);
   };
 
   const clearDraft = () => {
-    const removed = stored ? removeSubmission(stored.id) : true;
+    // Every draft for this product, stored or in memory (an earlier one can
+    // survive a failed replace); success is reported only if none remain.
+    const removed = removeSubmissionsWhere("review-draft", (entry) => entry.payload.product === product.slug);
     reset(EMPTY_VALUES);
     setEditing(false);
     setCleared(removed ? "cleared" : "failed");
@@ -220,6 +224,8 @@ export function ReviewDraftForm({ product, industries, className }: ReviewDraftF
     message: errors[name]?.message ?? "Check this field.",
   }));
   const showSummary = isSubmitted && summaryItems.length > 0;
+  // Read from storage, not remembered: the draft is only "saved" if it is really stored.
+  const persisted = stored ? isPersisted(stored.id) : true;
 
   const experience = useWatch({ control, name: "experience" });
   const ratingValues = useWatch({ control, name: RATINGS.map((rating) => rating.key) });
@@ -294,6 +300,12 @@ export function ReviewDraftForm({ product, industries, className }: ReviewDraftF
       </div>
 
       <div role="alert">
+        {retryNeeded && !showSummary && (
+          <p className="flex items-center gap-2 rounded-lg border border-danger/30 bg-danger-tint p-4 text-sm font-semibold text-danger sm:p-5">
+            <TriangleAlert aria-hidden="true" className="size-4 shrink-0" strokeWidth={2} />
+            {HONEYPOT_ERROR}
+          </p>
+        )}
         {showSummary && (
           <div className="rounded-lg border border-danger/30 bg-danger-tint p-4 sm:p-5">
             <p className="flex items-center gap-2 text-sm font-semibold text-danger">
@@ -526,8 +538,7 @@ export function ReviewDraftForm({ product, industries, className }: ReviewDraftF
 
       {/* Honeypot: hidden from people and assistive technology; bots tend to fill it. */}
       <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
-        <label htmlFor={fieldId("website")}>Leave this field empty</label>
-        <input id={fieldId("website")} type="text" tabIndex={-1} autoComplete="off" {...register("website")} />
+        <input id={fieldId("x")} type="text" tabIndex={-1} autoComplete="off" {...register(HONEYPOT_FIELD)} />
       </div>
 
       <div className="border-t border-line pt-6">

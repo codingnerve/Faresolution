@@ -3,6 +3,9 @@ import {
   claimSchema,
   COMPANY_SIZE_VALUES,
   contactSchema,
+  HONEYPOT_ERROR,
+  HONEYPOT_FIELD,
+  isHoneypotOnly,
   newsletterSchema,
   reviewDraftSchema,
   USAGE_LENGTH_OPTIONS,
@@ -69,7 +72,7 @@ const validReview = {
   jobTitle: "Operations lead",
   companySize: "small",
   industry: "Retail",
-  website: "",
+  [HONEYPOT_FIELD]: "",
 };
 
 /** A copy of `object` without `key`. */
@@ -90,7 +93,7 @@ describe("reviewDraftSchema", () => {
   });
 
   it("accepts a draft without the honeypot key and trims text", () => {
-    const result = reviewDraftSchema.safeParse({ ...without(validReview, "website"), headline: "  Solid for a small team  " });
+    const result = reviewDraftSchema.safeParse({ ...without(validReview, HONEYPOT_FIELD), headline: "  Solid for a small team  " });
     expect(result.success).toBe(true);
     expect(result.data?.headline).toBe("Solid for a small team");
   });
@@ -166,8 +169,8 @@ describe("reviewDraftSchema", () => {
   });
 
   it("rejects a filled honeypot", () => {
-    expect(reviewDraftSchema.safeParse({ ...validReview, website: "https://spam.example" }).success).toBe(false);
-    expect(reviewIssuePaths({ ...validReview, website: "x" })).toEqual(["website"]);
+    expect(reviewDraftSchema.safeParse({ ...validReview, [HONEYPOT_FIELD]: "https://spam.example" }).success).toBe(false);
+    expect(reviewIssuePaths({ ...validReview, [HONEYPOT_FIELD]: "x" })).toEqual([HONEYPOT_FIELD]);
   });
 
   it("drops unknown keys", () => {
@@ -213,7 +216,7 @@ describe("contactSchema", () => {
 
   it("rejects a product that is not a slug, and a filled honeypot", () => {
     expect(contactSchema.safeParse({ ...validContact, product: "Not A Slug" }).success).toBe(false);
-    expect(contactSchema.safeParse({ ...validContact, website: "spam" }).success).toBe(false);
+    expect(contactSchema.safeParse({ ...validContact, [HONEYPOT_FIELD]: "spam" }).success).toBe(false);
   });
 });
 
@@ -242,10 +245,33 @@ describe("claimSchema", () => {
 
   it("rejects an email without @ and a filled honeypot", () => {
     expect(claimSchema.safeParse({ ...validClaim, email: "priya.acme.example" }).success).toBe(false);
-    expect(claimSchema.safeParse({ ...validClaim, website: "spam" }).success).toBe(false);
+    expect(claimSchema.safeParse({ ...validClaim, [HONEYPOT_FIELD]: "spam" }).success).toBe(false);
   });
 
   it("limits the note length", () => {
     expect(claimSchema.safeParse({ ...validClaim, note: "x".repeat(1001) }).success).toBe(false);
+  });
+});
+
+describe("honeypot", () => {
+  it("uses a key that autofill and bots do not treat as a URL or contact field", () => {
+    expect(HONEYPOT_FIELD).not.toMatch(/website|url|site|email|phone|name|address|company/i);
+  });
+
+  it("is only a honeypot trip when the honeypot is the sole invalid field", () => {
+    expect(isHoneypotOnly({ [HONEYPOT_FIELD]: { message: "x" } })).toBe(true);
+    expect(isHoneypotOnly({ [HONEYPOT_FIELD]: { message: "x" }, headline: { message: "y" } })).toBe(false);
+    expect(isHoneypotOnly({ headline: { message: "y" } })).toBe(false);
+    expect(isHoneypotOnly({})).toBe(false);
+  });
+
+  it("a filled honeypot is rejected, and the same draft saves once it is cleared (retry)", () => {
+    expect(reviewDraftSchema.safeParse({ ...validReview, [HONEYPOT_FIELD]: "autofilled" }).success).toBe(false);
+    expect(reviewDraftSchema.safeParse({ ...validReview, [HONEYPOT_FIELD]: "" }).success).toBe(true);
+  });
+
+  it("has a neutral, actionable message that does not mention bots or spam", () => {
+    expect(HONEYPOT_ERROR).toBe("We couldn't save this draft. Please try again.");
+    expect(HONEYPOT_ERROR).not.toMatch(/bot|spam|hidden|honeypot/i);
   });
 });

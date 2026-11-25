@@ -132,3 +132,19 @@ export function removeSubmission(id: string): boolean {
   }
   return !listSubmissions().some((entry) => entry.id === id);
 }
+
+/** True when the entry is really in browser storage (not only in this page session's memory). */
+export function isPersisted(id: string): boolean {
+  return readPersisted().some((entry) => entry.id === id);
+}
+
+/**
+ * Removes every entry of `kind` matching `predicate`, stored and in memory.
+ * Returns true when none of them remain stored or in memory afterwards, false
+ * when a stored one could not be removed. Never throws.
+ */
+export function removeSubmissionsWhere(kind: SubmissionKind, predicate: (entry: Submission) => boolean): boolean {
+  const matches = listSubmissions(kind).filter(predicate);
+  for (const entry of matches) removeSubmission(entry.id);
+  return !listSubmissions(kind).some(predicate);
+}

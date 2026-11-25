@@ -57,11 +57,23 @@ function slugField(error: string) {
 }
 
 /**
- * Honeypot: a field real visitors never see or fill. Named `website` because
- * bots tend to fill it. Optional so a form that omits it still validates, but
- * any non-empty value is rejected.
+ * Honeypot: a field real visitors never see or fill. Its key is deliberately
+ * not a word like "website" or "url" that browser autofill treats as a real
+ * field and fills for a human. Optional so a form that omits it still
+ * validates, but any non-empty value is rejected.
  */
-const honeypotField = z.string().max(0, { error: "Leave this field empty." }).optional();
+export const HONEYPOT_FIELD = "hp_7f3c" as const;
+
+/** Shown when the honeypot was filled: neutral and actionable, never says why. */
+export const HONEYPOT_ERROR = "We couldn't save this draft. Please try again.";
+
+const honeypotField = z.string().max(0, { error: HONEYPOT_ERROR }).optional();
+
+/** True when the honeypot is the only invalid field (a bot, or autofill filling a hidden field). */
+export function isHoneypotOnly(errors: Record<string, unknown>): boolean {
+  const keys = Object.keys(errors);
+  return keys.length === 1 && keys[0] === HONEYPOT_FIELD;
+}
 
 // --- Review draft -----------------------------------------------------------------
 
@@ -119,7 +131,7 @@ export const reviewDraftSchema = z.object({
   jobTitle: textField("your job title", 2, 100),
   companySize: z.enum(COMPANY_SIZE_VALUES, { error: "Choose your company size." }),
   industry: textField("your industry", 2, 80),
-  website: honeypotField,
+  [HONEYPOT_FIELD]: honeypotField,
 });
 
 export type ReviewDraftInput = z.input<typeof reviewDraftSchema>;
@@ -137,7 +149,7 @@ export const contactSchema = z.object({
   email: emailField,
   product: optionalProductField,
   message: textField("a message", 10, 5000, "Your message must be at least 10 characters."),
-  website: honeypotField,
+  [HONEYPOT_FIELD]: honeypotField,
 });
 
 export type ContactInput = z.input<typeof contactSchema>;
@@ -156,7 +168,7 @@ export const claimSchema = z.object({
     .trim()
     .max(1000, { error: "The note must be at most 1000 characters." })
     .optional(),
-  website: honeypotField,
+  [HONEYPOT_FIELD]: honeypotField,
 });
 
 export type ClaimInput = z.input<typeof claimSchema>;

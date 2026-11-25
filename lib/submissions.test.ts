@@ -302,3 +302,66 @@ describe("saveSubmission: persisted flag and replacement", () => {
     expect(listSubmissions("review-draft").map((s) => s.id)).toEqual([old.id, fresh.id]);
   });
 });
+
+describe("isPersisted", () => {
+  it("is true only for entries actually in storage", async () => {
+    const storage = createStorage();
+    vi.stubGlobal("localStorage", storage);
+    const { saveSubmission, isPersisted } = await load();
+
+    const stored = saveSubmission("review-draft", { product: "a" });
+    expect(isPersisted(stored.id)).toBe(true);
+
+    storage.setItem.mockImplementation(() => {
+      throw new DOMException("Blocked", "SecurityError");
+    });
+    const memoryOnly = saveSubmission("review-draft", { product: "a" });
+    expect(memoryOnly.persisted).toBe(false);
+    expect(isPersisted(memoryOnly.id)).toBe(false);
+    expect(isPersisted("unknown")).toBe(false);
+  });
+
+  it("is false when storage is missing or blocked entirely", async () => {
+    vi.stubGlobal("localStorage", undefined);
+    const { saveSubmission, isPersisted } = await load();
+    expect(isPersisted(saveSubmission("review-draft", { product: "a" }).id)).toBe(false);
+  });
+});
+
+describe("removeSubmissionsWhere", () => {
+  it("removes every matching entry of the kind, stored and in memory, and reports true", async () => {
+    const storage = createStorage();
+    vi.stubGlobal("localStorage", storage);
+    const { saveSubmission, removeSubmissionsWhere, listSubmissions } = await load();
+
+    saveSubmission("review-draft", { product: "a" });
+    saveSubmission("review-draft", { product: "a" });
+    const keep = saveSubmission("review-draft", { product: "b" });
+    const news = saveSubmission("newsletter", { product: "a" });
+
+    expect(removeSubmissionsWhere("review-draft", (e) => e.payload.product === "a")).toBe(true);
+    expect(listSubmissions().map((s) => s.id)).toEqual([keep.id, news.id]);
+  });
+
+  it("reports false when a matching stored entry cannot be removed (failed replace edge case)", async () => {
+    const storage = createStorage();
+    vi.stubGlobal("localStorage", storage);
+    const { saveSubmission, removeSubmissionsWhere, listSubmissions } = await load();
+
+    const old = saveSubmission("review-draft", { product: "a" });
+    storage.setItem.mockImplementation(() => {
+      throw new DOMException("Quota exceeded", "QuotaExceededError");
+    });
+    saveSubmission("review-draft", { product: "a" }, { replaceWhere: (e) => e.payload.product === "a" });
+
+    expect(removeSubmissionsWhere("review-draft", (e) => e.payload.product === "a")).toBe(false);
+    // The in-memory draft is gone; the old stored one is not.
+    expect(listSubmissions("review-draft").map((s) => s.id)).toEqual([old.id]);
+  });
+
+  it("is true when nothing matches", async () => {
+    vi.stubGlobal("localStorage", createStorage());
+    const { removeSubmissionsWhere } = await load();
+    expect(removeSubmissionsWhere("review-draft", () => true)).toBe(true);
+  });
+});

@@ -2926,7 +2926,7 @@ export const products: Product[] = [
       "Advanced features sit in higher tiers.",
     ],
     faq: [
-      { q: "Amplitude or Mixpanel?", a: "Both are leading product-analytics tools with similar core reports. Amplitude bundles more adjacent tools such as experimentation and session replay; compare them side by side for your needs." },
+      { q: "Amplitude or Mixpanel?", a: "Both are widely used product-analytics tools with similar core reports. Amplitude bundles more adjacent tools such as experimentation and session replay; compare them side by side for your needs." },
       { q: "Does Amplitude have a free plan?", a: "Yes, Amplitude offers a free plan up to usage limits." },
       { q: "Can Amplitude run A/B tests?", a: "Yes. Amplitude offers experimentation and feature flags, depending on plan." },
     ],

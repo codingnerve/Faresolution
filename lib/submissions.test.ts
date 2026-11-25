@@ -234,3 +234,71 @@ describe("removeSubmission", () => {
     expect(listSubmissions().map((s) => s.id)).toEqual([a.id]);
   });
 });
+
+describe("saveSubmission: persisted flag and replacement", () => {
+  it("reports persisted: true when the entry was written to storage", async () => {
+    vi.stubGlobal("localStorage", createStorage());
+    const { saveSubmission } = await load();
+    expect(saveSubmission("newsletter", { email: "a@example.com" })).toMatchObject({ ok: true, persisted: true });
+  });
+
+  it("reports persisted: false when setItem throws, and when storage is missing", async () => {
+    const storage = createStorage();
+    storage.setItem.mockImplementation(() => {
+      throw new DOMException("Blocked", "SecurityError");
+    });
+    vi.stubGlobal("localStorage", storage);
+    let mod = await load();
+    expect(mod.saveSubmission("review-draft", { product: "x" })).toMatchObject({ ok: true, persisted: false });
+
+    vi.unstubAllGlobals();
+    vi.stubGlobal("localStorage", undefined);
+    mod = await load();
+    expect(mod.saveSubmission("review-draft", { product: "x" })).toMatchObject({ ok: true, persisted: false });
+  });
+
+  it("replaces matching entries of the same kind once the new one is persisted", async () => {
+    const storage = createStorage();
+    vi.stubGlobal("localStorage", storage);
+    const { saveSubmission, listSubmissions, SUBMISSIONS_STORAGE_KEY } = await load();
+
+    const old = saveSubmission("review-draft", { product: "a", headline: "old" });
+    const other = saveSubmission("review-draft", { product: "b" });
+    const news = saveSubmission("newsletter", { product: "a" });
+    const fresh = saveSubmission(
+      "review-draft",
+      { product: "a", headline: "new" },
+      { replaceWhere: (entry) => entry.payload.product === "a" },
+    );
+
+    expect(fresh.persisted).toBe(true);
+    const ids = listSubmissions().map((s) => s.id);
+    expect(ids).toEqual([other.id, news.id, fresh.id]);
+    expect(ids).not.toContain(old.id);
+    expect(JSON.parse(storage.raw.get(SUBMISSIONS_STORAGE_KEY)!).map((s: { id: string }) => s.id)).toEqual([
+      other.id,
+      news.id,
+      fresh.id,
+    ]);
+  });
+
+  it("keeps the earlier entry when the replacement could not be persisted", async () => {
+    const storage = createStorage();
+    vi.stubGlobal("localStorage", storage);
+    const { saveSubmission, listSubmissions } = await load();
+
+    const old = saveSubmission("review-draft", { product: "a", headline: "old" });
+    storage.setItem.mockImplementation(() => {
+      throw new DOMException("Quota exceeded", "QuotaExceededError");
+    });
+    const fresh = saveSubmission(
+      "review-draft",
+      { product: "a", headline: "new" },
+      { replaceWhere: (entry) => entry.payload.product === "a" },
+    );
+
+    expect(fresh.persisted).toBe(false);
+    // The old draft is still stored; the new one is visible for this page session only.
+    expect(listSubmissions("review-draft").map((s) => s.id)).toEqual([old.id, fresh.id]);
+  });
+});

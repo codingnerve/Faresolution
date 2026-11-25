@@ -34,7 +34,7 @@ const PILLARS: { title: string; body: string; list?: string[]; href?: string; ct
   },
   {
     title: "How reviewers will be verified",
-    body: "Reviewers will be asked to show they use the product, for example with a work email address, a professional profile or a screenshot of their account. Only verified reviews will count toward a rating.",
+    body: "Reviewers will be asked to show they use the product, for example with a work email address, a professional profile or a screenshot of their account. Only verified reviews will be published and counted toward a rating.",
     href: "/review-verification",
     cta: "Read the verification plan",
   },

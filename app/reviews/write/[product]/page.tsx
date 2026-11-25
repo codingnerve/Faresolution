@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: PageProps<"/reviews/write/[pr
   const { product: slug } = await params;
   const product = await getProduct(slug);
   if (!product) return {};
-  const path = `/reviews/write/${slug}`;
+  const path = `/reviews/write/${product.slug}`;
   const title = `Write a review of ${product.name}`;
   const description = `Draft a review of ${product.name}. Review collection hasn't opened yet, so your draft is saved only in your browser.`;
   return {

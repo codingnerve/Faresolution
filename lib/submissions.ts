@@ -15,7 +15,21 @@ export interface Submission {
   createdAt: string;
 }
 
-export type SaveResult = { ok: true; id: string };
+/**
+ * `persisted` is false when the entry could not be written to localStorage
+ * (missing, blocked, full): it is then kept in memory only and is lost when
+ * the page is reloaded, which callers should say.
+ */
+export type SaveResult = { ok: true; id: string; persisted: boolean };
+
+export interface SaveOptions {
+  /**
+   * Entries of the same kind this one replaces (for example the earlier draft
+   * for the same product). They are dropped only once the new entry has been
+   * persisted; if it could not be, they are kept.
+   */
+  replaceWhere?: (entry: Submission) => boolean;
+}
 
 /** Honest confirmation shown after every demo form submission. */
 export const SUBMISSION_NOTICE =
@@ -69,6 +83,7 @@ function copyPayload(payload: Record<string, unknown>): Record<string, unknown> 
 export function saveSubmission(
   kind: SubmissionKind,
   payload: Record<string, unknown>,
+  options: SaveOptions = {},
 ): SaveResult {
   const entry: Submission = {
     id: createId(),
@@ -80,8 +95,16 @@ export function saveSubmission(
   // if storage later becomes unreadable.
   memory.push(entry);
   if (memory.length > MAX_ENTRIES) memory.splice(0, memory.length - MAX_ENTRIES);
-  writeJson(SUBMISSIONS_STORAGE_KEY, [...readPersisted(), entry].slice(-MAX_ENTRIES));
-  return { ok: true, id: entry.id };
+  const replaces = (other: Submission) =>
+    other.id !== entry.id && other.kind === kind && (options.replaceWhere?.(other) ?? false);
+  const persisted = writeJson(
+    SUBMISSIONS_STORAGE_KEY,
+    [...readPersisted().filter((other) => !replaces(other)), entry].slice(-MAX_ENTRIES),
+  );
+  if (persisted) {
+    for (let i = memory.length - 1; i >= 0; i--) if (replaces(memory[i])) memory.splice(i, 1);
+  }
+  return { ok: true, id: entry.id, persisted };
 }
 
 /** Stored entries (persisted first, then in-memory), optionally of one kind. */

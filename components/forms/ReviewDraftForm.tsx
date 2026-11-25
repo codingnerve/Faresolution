@@ -4,9 +4,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleCheck, Star, TriangleAlert } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
-import { useForm, useWatch, type Path } from "react-hook-form";
+import { useForm, useWatch, type FieldErrors, type Path } from "react-hook-form";
 import { Button } from "@/components/ui/Button";
 import { useMounted } from "@/lib/hooks/useMounted";
+import { draftNotice } from "@/lib/reviews/draft-notice";
 import { companySizeLabel } from "@/lib/directory/labels";
 import {
   SUBMISSION_NOTICE,
@@ -128,6 +129,8 @@ export function ReviewDraftForm({ product, industries, className }: ReviewDraftF
   // Set after a save or clear; until then the draft found in storage is used.
   const [latest, setLatest] = useState<{ draft: StoredDraft | null } | null>(null);
   const [editing, setEditing] = useState(false);
+  // False when the last save could not reach browser storage (draft lives in memory only).
+  const [persisted, setPersisted] = useState(true);
   const [cleared, setCleared] = useState<"idle" | "cleared" | "failed">("idle");
   // True once the visitor has saved, edited or cleared, so focus follows those actions and never moves on page load.
   const [interacted, setInteracted] = useState(false);
@@ -143,6 +146,7 @@ export function ReviewDraftForm({ product, industries, className }: ReviewDraftF
     handleSubmit,
     reset,
     control,
+    getValues,
     setValue,
     formState: { errors, isSubmitted, isSubmitting },
   } = useForm<ReviewDraftInput, unknown, ReviewDraftValues>({
@@ -162,21 +166,36 @@ export function ReviewDraftForm({ product, industries, className }: ReviewDraftF
   }, [interacted, showNotice, id]);
 
   const onSubmit = (values: ReviewDraftValues) => {
-    // One draft per product: a new save replaces the earlier one.
-    for (const entry of listSubmissions("review-draft")) {
-      if (entry.payload.product === product.slug) removeSubmission(entry.id);
-    }
     const draft: Partial<ReviewDraftValues> = { ...values };
     delete draft.website;
-    saveSubmission("review-draft", {
-      ...draft,
-      product: product.slug,
-      productName: product.name,
-      status: "draft",
-    });
+    // One draft per product: the new save replaces the earlier one, but only
+    // once it has really been stored (the earlier draft is kept otherwise).
+    const result = saveSubmission(
+      "review-draft",
+      { ...draft, product: product.slug, productName: product.name, status: "draft" },
+      { replaceWhere: (entry) => entry.payload.product === product.slug },
+    );
+    setPersisted(result.persisted);
     setCleared("idle");
     setEditing(false);
     setLatest({ draft: findDraft(product.slug) });
+    setInteracted(true);
+  };
+
+  const onInvalid = (invalid: FieldErrors<ReviewDraftInput>) => {
+    const first = FIELD_ORDER.find((name) => invalid[name]);
+    if (first) {
+      focusField(first);
+      return;
+    }
+    // Only the honeypot failed: a bot (or odd autofill). Do not say so and do
+    // not store anything; show the normal outcome without persisting.
+    const parsed = reviewDraftSchema.safeParse({ ...getValues(), website: "" });
+    if (!parsed.success) return;
+    setPersisted(true);
+    setCleared("idle");
+    setEditing(false);
+    setLatest({ draft: { id: "", savedAt: new Date().toISOString(), values: parsed.data } });
     setInteracted(true);
   };
 
@@ -196,36 +215,39 @@ export function ReviewDraftForm({ product, industries, className }: ReviewDraftF
     setInteracted(true);
   };
 
-  const honeypotTripped = Boolean(errors.website);
   const summaryItems = FIELD_ORDER.filter((name) => errors[name]).map((name) => ({
     name,
     message: errors[name]?.message ?? "Check this field.",
   }));
-  const showSummary = isSubmitted && (summaryItems.length > 0 || honeypotTripped);
+  const showSummary = isSubmitted && summaryItems.length > 0;
 
   const experience = useWatch({ control, name: "experience" });
   const ratingValues = useWatch({ control, name: RATINGS.map((rating) => rating.key) });
   const experienceLength = (experience ?? "").trim().length;
 
   if (showNotice && stored) {
+    const notice = draftNotice({ persisted, productName: product.name, headline: stored.values.headline });
     return (
       <div className={className}>
         <div className="rounded-lg border border-line bg-surface-alt p-5 sm:p-6">
           <div className="flex items-start gap-3">
-            <CircleCheck aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-success" strokeWidth={2} />
+            {persisted ? (
+              <CircleCheck aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-success" strokeWidth={2} />
+            ) : (
+              <TriangleAlert aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-danger" strokeWidth={2} />
+            )}
             <div className="min-w-0">
               <h2 ref={noticeRef} tabIndex={-1} className="type-h3 text-navy outline-none">
-                Draft saved in this browser
+                {notice.title}
               </h2>
-              <p className="type-body mt-2 text-ink">
-                Your draft of {product.name}, &ldquo;{stored.values.headline}&rdquo;, is stored only in this browser.
-                Review collection isn&rsquo;t open yet, so it has not been submitted, published or sent to anyone.
-              </p>
-              <p className="type-meta mt-2">{SUBMISSION_NOTICE}</p>
-              <p className="type-meta mt-1">
-                Saved {new Date(stored.savedAt).toLocaleString("en", { dateStyle: "medium", timeStyle: "short" })}.
-                Clearing your browser data or using another device will remove or hide it.
-              </p>
+              <p className="type-body mt-2 text-ink">{notice.body}</p>
+              {notice.showStorageNotice && <p className="type-meta mt-2">{SUBMISSION_NOTICE}</p>}
+              {notice.showSavedLine && (
+                <p className="type-meta mt-1">
+                  Saved {new Date(stored.savedAt).toLocaleString("en", { dateStyle: "medium", timeStyle: "short" })}.
+                  Clearing your browser data or using another device will remove or hide it.
+                </p>
+              )}
               {cleared === "failed" && (
                 <p role="alert" className="mt-3 text-sm text-danger">
                   We couldn&rsquo;t remove the draft from this browser&rsquo;s storage. Clear this site&rsquo;s data in
@@ -254,10 +276,7 @@ export function ReviewDraftForm({ product, industries, className }: ReviewDraftF
     <form
       noValidate
       aria-label={`Review draft for ${product.name}`}
-      onSubmit={handleSubmit(onSubmit, (invalid) => {
-        const first = FIELD_ORDER.find((name) => invalid[name]);
-        if (first) focusField(first);
-      })}
+      onSubmit={handleSubmit(onSubmit, onInvalid)}
       className={cn("relative space-y-10", className)}
     >
       <div aria-live="polite">
@@ -279,9 +298,7 @@ export function ReviewDraftForm({ product, industries, className }: ReviewDraftF
           <div className="rounded-lg border border-danger/30 bg-danger-tint p-4 sm:p-5">
             <p className="flex items-center gap-2 text-sm font-semibold text-danger">
               <TriangleAlert aria-hidden="true" className="size-4 shrink-0" strokeWidth={2} />
-              {honeypotTripped && summaryItems.length === 0
-                ? "We couldn't save this draft. Reload the page and try again."
-                : `Please fix ${summaryItems.length} ${summaryItems.length === 1 ? "field" : "fields"} before saving your draft.`}
+              {`Please fix ${summaryItems.length} ${summaryItems.length === 1 ? "field" : "fields"} before saving your draft.`}
             </p>
             {summaryItems.length > 0 && (
               <ul className="mt-2 list-disc space-y-1 pl-9 text-sm text-ink">
@@ -633,6 +650,7 @@ function RatingGroup({
                 className="peer absolute inset-0 size-full cursor-pointer opacity-0"
                 aria-label={`${n} ${n === 1 ? "star" : "stars"}, ${label}`}
                 name={name}
+                aria-describedby={error ? errorId : undefined}
                 checked={chosen === n}
                 onChange={() => onChoose(n)}
               />

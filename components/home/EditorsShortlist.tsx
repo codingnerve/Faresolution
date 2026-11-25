@@ -11,7 +11,15 @@ const SHORTLIST_SIZE = 6;
 export async function EditorsShortlist() {
   const [products, vendors] = await Promise.all([getProducts(), getVendors()]);
   const vendorName = new Map(vendors.map((v) => [v.slug, v.name]));
-  const shortlist = products.filter((p) => p.featured).slice(0, SHORTLIST_SIZE);
+  // One featured product per primary category, so the shortlist spans categories.
+  const seenCategories = new Set<string>();
+  const shortlist = products
+    .filter((p) => {
+      if (!p.featured || seenCategories.has(p.primaryCategory)) return false;
+      seenCategories.add(p.primaryCategory);
+      return true;
+    })
+    .slice(0, SHORTLIST_SIZE);
   if (shortlist.length === 0) return null;
 
   return (
@@ -21,7 +29,7 @@ export async function EditorsShortlist() {
           id="home-shortlist-title"
           eyebrow="Editor's shortlist"
           title="Established tools worth a first look"
-          description="A small editorial selection of widely used products, chosen as sensible starting points in their categories. The order is not a ranking."
+          description="A small editorial selection of well-established products, chosen as sensible starting points in their categories. The order is not a ranking."
           action={
             <Button href="/software" variant="secondary">
               Browse all software

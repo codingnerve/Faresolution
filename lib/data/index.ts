@@ -61,6 +61,17 @@ export async function getProductsByCategory(slug: string): Promise<Product[]> {
   return products.filter((p) => p.categorySlugs.includes(slug));
 }
 
+/**
+ * Products listed under a category including its subcategories: the distinct
+ * union of products tagged with the category or any direct child, in catalogue
+ * order. Equals `getProductsByCategory` for a category without children.
+ */
+export async function getProductsInCategoryTree(slug: string): Promise<Product[]> {
+  if (!categoryBySlug.has(slug)) return [];
+  const slugs = new Set([slug, ...categories.filter((c) => c.parentSlug === slug).map((c) => c.slug)]);
+  return products.filter((p) => p.categorySlugs.some((s) => slugs.has(s)));
+}
+
 export async function getProductsByIndustry(slug: string): Promise<Product[]> {
   return products.filter((p) => p.industrySlugs.includes(slug));
 }

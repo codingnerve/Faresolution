@@ -14,6 +14,7 @@ import {
   getProduct,
   getProducts,
   getProductsByCategory,
+  getProductsInCategoryTree,
   getProductsByIndustry,
   getVendor,
   getVendors,
@@ -170,5 +171,33 @@ describe("articles", () => {
 
   it("does not resolve an article under the wrong kind", async () => {
     expect(await getArticle("blog", "how-to-run-a-software-trial")).toBeNull();
+  });
+});
+
+describe("getProductsInCategoryTree", () => {
+  it("includes products tagged with a root category or any of its children", async () => {
+    const tree = await getProductsInCategoryTree("crm-software");
+    const root = await getProductsByCategory("crm-software");
+    const child = await getProductsByCategory("sales-software");
+    const slugs = new Set(tree.map((p) => p.slug));
+    expect(tree.length).toBeGreaterThanOrEqual(child.length);
+    expect(tree.length).toBeGreaterThanOrEqual(root.length);
+    for (const p of [...root, ...child]) expect(slugs.has(p.slug)).toBe(true);
+  });
+
+  it("lists each product once", async () => {
+    for (const category of await getCategories()) {
+      const slugs = (await getProductsInCategoryTree(category.slug)).map((p) => p.slug);
+      expect(new Set(slugs).size).toBe(slugs.length);
+    }
+  });
+
+  it("matches getProductsByCategory for a category without children", async () => {
+    const leaf = await getProductsInCategoryTree("sales-software");
+    expect(leaf.map((p) => p.slug)).toEqual((await getProductsByCategory("sales-software")).map((p) => p.slug));
+  });
+
+  it("returns an empty list for an unknown slug", async () => {
+    expect(await getProductsInCategoryTree("nope")).toEqual([]);
   });
 });

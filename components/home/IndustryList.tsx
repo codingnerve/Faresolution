@@ -1,4 +1,4 @@
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { allIndustriesLink, industryHref } from "@/components/layout/navigation";
 import { Container } from "@/components/ui/Container";
@@ -30,7 +30,7 @@ export async function IndustryList() {
             className="inline-flex shrink-0 items-center gap-1.5 rounded-xs text-sm font-medium text-white hover:text-blue-light"
           >
             {allIndustriesLink.label}
-            <ArrowUpRight aria-hidden="true" className="size-4" strokeWidth={2} />
+            <ArrowRight aria-hidden="true" className="size-4" strokeWidth={2} />
           </Link>
         </div>
 

@@ -136,8 +136,8 @@ export async function Hero() {
           />
 
           <div className="mt-5 flex max-w-[38rem] flex-wrap items-center gap-2">
-            <span className="mr-1 text-[0.8125rem] text-subtle">Popular:</span>
-            {popularSearches.slice(0, 6).map((term) => (
+            <span className="mr-1 text-[0.8125rem] text-subtle">Try:</span>
+            {popularSearches.slice(0, 5).map((term) => (
               <Link key={term} href={softwareSearchHref(term)} className={chipClass}>
                 {term}
               </Link>

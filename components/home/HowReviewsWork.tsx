@@ -6,26 +6,27 @@ import { LogoMark } from "@/components/ui/LogoMark";
 import { Rating } from "@/components/ui/Rating";
 import { getArticle, getProduct } from "@/lib/data";
 
+// Review collection is not open yet: every step is described as planned (R11).
 const STEPS = [
   {
     title: "Written by people who use the product",
-    body: "Reviewers describe how their team uses the tool and rate ease of use, value, features and support separately.",
+    body: "When reviews open, reviewers will describe how their team uses the tool and rate ease of use, value, features and support separately.",
   },
   {
-    title: "Checked before it is published",
-    body: "Each review is moderated against our guidelines, and the reviewer's use of the product is verified.",
+    title: "Checked before publishing (planned)",
+    body: "Each review will be checked against our guidelines, including the reviewer's use of the product, before it is published.",
   },
   {
     title: "Ratings follow the reviews",
-    body: "A product's rating is calculated only from published reviews. Until there are some, its profile says so.",
+    body: "Ratings will be calculated only from published reviews. Until a product has some, its profile says so.",
   },
 ];
 
 const METHOD_ARTICLE = { kind: "research", slug: "how-faresolution-handles-product-facts-and-reviews" } as const;
 
 /**
- * Explains the review policy in place of "recent reviews" and "highest rated":
- * no reviews have been collected yet, so none are shown.
+ * Explains the planned review process in place of "recent reviews" and
+ * "highest rated": review collection is not open yet, so none are shown.
  */
 export async function HowReviewsWork() {
   const [example, method] = await Promise.all([
@@ -42,10 +43,9 @@ export async function HowReviewsWork() {
             Ratings appear when real reviews do
           </h2>
           <p className="type-body mt-4 max-w-xl text-subtle">
-            We don&rsquo;t seed listings with placeholder stars or borrowed
-            scores. Reviews are published only once they have been verified, so
-            today every profile reads &ldquo;No reviews yet&rdquo;. That is the
-            honest state of a new directory.
+            Review collection isn&rsquo;t open yet, so every profile reads
+            &ldquo;No reviews yet&rdquo;. We don&rsquo;t seed listings with
+            placeholder stars or borrowed scores.
           </p>
 
           {example && (
@@ -58,7 +58,7 @@ export async function HowReviewsWork() {
                 </div>
               </div>
               <figcaption className="type-meta mt-3 border-t border-line pt-3">
-                How a listing looks before its first verified review.
+                How every listing looks today.
               </figcaption>
             </figure>
           )}
@@ -88,7 +88,7 @@ export async function HowReviewsWork() {
               <ArrowRight aria-hidden="true" className="size-4" strokeWidth={2} />
             </Link>
             <Link href="/review-verification" className="rounded-xs text-sm font-medium text-ink hover:text-navy">
-              How verification works
+              Our verification plan
             </Link>
             {method && (
               <Link

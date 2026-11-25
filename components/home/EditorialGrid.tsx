@@ -92,7 +92,7 @@ export async function EditorialGrid() {
         />
 
         <div className="mt-10 grid gap-10 lg:mt-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-14">
-          <article className="group relative flex flex-col rounded-lg border border-line bg-surface-alt p-6 sm:p-8 lg:p-10">
+          <article className="group relative flex flex-col rounded-lg border border-line bg-surface-alt p-6 sm:p-8 lg:self-start lg:p-10">
             <KindLabel kind={lead.kind} />
             <h3 className="mt-5 font-serif text-[1.75rem] leading-[1.15] font-[440] tracking-[-0.015em] text-balance text-navy sm:text-[2.25rem]">
               <Link

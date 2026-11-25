@@ -3,7 +3,7 @@ import Link from "next/link";
 import { allCategoriesLink, categoryHref } from "@/components/layout/navigation";
 import { Container } from "@/components/ui/Container";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { getCategories, getCategoryTree, getProducts } from "@/lib/data";
+import { getCategories, getCategoryTree, getProductsInCategoryTree } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
 // Static class names so Tailwind can see them. The closing cell fills the last row.
@@ -13,13 +13,16 @@ const fillSpan = (items: number, cols: number) => cols - (items % cols);
 
 /** Typographic index of every top-level category with its subcategories and listing counts. */
 export async function CategoryIndex() {
-  const [tree, categories, products] = await Promise.all([
-    getCategoryTree(),
-    getCategories(),
-    getProducts(),
-  ]);
-  // Same rule as the category pages: a product counts wherever it is tagged.
-  const count = (slug: string) => products.filter((p) => p.categorySlugs.includes(slug)).length;
+  const [tree, categories] = await Promise.all([getCategoryTree(), getCategories()]);
+  // Shared rule with the category pages: a category's listing includes its
+  // subcategories, each product counted once.
+  const counts = new Map(
+    await Promise.all(
+      categories.map(async (c) => [c.slug, (await getProductsInCategoryTree(c.slug)).length] as const),
+    ),
+  );
+  const count = (slug: string) => counts.get(slug) ?? 0;
+  const subcategoryCount = tree.reduce((n, root) => n + root.children.length, 0);
 
   return (
     <section aria-labelledby="home-categories-title" className="py-16 sm:py-20 lg:py-24">
@@ -28,7 +31,7 @@ export async function CategoryIndex() {
           id="home-categories-title"
           eyebrow="Category index"
           title="Start from the job you need done"
-          description={`${categories.length} categories, each with a buying guide and the products we list in it.`}
+          description={`${tree.length} categories and ${subcategoryCount} subcategories, each with a buying guide and the products we list in it.`}
           action={
             <Link
               href={allCategoriesLink.href}

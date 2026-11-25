@@ -27,6 +27,8 @@ export function NewsletterForm({ tone = "light", source = "unknown", className }
   const inputId = `${id}-email`;
   const errorId = `${id}-error`;
   const [savedEmail, setSavedEmail] = useState<string | null>(null);
+  // Distinguishes forms when more than one could appear (e.g. "Newsletter sign-up (footer)").
+  const formLabel = source === "unknown" ? "Newsletter sign-up" : `Newsletter sign-up (${source})`;
 
   const {
     register,
@@ -48,7 +50,12 @@ export function NewsletterForm({ tone = "light", source = "unknown", className }
 
   return (
     <div className={className}>
-      <form noValidate onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2 sm:flex-row">
+      <form
+        noValidate
+        aria-label={formLabel}
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col gap-2 sm:flex-row"
+      >
         <label htmlFor={inputId} className="sr-only">
           Email address
         </label>

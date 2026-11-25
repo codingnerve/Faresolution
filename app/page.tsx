@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { CategoryIndex } from "@/components/home/CategoryIndex";
+import { ClosingCta } from "@/components/home/ClosingCta";
 import { EditorialGrid } from "@/components/home/EditorialGrid";
 import { EditorsShortlist } from "@/components/home/EditorsShortlist";
 import { Hero } from "@/components/home/Hero";
 import { HowReviewsWork } from "@/components/home/HowReviewsWork";
 import { IndustryList } from "@/components/home/IndustryList";
-import { NewsletterBand } from "@/components/home/NewsletterBand";
 import { PopularComparisons } from "@/components/home/PopularComparisons";
 import { VendorStrip } from "@/components/home/VendorStrip";
 import { organizationJsonLd, safeJsonLd } from "@/lib/jsonld";
@@ -50,7 +50,7 @@ export default function HomePage() {
       <HowReviewsWork />
       <VendorStrip />
       <EditorialGrid />
-      <NewsletterBand />
+      <ClosingCta />
     </>
   );
 }

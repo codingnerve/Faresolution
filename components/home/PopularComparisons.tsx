@@ -39,6 +39,7 @@ export async function PopularComparisons() {
             Put up to four products side by side: plans, deployment, platforms,
             features and integrations, with the gaps clearly marked.
           </p>
+          <p className="type-meta mt-3">Picked by our editors.</p>
           <Link
             href="/compare"
             className="mt-6 inline-flex h-10 items-center gap-2 rounded-md border border-line-strong bg-surface px-4 text-sm font-medium text-ink shadow-card transition-colors hover:border-muted/60 hover:bg-surface-alt"

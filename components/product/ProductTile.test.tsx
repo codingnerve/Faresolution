@@ -35,6 +35,17 @@ describe("ProductTile", () => {
     expect(html).not.toContain("Pricing not verified");
   });
 
+  it("states known negatives: no free plan, no free trial", async () => {
+    const product = await sample();
+    const html = render({
+      ...product,
+      pricing: { ...product.pricing, freePlan: false, freeTrial: false },
+    });
+    expect(html).toContain("No free plan");
+    expect(html).toContain("No free trial");
+    expect(html).not.toContain("Pricing not verified");
+  });
+
   it("says pricing is not verified when nothing is known, never null or NaN", async () => {
     const product = await sample();
     const html = render({

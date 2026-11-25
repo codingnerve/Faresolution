@@ -1,5 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import type { Pricing } from "@/lib/data/types";
+import { pricingModelLabel } from "@/lib/directory/labels";
 
 export const SITE_URL = "https://faresolution.com";
 export const SITE_NAME = "Faresolution";
@@ -12,6 +14,16 @@ export function cn(...inputs: ClassValue[]): string {
 /** Absolute URL on the canonical site origin for a site-relative path. */
 export function absoluteUrl(path: string): string {
   return `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
+}
+
+/** True for an absolute http(s) URL: only those become outbound links. */
+export function isWebUrl(url: string): boolean {
+  try {
+    const { protocol } = new URL(url);
+    return protocol === "https:" || protocol === "http:";
+  } catch {
+    return false;
+  }
 }
 
 /** One or two uppercase initials for a monogram ("Northwind Ledger" -> "NL"). */
@@ -59,4 +71,22 @@ export function isLightColor(color: string): boolean {
   const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
   const contrastWithWhite = 1.05 / (luminance + 0.05);
   return contrastWithWhite < 3;
+}
+
+/**
+ * One-line pricing summary from known facts only, e.g.
+ * "Freemium · Free plan available". The pricing model, a starting price
+ * (verbatim, never derived) and free plan / trial flags appear only when set;
+ * with nothing known it reads "Pricing not verified".
+ */
+export function formatPricing({ pricing }: { pricing: Pricing }): string {
+  const parts: string[] = [];
+  if (pricing.model) parts.push(pricingModelLabel[pricing.model]);
+  const startingPrice = pricing.startingPrice?.trim();
+  if (startingPrice) parts.push(`From ${startingPrice}`);
+  if (pricing.freePlan === true && pricing.model !== "free") parts.push("Free plan available");
+  if (pricing.freePlan === false) parts.push("No free plan");
+  if (pricing.freeTrial === true) parts.push("Free trial available");
+  if (pricing.freeTrial === false) parts.push("No free trial");
+  return parts.length > 0 ? parts.join(" · ") : "Pricing not verified";
 }

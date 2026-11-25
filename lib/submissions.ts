@@ -2,10 +2,8 @@
  * Demo form submissions. Nothing is sent anywhere: entries are kept in this
  * browser's localStorage, or in memory when storage is missing, blocked,
  * full or holding corrupt data. `saveSubmission` never throws.
- *
- * The tiny storage helper below is deliberately self-contained so it can be
- * swapped for `lib/storage.ts` (Task 8) without changing this module's API.
  */
+import { readJson, writeJson } from "@/lib/storage";
 
 export type SubmissionKind = "newsletter" | "contact" | "review-draft" | "claim";
 
@@ -27,38 +25,6 @@ export const SUBMISSIONS_STORAGE_KEY = "faresolution:submissions";
 
 /** Oldest entries are dropped beyond this many, to stay well under quota. */
 const MAX_ENTRIES = 100;
-
-// --- Storage helper (replaceable) ---------------------------------------------
-
-function getStorage(): Storage | null {
-  try {
-    const storage = (globalThis as { localStorage?: Storage }).localStorage;
-    return storage && typeof storage.getItem === "function" ? storage : null;
-  } catch {
-    return null;
-  }
-}
-
-function readJson(key: string): unknown {
-  try {
-    const raw = getStorage()?.getItem(key);
-    return raw == null ? null : JSON.parse(raw);
-  } catch {
-    return null;
-  }
-}
-
-/** True when the value was written; false on any failure (never throws). */
-function writeJson(key: string, value: unknown): boolean {
-  const storage = getStorage();
-  if (!storage) return false;
-  try {
-    storage.setItem(key, JSON.stringify(value));
-    return true;
-  } catch {
-    return false;
-  }
-}
 
 // --- Submissions --------------------------------------------------------------
 

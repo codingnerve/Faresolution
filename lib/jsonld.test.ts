@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { faqJsonLd, organizationJsonLd, safeJsonLd } from "@/lib/jsonld";
+import { getProduct } from "@/lib/data";
+import { faqJsonLd, organizationJsonLd, productJsonLd, safeJsonLd } from "@/lib/jsonld";
 
 describe("safeJsonLd", () => {
   it("escapes < so text can never close the script tag", () => {
@@ -75,5 +76,63 @@ describe("faqJsonLd", () => {
 
   it("returns null when there are no questions", () => {
     expect(faqJsonLd([])).toBeNull();
+  });
+});
+
+describe("productJsonLd", () => {
+  async function sample() {
+    const product = await getProduct("hubspot-crm");
+    if (!product) throw new Error("fixture missing");
+    return product;
+  }
+  const vendor = { slug: "hubspot", name: "HubSpot", website: "https://www.hubspot.com", description: "", headquarters: null };
+
+  it("describes the product as a SoftwareApplication with its profile URL, category and publisher", async () => {
+    const product = await sample();
+    const ld = productJsonLd(product, { vendor, categoryName: "CRM Software" });
+    expect(ld).toMatchObject({
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: "HubSpot CRM",
+      description: product.description,
+      url: "https://faresolution.com/products/hubspot-crm",
+      applicationCategory: "CRM Software",
+      sameAs: product.website,
+      publisher: { "@type": "Organization", name: "HubSpot", url: "https://www.hubspot.com" },
+    });
+  });
+
+  it("omits aggregateRating when rating is null and offers when startingPrice is null", async () => {
+    const product = await sample();
+    const ld = productJsonLd({ ...product, rating: null, reviewCount: 0 });
+    expect(ld).not.toHaveProperty("aggregateRating");
+    expect(ld).not.toHaveProperty("review");
+    expect(product.pricing.startingPrice).toBeNull();
+    expect(ld).not.toHaveProperty("offers");
+    expect(safeJsonLd(ld)).not.toMatch(/aggregateRating|offers|null|NaN|undefined/);
+  });
+
+  it("omits aggregateRating even for a rating with no reviews behind it", async () => {
+    const product = await sample();
+    expect(productJsonLd({ ...product, rating: 4.5, reviewCount: 0 })).not.toHaveProperty("aggregateRating");
+  });
+
+  it("adds an offer only when a starting price is known", async () => {
+    const product = await sample();
+    const ld = productJsonLd({ ...product, pricing: { ...product.pricing, startingPrice: "From 15 USD per seat" } });
+    expect(ld.offers).toMatchObject({ "@type": "Offer", description: "From 15 USD per seat" });
+  });
+
+  it("omits publisher and category when they are not given", async () => {
+    const ld = productJsonLd(await sample());
+    expect(ld).not.toHaveProperty("publisher");
+    expect(ld).not.toHaveProperty("applicationCategory");
+  });
+
+  it("escapes < in text once serialised", async () => {
+    const product = await sample();
+    const out = safeJsonLd(productJsonLd({ ...product, name: "</script><b>", description: "a < b" }));
+    expect(out).not.toContain("<");
+    expect(JSON.parse(out).name).toBe("</script><b>");
   });
 });

@@ -1,5 +1,5 @@
 /** Display labels for the directory's enum-valued filters. Client-safe. */
-import type { CompanySize, Deployment, PricingModel } from "@/lib/data/types";
+import type { CompanySize, Deployment, Platform, PricingModel } from "@/lib/data/types";
 import type { DirectorySort } from "./query";
 
 export const pricingModelLabel: Record<PricingModel, string> = {
@@ -22,6 +22,16 @@ export const deploymentLabel: Record<Deployment, string> = {
   cloud: "Cloud",
   "on-premise": "On-premise",
   hybrid: "Hybrid",
+};
+
+export const platformLabel: Record<Platform, string> = {
+  web: "Web",
+  ios: "iOS",
+  android: "Android",
+  windows: "Windows",
+  mac: "macOS",
+  linux: "Linux",
+  api: "API",
 };
 
 export const sortLabel: Record<DirectorySort, string> = {

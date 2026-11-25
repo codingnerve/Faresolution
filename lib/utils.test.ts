@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { absoluteUrl, cn, getInitials, isLightColor } from "@/lib/utils";
+import { getProducts, type Pricing } from "@/lib/data";
+import { absoluteUrl, cn, formatPricing, getInitials, isLightColor, isWebUrl } from "@/lib/utils";
 
 describe("cn", () => {
   it("drops falsy values and lets later Tailwind classes win", () => {
@@ -47,5 +48,63 @@ describe("absoluteUrl", () => {
   it("joins paths onto the site origin", () => {
     expect(absoluteUrl("/software")).toBe("https://faresolution.com/software");
     expect(absoluteUrl("software")).toBe("https://faresolution.com/software");
+  });
+});
+
+describe("formatPricing", () => {
+  const unknown: Pricing = {
+    model: null,
+    freePlan: null,
+    freeTrial: null,
+    startingPrice: null,
+    note: null,
+    plans: [{ name: "Pro", price: null, summary: "Paid tier." }],
+  };
+  const withPricing = (pricing: Partial<Pricing>) => ({ pricing: { ...unknown, ...pricing } });
+
+  it("says pricing is not verified when nothing is known", () => {
+    expect(formatPricing(withPricing({}))).toBe("Pricing not verified");
+    expect(formatPricing(withPricing({ startingPrice: "   " }))).toBe("Pricing not verified");
+  });
+
+  it("names the pricing model when known", () => {
+    expect(formatPricing(withPricing({ model: "subscription" }))).toBe("Subscription");
+    expect(formatPricing(withPricing({ model: "custom" }))).toBe("Custom quote");
+  });
+
+  it("mentions free plan and trial facts only when they are set", () => {
+    expect(formatPricing(withPricing({ model: "freemium", freePlan: true }))).toBe("Freemium · Free plan available");
+    expect(formatPricing(withPricing({ model: "subscription", freePlan: false, freeTrial: true }))).toBe(
+      "Subscription · No free plan · Free trial available",
+    );
+    expect(formatPricing(withPricing({ freeTrial: false }))).toBe("No free trial");
+  });
+
+  it("does not repeat the free plan for a free product", () => {
+    expect(formatPricing(withPricing({ model: "free", freePlan: true }))).toBe("Free");
+  });
+
+  it("uses a known starting price verbatim and never invents one", () => {
+    expect(formatPricing(withPricing({ model: "subscription", startingPrice: "15 USD per seat a month" }))).toBe(
+      "Subscription · From 15 USD per seat a month",
+    );
+  });
+
+  it("never renders null, NaN, undefined or a currency sign for unknown values, for every catalogue product", async () => {
+    for (const product of await getProducts()) {
+      const text = formatPricing(product);
+      expect(text, product.slug).not.toMatch(/null|NaN|undefined|\$/);
+      expect(text.length, product.slug).toBeGreaterThan(0);
+    }
+  });
+});
+
+describe("isWebUrl", () => {
+  it("accepts absolute http(s) URLs only", () => {
+    expect(isWebUrl("https://www.hubspot.com")).toBe(true);
+    expect(isWebUrl("http://example.com/x")).toBe(true);
+    expect(isWebUrl("javascript:alert(1)")).toBe(false);
+    expect(isWebUrl("/relative")).toBe(false);
+    expect(isWebUrl("")).toBe(false);
   });
 });

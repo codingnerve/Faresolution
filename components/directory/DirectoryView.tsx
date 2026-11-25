@@ -9,7 +9,7 @@ import { ProductTile } from "@/components/product/ProductTile";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import type { DirectoryData } from "@/lib/directory/data";
-import { directoryHref, effectiveQuery, type DirectoryPreset } from "@/lib/directory/preset";
+import { directoryHref, effectiveQuery, isPageOnlyChange, type DirectoryPreset } from "@/lib/directory/preset";
 import {
   applyQuery,
   DEFAULT_QUERY,
@@ -104,17 +104,21 @@ export function DirectoryView({ data, preset, params }: DirectoryViewProps) {
     [navigate, query.sort, query.view],
   );
 
-  // Bring the top of the results into view when the page changes (not on first render).
-  const previousPage = useRef(current.page);
+  // After pagination (and only then: a filter change also resets the page, and
+  // must not steal focus from its control), bring the results into view and
+  // move focus to them. Compares the shown page, so clamped URLs count too.
+  const shownQuery = useMemo(() => ({ ...query, page: current.page }), [query, current.page]);
+  const previousQuery = useRef(shownQuery);
   useEffect(() => {
-    if (previousPage.current === current.page) return;
-    previousPage.current = current.page;
+    const prev = previousQuery.current;
+    previousQuery.current = shownQuery;
+    if (!isPageOnlyChange(prev, shownQuery)) return;
     const el = resultsRef.current;
     if (el && el.getBoundingClientRect().top < 0) {
       el.scrollIntoView({ block: "start" });
     }
     el?.focus({ preventScroll: true });
-  }, [current.page]);
+  }, [shownQuery]);
 
   const closeDrawer = useCallback(() => setDrawerOpen(false), []);
   const filterCount = chips.length;
@@ -173,7 +177,12 @@ export function DirectoryView({ data, preset, params }: DirectoryViewProps) {
               </button>
             }
           />
-          <ActiveFilters chips={chips} onRemove={(patch) => update(patch)} onClearAll={clearAll} />
+          <ActiveFilters
+            chips={chips}
+            onRemove={(patch) => update(patch)}
+            onClearAll={clearAll}
+            fallbackFocusRef={resultsRef}
+          />
         </div>
 
         <div ref={resultsRef} tabIndex={-1} className="scroll-mt-24 pt-6 focus:outline-none">

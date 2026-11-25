@@ -40,6 +40,15 @@ export function urlQuery(query: DirectoryQuery, locked: LockedQuery | undefined)
   return out;
 }
 
+/**
+ * True when only the page differs between two queries (pagination), as
+ * opposed to a filter, sort or view change (which may also reset the page).
+ */
+export function isPageOnlyChange(prev: DirectoryQuery, next: DirectoryQuery): boolean {
+  if (prev.page === next.page) return false;
+  return serializeQuery({ ...prev, page: 1 }) === serializeQuery({ ...next, page: 1 });
+}
+
 /** Listing URL for a query on a preset route. */
 export function directoryHref(preset: DirectoryPreset, query: DirectoryQuery): string {
   const qs = serializeQuery(urlQuery(query, preset.locked));

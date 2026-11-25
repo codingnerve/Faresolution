@@ -1,6 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
+import { useEffect, useRef, type RefObject } from "react";
 import type { DirectoryLabels } from "@/lib/directory/data";
 import { companySizeLabel, deploymentLabel, labelFor, pricingModelLabel } from "@/lib/directory/labels";
 import type { DirectoryQuery } from "@/lib/directory/query";
@@ -69,26 +70,60 @@ export function activeChips(query: DirectoryQuery, labels: DirectoryLabels, lock
   return chips;
 }
 
+export type ChipFocusTarget = number | "clear-all" | "fallback";
+
+/**
+ * Where focus goes after the chip at `removedIndex` is removed and
+ * `remaining` chips are left: the chip that moved into its place, else
+ * "Clear all", else the fallback (the results), never `<body>`.
+ */
+export function chipFocusTarget(removedIndex: number, remaining: number): ChipFocusTarget {
+  if (remaining <= 0) return "fallback";
+  return removedIndex < remaining ? removedIndex : "clear-all";
+}
+
 /** Active filter chips with per-chip remove and "Clear all". Renders nothing without filters. */
 export function ActiveFilters({
   chips,
   onRemove,
   onClearAll,
+  fallbackFocusRef,
 }: {
   chips: Chip[];
   onRemove: (patch: QueryPatch) => void;
   onClearAll: () => void;
+  /** Focused when the last chip is removed or everything is cleared. */
+  fallbackFocusRef: RefObject<HTMLElement | null>;
 }) {
+  const listRef = useRef<HTMLUListElement>(null);
+  const clearRef = useRef<HTMLButtonElement>(null);
+  // Set on click; applied once the URL update has re-rendered the chips.
+  const pending = useRef<{ index: number; before: string } | null>(null);
+  const signature = chips.map((c) => c.key).join("|");
+
+  useEffect(() => {
+    const p = pending.current;
+    if (!p || p.before === signature) return;
+    pending.current = null;
+    const target = chipFocusTarget(p.index, chips.length);
+    if (target === "fallback") fallbackFocusRef.current?.focus({ preventScroll: true });
+    else if (target === "clear-all") clearRef.current?.focus();
+    else listRef.current?.querySelectorAll<HTMLButtonElement>("button")[target]?.focus();
+  }, [signature, chips.length, fallbackFocusRef]);
+
   if (chips.length === 0) return null;
   return (
     <div className="flex flex-wrap items-center gap-2">
       <h2 className="sr-only">Active filters</h2>
-      <ul className="contents">
-        {chips.map((chip) => (
-          <li key={chip.key}>
+      <ul ref={listRef} className="flex flex-wrap items-center gap-2">
+        {chips.map((chip, index) => (
+          <li key={chip.key} className="max-w-full">
             <button
               type="button"
-              onClick={() => onRemove(chip.remove)}
+              onClick={() => {
+                pending.current = { index, before: signature };
+                onRemove(chip.remove);
+              }}
               aria-label={`Remove filter: ${chip.label}`}
               className="inline-flex h-8 max-w-full items-center gap-1.5 rounded-md border border-blue/20 bg-blue-tint pr-2 pl-3 text-[0.8125rem] font-medium text-blue-ink hover:border-blue/40"
             >
@@ -99,8 +134,13 @@ export function ActiveFilters({
         ))}
       </ul>
       <button
+        ref={clearRef}
         type="button"
-        onClick={onClearAll}
+        onClick={() => {
+          // Every chip goes, so focus lands on the fallback.
+          pending.current = { index: chips.length, before: signature };
+          onClearAll();
+        }}
         className="ml-1 rounded-xs text-[0.8125rem] font-medium text-subtle underline decoration-line-strong underline-offset-4 hover:text-ink hover:decoration-ink"
       >
         Clear all

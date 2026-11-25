@@ -53,16 +53,26 @@ export function FilterPanel({
   const integrationName = new Map(labels.integrations.map((i) => [i.slug, i.name]));
 
   const categoryCount = new Map(facets.category.map((f) => [f.value, f.count]));
-  const categoryOptions: { value: string; label: string; child: boolean }[] = [];
-  for (const root of labels.categories.filter((c) => c.parentSlug === null)) {
-    const entries = [root, ...labels.categories.filter((c) => c.parentSlug === root.slug)];
-    for (const c of entries) {
-      const count = categoryCount.get(c.slug) ?? 0;
-      if (count > 0 || c.slug === query.category) {
-        categoryOptions.push({ value: c.slug, label: `${c.name} (${count})`, child: c.parentSlug !== null });
-      }
-    }
-  }
+  const shownCategory = (slug: string) => (categoryCount.get(slug) ?? 0) > 0 || slug === query.category;
+  const categoryOption = (slug: string, name: string) => (
+    <option key={slug} value={slug}>
+      {name} ({categoryCount.get(slug) ?? 0})
+    </option>
+  );
+  // A root with children becomes an <optgroup> (the root itself is its first
+  // option, "All <root>"); a root without children is a plain option.
+  const categoryTree = labels.categories
+    .filter((c) => c.parentSlug === null && shownCategory(c.slug))
+    .map((root) => {
+      const children = labels.categories.filter((c) => c.parentSlug === root.slug && shownCategory(c.slug));
+      if (children.length === 0) return categoryOption(root.slug, root.name);
+      return (
+        <optgroup key={root.slug} label={root.name}>
+          {categoryOption(root.slug, `All ${root.name}`)}
+          {children.map((c) => categoryOption(c.slug, c.name))}
+        </optgroup>
+      );
+    });
   const unknownCategory = query.category !== undefined && !categoryName.has(query.category);
 
   return (
@@ -78,11 +88,7 @@ export function FilterPanel({
         >
           <option value="">All categories</option>
           {unknownCategory && <option value={query.category}>Unknown category (0)</option>}
-          {categoryOptions.map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.child ? `   ${o.label}` : o.label}
-            </option>
-          ))}
+          {categoryTree}
         </Select>
       </Section>
 

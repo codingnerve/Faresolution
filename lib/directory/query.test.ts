@@ -434,13 +434,35 @@ describe("facetCounts", () => {
     }
   });
 
-  it("omits zero counts but keeps a selected value", () => {
-    const counts = facetCounts(products, q({ category: "no-such-category" }), ctx);
+  it("keeps a selected value even when nothing matches it", () => {
+    const counts = facetCounts(products, q({ category: "no-such-category", feature: ["no-such-feature"] }), ctx);
     expect(counts.category.find((f) => f.value === "no-such-category")).toEqual({ value: "no-such-category", count: 0 });
-    expect(counts.priceModel.every((f) => f.count === 0)).toBe(true);
-    for (const key of ["companySize", "deployment", "industry", "feature", "integration"] as const) {
+    expect(counts.feature).toContainEqual({ value: "no-such-feature", count: 0 });
+  });
+
+  it("omits values with no matching products under the other filters", () => {
+    const query = q({ freePlan: true });
+    const counts = facetCounts(products, query, ctx);
+    const matching = applyQuery(products, query, ctx);
+    expect(matching.length).toBeGreaterThan(0);
+    const valuesOf: Record<"companySize" | "deployment" | "industry" | "feature" | "integration", (p: Product) => string[]> = {
+      companySize: (p) => p.companySizes,
+      deployment: (p) => p.deployment,
+      industry: (p) => p.industrySlugs,
+      feature: (p) => p.featureSlugs,
+      integration: (p) => p.integrationSlugs,
+    };
+    let omitted = 0;
+    for (const [key, values] of Object.entries(valuesOf) as [keyof typeof valuesOf, (p: Product) => string[]][]) {
+      expect(counts[key].length).toBeGreaterThan(0);
       expect(counts[key].every((f) => f.count > 0)).toBe(true);
+      const present = new Set(matching.flatMap(values));
+      const listed = new Set(counts[key].map((f) => f.value));
+      expect(listed).toEqual(present);
+      omitted += new Set(products.flatMap(values).filter((v) => !present.has(v))).size;
     }
+    // The filter really excludes some values, so the omission is exercised.
+    expect(omitted).toBeGreaterThan(0);
   });
 
   it("sorts values by count, then value", () => {

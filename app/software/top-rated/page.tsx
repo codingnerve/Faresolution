@@ -10,7 +10,7 @@ import { applyQuery, DEFAULT_QUERY } from "@/lib/directory/query";
 
 const title = "Top rated software";
 const description =
-  "Business software ranked by verified user ratings. Ratings will appear here once Faresolution opens review collection.";
+  "This page will rank business software by ratings from verified reviews once review collection opens. No products are rated yet.";
 
 export const metadata: Metadata = {
   title,

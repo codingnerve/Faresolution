@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { directoryHref, effectiveQuery, urlQuery } from "./preset";
+import { directoryHref, effectiveQuery, isPageOnlyChange, urlQuery } from "./preset";
 import { DEFAULT_QUERY, parseQuery, type DirectoryQuery } from "./query";
 
 const q = (o: Partial<DirectoryQuery> = {}): DirectoryQuery => ({ ...DEFAULT_QUERY, ...o });
@@ -20,6 +20,25 @@ describe("effectiveQuery", () => {
     expect(query.sort).toBe("relevance");
     expect(query.minRating).toBeUndefined();
     expect(effectiveQuery(parsed, undefined, { ratingsAvailable: true })).toMatchObject({ sort: "rating", minRating: 4 });
+  });
+});
+
+describe("isPageOnlyChange", () => {
+  it("is true when only the page changes", () => {
+    expect(isPageOnlyChange(q({ page: 1, freePlan: true }), q({ page: 2, freePlan: true }))).toBe(true);
+    expect(isPageOnlyChange(q({ page: 3, feature: ["a", "b"] }), q({ page: 2, feature: ["a", "b"] }))).toBe(true);
+  });
+
+  it("is false when a filter, sort or view change also resets the page", () => {
+    expect(isPageOnlyChange(q({ page: 2 }), q({ page: 1, freePlan: true }))).toBe(false);
+    expect(isPageOnlyChange(q({ page: 2 }), q({ page: 1, sort: "newest" }))).toBe(false);
+    expect(isPageOnlyChange(q({ page: 2, feature: ["a"] }), q({ page: 1 }))).toBe(false);
+    expect(isPageOnlyChange(q({ page: 2 }), q({ page: 1, q: "crm" }))).toBe(false);
+  });
+
+  it("is false when nothing changes or only the view changes", () => {
+    expect(isPageOnlyChange(q({ page: 2 }), q({ page: 2 }))).toBe(false);
+    expect(isPageOnlyChange(q({ page: 2 }), q({ page: 2, view: "list" }))).toBe(false);
   });
 });
 

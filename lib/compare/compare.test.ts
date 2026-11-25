@@ -57,6 +57,14 @@ describe("buildCompareSlug", () => {
     expect(parseCompareSlug(buildCompareSlug(["xero", "quickbooks-online"]))).toEqual(["quickbooks-online", "xero"]);
   });
 
+  it("round-trips real product pairs to the sorted pair", () => {
+    const sample = products.slice(0, 12).map((p) => p.slug);
+    const pairs: Array<[string, string]> = [];
+    for (let i = 0; i < sample.length; i++) for (let j = i + 1; j < sample.length; j++) pairs.push([sample[i], sample[j]]);
+    for (const { slugs } of popularComparisons) for (let i = 1; i < slugs.length; i++) pairs.push([slugs[i], slugs[0]]);
+    for (const [a, b] of pairs) expect(parseCompareSlug(buildCompareSlug([a, b])), `${a},${b}`).toEqual([a, b].sort());
+  });
+
   it("matches every popular comparison (those are listed in canonical order)", () => {
     for (const { slugs } of popularComparisons) expect(parseCompareSlug(buildCompareSlug(slugs))).toEqual(slugs);
   });

@@ -58,9 +58,11 @@ export function CompareTable({ columns, groups }: CompareTableProps) {
     .filter((g) => g.rows.length > 0);
 
   // Same column widths for the table and the sticky bar, so they line up.
+  // Column minimums are small enough on phones that two products fit a 375px
+  // screen; three or four scroll inside the table's own box.
   const widths = {
     "--cols": n,
-    minWidth: "calc(var(--label-w) + var(--cols) * 10.5rem)",
+    minWidth: "calc(var(--label-w) + var(--cols) * var(--col-min))",
   } as CSSProperties;
   const gridColumns = { gridTemplateColumns: `var(--label-w) repeat(${n}, minmax(0, 1fr))` };
 
@@ -91,7 +93,7 @@ export function CompareTable({ columns, groups }: CompareTableProps) {
   }
 
   return (
-    <div className="[--label-w:7.5rem] sm:[--label-w:11rem] lg:[--label-w:13rem]">
+    <div className="[--col-min:6.5rem] [--label-w:7rem] sm:[--col-min:10.5rem] sm:[--label-w:11rem] lg:[--label-w:13rem]">
       <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
         <label htmlFor={switchId} className="inline-flex cursor-pointer items-center gap-3 text-sm font-medium text-navy">
           <input

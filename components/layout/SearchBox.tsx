@@ -324,9 +324,12 @@ export function SearchBox({
       {open && (
         <div
           className={cn(
+            // Inline dropdown: z-[35] sits above the compare tray (z-30) but
+            // below the sticky header and its menus (z-40, which a tie would
+            // lose to this later element) and the portalled drawers (z-50).
             overlay
               ? "mt-2 border-t border-line pt-3"
-              : "absolute inset-x-0 top-full z-30 mt-2 rounded-lg border border-line bg-surface p-2 shadow-overlay",
+              : "absolute inset-x-0 top-full z-[35] mt-2 rounded-lg border border-line bg-surface p-2 shadow-overlay",
           )}
         >
           <div

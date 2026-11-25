@@ -97,7 +97,8 @@ describe("slug uniqueness", () => {
       ...articles,
     ];
     for (const { slug } of all) expect(slug).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);
-    for (const p of products) expect(p.slug).not.toContain("-vs-");
+    // Compare URLs join slugs with "-vs-"; no "vs" word anywhere in a slug keeps parsing unambiguous.
+    for (const p of products) expect(p.slug).not.toMatch(/(^|-)vs(-|$)/);
   });
 });
 

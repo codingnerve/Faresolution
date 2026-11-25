@@ -493,7 +493,7 @@ export const products: Product[] = [
       "Templates for common workflows.",
     ],
     pros: [
-      "Very fast to learn; most people are productive on day one.",
+      "Very fast to learn.",
       "Works well for visual, stage-based workflows.",
       "Generous free plan for individuals.",
     ],
@@ -515,7 +515,7 @@ export const products: Product[] = [
   },
   {
     slug: "monday-com",
-    name: "Monday.com",
+    name: "monday.com",
     vendorSlug: "monday-com",
     tagline: "A configurable work OS for projects, operations and CRM.",
     description:
@@ -616,7 +616,7 @@ export const products: Product[] = [
       plans: [
         { name: "Free Forever", price: null, summary: "Core tasks, docs and views with storage and usage limits." },
         { name: "Unlimited", price: null, summary: "Removes most storage limits and adds more integrations and dashboards." },
-        { name: "Business", price: null, summary: "Adds advanced automation, time tracking and team permissions." },
+        { name: "Business", price: null, summary: "Adds advanced automation, advanced time tracking and reporting, and team permissions." },
         { name: "Enterprise", price: null, summary: "Adds enterprise security, admin and support." },
       ],
     },
@@ -688,7 +688,7 @@ export const products: Product[] = [
         { name: "Enterprise", price: null, summary: "Multi-instance, security and analytics features for large organisations." },
       ],
     },
-    deployment: ["cloud", "on-premise"],
+    deployment: ["cloud"],
     platforms: ["web", "ios", "android", "api"],
     companySizes: ["small", "mid", "enterprise"],
     highlights: [
@@ -698,7 +698,7 @@ export const products: Product[] = [
       "Automation rules and a JQL query language for filters and reports.",
     ],
     pros: [
-      "Industry standard for agile software teams.",
+      "Widely used by agile software teams.",
       "Very configurable workflows and permissions.",
       "Large marketplace of apps.",
     ],
@@ -708,7 +708,7 @@ export const products: Product[] = [
       "Advanced planning features need higher tiers.",
     ],
     faq: [
-      { q: "Can Jira be self-hosted?", a: "Yes. Besides Jira Cloud, Atlassian offers a Data Center edition for organisations that need to run it on their own infrastructure." },
+      { q: "Can Jira be self-hosted?", a: "Atlassian's self-managed Data Center edition has been announced for retirement and is no longer offered to new customers; new deployments use Jira Cloud. Check Atlassian's current Data Center policy." },
       { q: "Is Jira only for developers?", a: "No, though it is designed with software teams in mind. Business, IT and operations teams also use Jira with simpler templates." },
       { q: "How does Jira work with Confluence?", a: "Both are Atlassian products, so Jira issues can be embedded and linked in Confluence pages, and requirements or release notes in Confluence can reference Jira work." },
     ],
@@ -870,7 +870,7 @@ export const products: Product[] = [
       note: CHECK_PRICING,
       plans: [
         { name: "Basic", price: null, summary: "Free meetings with a time limit on group calls." },
-        { name: "Pro", price: null, summary: "Longer meetings, cloud recording and more participants." },
+        { name: "Pro", price: null, summary: "Longer group meetings and cloud recording." },
         { name: "Business", price: null, summary: "Adds admin features, SSO and managed domains." },
         { name: "Enterprise", price: null, summary: "Larger meetings and enterprise administration." },
       ],
@@ -1005,7 +1005,7 @@ export const products: Product[] = [
         { name: "Enterprise", price: null, summary: "For large organisations needing scale and governance." },
       ],
     },
-    deployment: ["cloud", "on-premise"],
+    deployment: ["cloud"],
     platforms: ["web", "ios", "android", "api"],
     companySizes: ["small", "mid", "enterprise"],
     highlights: [
@@ -1017,7 +1017,6 @@ export const products: Product[] = [
     pros: [
       "Excellent pairing with Jira for engineering teams.",
       "Mature permission model for larger organisations.",
-      "Self-managed Data Center option available.",
     ],
     cons: [
       "Editor and navigation can feel heavier than newer docs tools.",
@@ -1026,7 +1025,7 @@ export const products: Product[] = [
     ],
     faq: [
       { q: "Is Confluence free?", a: "Confluence has a free plan for small teams up to a user limit. Paid plans add permissions, storage and admin features." },
-      { q: "Can Confluence be self-hosted?", a: "Yes. Atlassian offers Confluence Data Center for self-managed deployments, alongside Confluence Cloud." },
+      { q: "Can Confluence be self-hosted?", a: "Atlassian's self-managed Data Center edition has been announced for retirement and is no longer offered to new customers; new deployments use Confluence Cloud. Check Atlassian's current Data Center policy." },
       { q: "What is the difference between Confluence and Jira?", a: "Confluence is for documents and knowledge; Jira is for tracking work items. They are designed to be used together." },
     ],
     ...unrated,
@@ -1192,7 +1191,7 @@ export const products: Product[] = [
       "Natural-language assistance for building automations.",
     ],
     pros: [
-      "Widest app coverage of the mainstream automation tools.",
+      "Very large catalogue of prebuilt app connectors.",
       "Approachable for non-technical users.",
       "Free plan for trying simple automations.",
     ],
@@ -1732,7 +1731,7 @@ export const products: Product[] = [
     ],
     cons: [
       "More setup than simple stock-tracking tools.",
-      "Pricing not published in a way Faresolution has verified.",
+      "Add-on modules and channel connections can raise the total cost.",
       "Choosing between Core and Omni needs care.",
     ],
     faq: [
@@ -1934,7 +1933,7 @@ export const products: Product[] = [
     description:
       "Greenhouse is an applicant-tracking system built around structured hiring: defining interview plans and scorecards for each role so candidates are evaluated consistently. It covers job posting, sourcing, interview scheduling, offers and onboarding, with reporting for recruiting teams.",
     website: "https://www.greenhouse.com",
-    categorySlugs: ["recruiting-software"],
+    categorySlugs: ["recruiting-software", "hr-software"],
     primaryCategory: "recruiting-software",
     industrySlugs: ["professional-services", "finance", "healthcare"],
     featureSlugs: ["applicant-tracking", "workflow-automation", "custom-reports", "single-sign-on", "api-access"],
@@ -1985,7 +1984,7 @@ export const products: Product[] = [
     description:
       "Workable is recruiting software that helps companies post jobs to many boards, source candidates, collaborate on evaluations and schedule interviews. It is popular with small and mid-sized companies for its quick setup, and offers additional HR features alongside its applicant tracking.",
     website: "https://www.workable.com",
-    categorySlugs: ["recruiting-software"],
+    categorySlugs: ["recruiting-software", "hr-software"],
     primaryCategory: "recruiting-software",
     industrySlugs: ["hospitality", "retail", "professional-services"],
     featureSlugs: ["applicant-tracking", "employee-records", "time-off-management", "mobile-app", "api-access", "ai-assistant"],
@@ -2807,7 +2806,7 @@ export const products: Product[] = [
     ],
     pros: [
       "Free for most websites.",
-      "Industry-standard for marketing analytics.",
+      "Widely used for marketing analytics.",
       "Deep integration with Google's ad products.",
     ],
     cons: [
@@ -3562,7 +3561,7 @@ export const products: Product[] = [
     integrationSlugs: ["github", "slack", "okta"],
     pricing: {
       model: "freemium",
-      freePlan: null,
+      freePlan: true,
       freeTrial: null,
       startingPrice: null,
       note: "The Terraform CLI is free to download and use; HCP Terraform and Terraform Enterprise are commercial offerings. " + CHECK_PRICING,

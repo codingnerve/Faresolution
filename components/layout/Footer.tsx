@@ -44,6 +44,7 @@ const exploreLinks: NavLink[] = [
   { label: "Recently added", href: "/software/new" },
   { label: "Free software", href: "/software/free" },
   { label: "Top rated", href: "/software/top-rated" },
+  { label: "Reviews", href: "/reviews" },
   { label: "All categories", href: allCategoriesLink.href },
 ];
 
@@ -58,6 +59,7 @@ const vendorLinks: NavLink[] = [
 const companyLinks: NavLink[] = [
   { label: "About us", href: "/about" },
   { label: "Contact", href: "/contact" },
+  { label: "Review guidelines", href: "/review-guidelines" },
   { label: "Privacy policy", href: "/privacy" },
   { label: "Terms", href: "/terms" },
 ];

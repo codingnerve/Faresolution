@@ -188,6 +188,49 @@ describe("isKnownPath: alternatives", () => {
   });
 });
 
+describe("isKnownPath: review drafts", () => {
+  it("is true for every kind of known product slug", () => {
+    expect(isKnownPath("/reviews/write/hubspot-crm")).toBe(true);
+    expect(isKnownPath("/reviews/write/jira")).toBe(true);
+    expect(isKnownPath("/reviews/write/terraform")).toBe(true);
+  });
+
+  it("is false for an unknown product, and a category slug is not a product", () => {
+    expect(isKnownPath("/reviews/write/nope")).toBe(false);
+    expect(isKnownPath("/reviews/write/crm-software")).toBe(false);
+  });
+
+  it("is false for extra segments, including a product tab", () => {
+    expect(isKnownPath("/reviews/write/hubspot-crm/x")).toBe(false);
+    expect(isKnownPath("/reviews/write/hubspot-crm/reviews")).toBe(false);
+    expect(isKnownPath("/reviews/write/hubspot-crm//")).toBe(false);
+  });
+
+  it("never resolves prototype keys", () => {
+    for (const key of ["__proto__", "constructor", "toString", "hasOwnProperty"]) {
+      expect(isKnownPath(`/reviews/write/${key}`), key).toBe(false);
+    }
+  });
+
+  it("is false for malformed escapes and encoded slashes, and case sensitive", () => {
+    expect(isKnownPath("/reviews/write/%E0%A4%A")).toBe(false);
+    expect(isKnownPath("/reviews/write/hubspot-crm%2Fx")).toBe(false);
+    expect(isKnownPath("/reviews/write/HubSpot-CRM")).toBe(false);
+  });
+
+  it("decodes escapes and allows one trailing slash, like the other routes", () => {
+    expect(isKnownPath("/reviews/write/hubspot%2Dcrm")).toBe(true);
+    expect(isKnownPath("/reviews/write/hubspot-crm/")).toBe(true);
+  });
+
+  it("leaves the other review pages unguarded and has no canonical redirect", () => {
+    for (const path of ["/reviews", "/reviews/", "/reviews/latest", "/reviews/helpful", "/reviews/write", "/reviews/write/", "/review-guidelines", "/review-verification"]) {
+      expect(isKnownPath(path), path).toBeNull();
+    }
+    expect(canonicalPath("/reviews/write/hubspot-crm")).toBeNull();
+  });
+});
+
 describe("isKnownPath: unguarded paths", () => {
   it("is null when no guard applies", () => {
     for (const path of ["/", "/software", "/categories", "/categories/", "/products", "/products/", "/software/free", "/unknown/thing", "/compare", "/compare/"]) {

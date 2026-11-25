@@ -31,7 +31,17 @@ function normalise(text: string): string {
  * Every link is in the server-rendered HTML; typing narrows the list by product,
  * vendor or category name (plain substring match).
  */
-export function AlternativesFinder({ groups }: { groups: FinderGroup[] }) {
+export function AlternativesFinder({
+  groups,
+  hrefBase = "/alternatives/",
+  linkSuffix = " alternatives",
+}: {
+  groups: FinderGroup[];
+  /** Each product links to `hrefBase + slug`; also used to start a review draft (`/reviews/write/`). */
+  hrefBase?: string;
+  /** Appended to the product name in each link (empty for a plain name). */
+  linkSuffix?: string;
+}) {
   const [query, setQuery] = useState("");
   const inputId = useId();
   const statusId = useId();
@@ -100,11 +110,12 @@ export function AlternativesFinder({ groups }: { groups: FinderGroup[] }) {
               <ul className="divide-y divide-line">
                 {group.products.map((p) => (
                   <li key={p.slug}>
-                    <Link href={`/alternatives/${p.slug}`} className="group flex items-center gap-3 rounded-xs py-2.5">
+                    <Link href={`${hrefBase}${p.slug}`} className="group flex items-center gap-3 rounded-xs py-2.5">
                       <LogoMark name={p.name} color={p.brandColor} size={28} className="shrink-0" />
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-[0.9375rem] leading-5 font-medium text-ink group-hover:text-blue-ink">
-                          {p.name} alternatives
+                          {p.name}
+                          {linkSuffix}
                         </span>
                         {p.vendorName && <span className="type-meta block truncate">by {p.vendorName}</span>}
                       </span>

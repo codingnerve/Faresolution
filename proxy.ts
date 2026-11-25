@@ -30,5 +30,6 @@ export const config = {
     "/products/:slug/:tab",
     "/compare/:slug",
     "/alternatives/:product",
+    "/reviews/write/:product",
   ],
 };

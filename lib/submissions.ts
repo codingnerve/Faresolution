@@ -91,3 +91,21 @@ export function listSubmissions(kind?: SubmissionKind): Submission[] {
   const all = [...persisted, ...memory.filter((s) => !seen.has(s.id))];
   return kind ? all.filter((s) => s.kind === kind) : all;
 }
+
+/**
+ * Removes one entry (for example a review draft the visitor chose to clear).
+ * Returns true when the entry is no longer stored, false when it could not be
+ * removed from storage (the page should then say so). Never throws.
+ */
+export function removeSubmission(id: string): boolean {
+  const index = memory.findIndex((entry) => entry.id === id);
+  if (index !== -1) memory.splice(index, 1);
+  const persisted = readPersisted();
+  if (persisted.some((entry) => entry.id === id)) {
+    writeJson(
+      SUBMISSIONS_STORAGE_KEY,
+      persisted.filter((entry) => entry.id !== id),
+    );
+  }
+  return !listSubmissions().some((entry) => entry.id === id);
+}

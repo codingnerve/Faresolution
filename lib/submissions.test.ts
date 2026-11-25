@@ -184,3 +184,53 @@ describe("saveSubmission", () => {
     expect(listSubmissions()[0].payload).toEqual({ email: "person@example.com" });
   });
 });
+
+describe("removeSubmission", () => {
+  it("removes one entry from storage and memory, keeping the others", async () => {
+    const storage = createStorage();
+    vi.stubGlobal("localStorage", storage);
+    const { saveSubmission, removeSubmission, listSubmissions, SUBMISSIONS_STORAGE_KEY } = await load();
+
+    const a = saveSubmission("review-draft", { product: "hubspot-crm" });
+    const b = saveSubmission("newsletter", { email: "a@example.com" });
+
+    expect(removeSubmission(a.id)).toBe(true);
+    expect(listSubmissions().map((s) => s.id)).toEqual([b.id]);
+    expect(JSON.parse(storage.raw.get(SUBMISSIONS_STORAGE_KEY)!).map((s: { id: string }) => s.id)).toEqual([b.id]);
+  });
+
+  it("is a harmless no-op for an unknown id", async () => {
+    vi.stubGlobal("localStorage", createStorage());
+    const { saveSubmission, removeSubmission, listSubmissions } = await load();
+
+    const a = saveSubmission("claim", { product: "x" });
+    expect(removeSubmission("does-not-exist")).toBe(true);
+    expect(listSubmissions().map((s) => s.id)).toEqual([a.id]);
+  });
+
+  it("works in memory when storage is missing", async () => {
+    vi.stubGlobal("localStorage", undefined);
+    const { saveSubmission, removeSubmission, listSubmissions } = await load();
+
+    const a = saveSubmission("review-draft", { product: "hubspot-crm" });
+    expect(removeSubmission(a.id)).toBe(true);
+    expect(listSubmissions()).toEqual([]);
+  });
+
+  it("reports false instead of throwing when the entry cannot be removed from storage", async () => {
+    const storage = createStorage();
+    vi.stubGlobal("localStorage", storage);
+    const { saveSubmission, removeSubmission, listSubmissions } = await load();
+
+    const a = saveSubmission("review-draft", { product: "hubspot-crm" });
+    storage.setItem.mockImplementation(() => {
+      throw new DOMException("Quota exceeded", "QuotaExceededError");
+    });
+    let removed: boolean | undefined;
+    expect(() => {
+      removed = removeSubmission(a.id);
+    }).not.toThrow();
+    expect(removed).toBe(false);
+    expect(listSubmissions().map((s) => s.id)).toEqual([a.id]);
+  });
+});

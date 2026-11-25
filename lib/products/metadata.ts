@@ -9,7 +9,7 @@ function copy(profile: ProductProfile, segment: ProductTabSegment | null): { tit
   const { product, vendor, primaryCategory } = profile;
   const name = product.name;
   const by = vendor ? ` by ${vendor.name}` : "";
-  const inCategory = primaryCategory ? ` in ${primaryCategory.name}` : "";
+  const listedUnder = primaryCategory ? ` (listed under ${primaryCategory.name})` : "";
   switch (segment) {
     case null:
       return {
@@ -34,7 +34,7 @@ function copy(profile: ProductProfile, segment: ProductTabSegment | null): { tit
     case "alternatives":
       return {
         title: `${name} Alternatives`,
-        description: `Products similar to ${name}${inCategory}, matched on categories, features, pricing model, industries and deployment.`,
+        description: `Products similar to ${name}${listedUnder}, matched on categories, features, pricing model, industries and deployment.`,
       };
     case "integrations":
       return {

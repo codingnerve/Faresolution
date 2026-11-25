@@ -70,7 +70,9 @@ export default async function AlternativesIndexPage() {
             </h2>
             <p className="type-body mt-3 text-subtle">
               Matches are scored from the facts in each listing. Anything we do not know is left out of the score rather
-              than counted against a product. We do not use ratings or popularity: no reviews have been collected yet.
+              than counted against a product. A product is listed only if it shares a category with the one you chose, or
+              several distinctive features that few other products have. We do not use ratings or popularity: no reviews
+              have been collected yet.
             </p>
           </div>
           <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-2">

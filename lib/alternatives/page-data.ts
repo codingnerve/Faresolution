@@ -46,18 +46,19 @@ async function loadAlternativesPage(slug: string): Promise<AlternativesPageData 
     buildAlternativeLabels(categories, industries),
   );
   const category = categories.find((c) => c.slug === product.primaryCategory) ?? null;
-  const inCategory = category ? ` in ${category.name}` : "";
+  // Not "similar products in <category>": many alternatives share features, not the category.
+  const listedUnder = category ? ` (listed under ${category.name})` : "";
   return {
     product,
     vendor: vendors.find((v) => v.slug === product.vendorSlug) ?? null,
     category,
     alternatives,
     vendorNames: new Map(vendors.map((v) => [v.slug, v.name])),
-    title: `Top ${product.name} alternatives`,
+    title: `Alternatives to ${product.name}`,
     description:
       alternatives.length > 0
-        ? `${alternatives.length} products similar to ${product.name}${inCategory}, listed by how much they share with it: categories, features, pricing model, industries and deployment. Not ranked by ratings or popularity.`
-        : `Products similar to ${product.name}${inCategory} will be listed here when we have matches.`,
+        ? `${alternatives.length === 1 ? "1 product" : `${alternatives.length} products`} similar to ${product.name}${listedUnder}, listed by how much they share with it: categories, distinctive features, pricing model, industries and deployment. Not ranked by ratings or popularity.`
+        : `Products similar to ${product.name}${listedUnder} will be listed here when we have matches.`,
   };
 }
 

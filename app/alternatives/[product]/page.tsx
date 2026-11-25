@@ -57,8 +57,8 @@ export default async function AlternativesPage({ params }: PageProps<"/alternati
           <h1 className="type-h1 mt-2 max-w-3xl text-navy">Alternatives to {product.name}</h1>
           <p className="type-body mt-3 max-w-2xl text-subtle">
             Products similar to {product.name}
-            {category ? ` in ${category.name}` : ""}, matched on shared categories, features, pricing model, industries
-            and deployment. They are listed by how much they have in common with {product.name}, most similar first.
+            {category ? ` (listed under ${category.name})` : ""}, matched on shared categories, distinctive features,
+            pricing model, industries and deployment. They are listed by how much they have in common with {product.name}, most similar first.
             This is not a ranking by ratings or popularity, and no ratings or reviews have been collected yet.
           </p>
 

@@ -60,6 +60,7 @@ export function AlternativeCard({
         <div className="mt-auto flex flex-col items-start gap-3">
           <Link
             href={compareHref([source.slug, product.slug])}
+            aria-label={`Compare ${product.name} with ${source.name}`}
             className={buttonClasses({ variant: "primary", size: "sm" })}
           >
             Compare with {source.name}

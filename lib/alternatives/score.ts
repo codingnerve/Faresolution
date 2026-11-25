@@ -11,17 +11,32 @@
  * ordering, and a fact we do not know (`null`) adds nothing and costs nothing.
  *
  * Relevance gate: a product is only returned when it shares a category with
- * the source or at least `MIN_SHARED_FEATURES` features. Pricing model, free
- * plan, industry and deployment only rank products that already pass; two
- * unrelated tools that both happen to be cloud-based are not alternatives.
+ * the source or at least `MIN_SHARED_DISTINCTIVE_FEATURES` distinctive
+ * features. A feature is distinctive when few products have it (see
+ * `distinctiveLimit`): near-universal ones such as API access say nothing about
+ * whether two products do the same job. Pricing model, free plan, industry and
+ * deployment only rank products that already pass; two unrelated tools that
+ * both happen to be cloud-based are not alternatives.
  */
 import type { Deployment, Product } from "@/lib/data/types";
 import { deploymentLabel, pricingModelLabel } from "@/lib/directory/labels";
 
 export const DEFAULT_ALTERNATIVES_LIMIT = 8;
 
-/** Shared features needed on their own (no shared category) to count as an alternative. */
-export const MIN_SHARED_FEATURES = 6;
+/** Shared distinctive features needed on their own (no shared category) to count as an alternative. */
+export const MIN_SHARED_DISTINCTIVE_FEATURES = 3;
+
+/** A feature is distinctive when at most this share of all products have it. */
+export const DISTINCTIVE_FEATURE_SHARE = 0.2;
+
+/**
+ * Most products that may have a feature for it to count as distinctive: 20% of
+ * the catalogue, but never fewer than two, so a feature that exactly two
+ * products share still counts in a tiny catalogue.
+ */
+export function distinctiveLimit(productCount: number): number {
+  return Math.max(2, Math.floor(productCount * DISTINCTIVE_FEATURE_SHARE));
+}
 
 const WEIGHT = {
   primaryCategory: 40,
@@ -29,6 +44,8 @@ const WEIGHT = {
   sharedCategoryCap: 3,
   sharedFeature: 3,
   sharedFeatureCap: 10,
+  /** A shared feature that many products have: worth a little, never enough to qualify. */
+  sharedCommonFeature: 1,
   sharedIndustry: 4,
   sharedIndustryCap: 3,
   pricingModel: 6,
@@ -64,8 +81,25 @@ function names(slugs: readonly string[], labels: ReadonlyMap<string, string> | u
   return slugs.map((slug) => labels?.get(slug)).filter((name): name is string => Boolean(name));
 }
 
+/** "A", "A, B" or "A, B and N more" for the names of `total` things; null when a name is missing. */
+function listWithMore(names: readonly string[], total: number): string | null {
+  if (names.length === 0 || names.length !== total) return null;
+  const listed = names.slice(0, 2).join(", ");
+  return total > 2 ? `${listed} and ${total - 2} more` : listed;
+}
+
 function categoriesOf(product: Product): string[] {
   return product.primaryCategory ? [product.primaryCategory, ...product.categorySlugs] : product.categorySlugs;
+}
+
+/** Features that at most `distinctiveLimit` of the given (distinct) products have. */
+function distinctiveFeatures(products: readonly Product[]): Set<string> {
+  const counts = new Map<string, number>();
+  for (const p of products) {
+    for (const slug of new Set(p.featureSlugs)) counts.set(slug, (counts.get(slug) ?? 0) + 1);
+  }
+  const limit = distinctiveLimit(products.length);
+  return new Set([...counts].filter(([, count]) => count <= limit).map(([slug]) => slug));
 }
 
 function compareAlternatives(a: Alternative, b: Alternative): number {
@@ -76,16 +110,23 @@ function compareAlternatives(a: Alternative, b: Alternative): number {
   );
 }
 
-function scoreOne(product: Product, other: Product, labels: AlternativeLabels | undefined): Alternative | null {
+function scoreOne(
+  product: Product,
+  other: Product,
+  distinctive: ReadonlySet<string>,
+  labels: AlternativeLabels | undefined,
+): Alternative | null {
   const reasons: string[] = [];
   let score = 0;
 
   const samePrimary = Boolean(product.primaryCategory) && other.primaryCategory === product.primaryCategory;
   const sharedCategories = shared(categoriesOf(product), categoriesOf(other));
   const sharedFeatures = shared(product.featureSlugs, other.featureSlugs);
+  const sharedDistinctive = sharedFeatures.filter((slug) => distinctive.has(slug));
+  const sharedCommon = sharedFeatures.length - sharedDistinctive.length;
 
-  // Relevance gate: no common category and few common features means not an alternative.
-  if (sharedCategories.length === 0 && sharedFeatures.length < MIN_SHARED_FEATURES) return null;
+  // Relevance gate: no common category and too few distinctive features in common means not an alternative.
+  if (sharedCategories.length === 0 && sharedDistinctive.length < MIN_SHARED_DISTINCTIVE_FEATURES) return null;
 
   if (samePrimary) {
     score += WEIGHT.primaryCategory;
@@ -96,28 +137,27 @@ function scoreOne(product: Product, other: Product, labels: AlternativeLabels | 
   const countedCategories = Math.min(sharedCategories.length, WEIGHT.sharedCategoryCap);
   score += countedCategories * WEIGHT.sharedCategory;
   if (otherCategories.length > 0) {
-    const categoryNames = names(otherCategories, labels?.categories);
-    const listed = categoryNames.slice(0, 2).join(", ");
+    const listed = listWithMore(names(otherCategories, labels?.categories), otherCategories.length);
     if (samePrimary) {
       reasons.push(
-        listed && categoryNames.length === otherCategories.length
-          ? `Also shares: ${listed}`
-          : `${plural(otherCategories.length, "other shared category", "other shared categories")}`,
+        listed ? `Also shares: ${listed}` : plural(otherCategories.length, "other shared category", "other shared categories"),
       );
     } else {
       reasons.push(
         otherCategories.length === 1 && listed
           ? `Shared category: ${listed}`
-          : listed && categoryNames.length === otherCategories.length
-            ? `Shared categories: ${listed}${otherCategories.length > 2 ? ` and ${otherCategories.length - 2} more` : ""}`
+          : listed
+            ? `Shared categories: ${listed}`
             : plural(otherCategories.length, "shared category", "shared categories"),
       );
     }
   }
 
-  if (sharedFeatures.length > 0) {
-    score += Math.min(sharedFeatures.length, WEIGHT.sharedFeatureCap) * WEIGHT.sharedFeature;
-    reasons.push(plural(sharedFeatures.length, "shared feature", "shared features"));
+  // Only distinctive features are named in the reasons, so the count is not padded by ones nearly everything has.
+  score += Math.min(sharedDistinctive.length, WEIGHT.sharedFeatureCap) * WEIGHT.sharedFeature;
+  score += Math.min(sharedCommon, WEIGHT.sharedFeatureCap) * WEIGHT.sharedCommonFeature;
+  if (sharedDistinctive.length > 0) {
+    reasons.push(plural(sharedDistinctive.length, "shared feature", "shared features"));
   }
 
   const sharedIndustries = shared(product.industrySlugs, other.industrySlugs);
@@ -156,7 +196,7 @@ function scoreOne(product: Product, other: Product, labels: AlternativeLabels | 
  * includes `product` itself (matched by slug), never repeats a product, and
  * breaks score ties by name then slug so the result does not depend on the
  * order of `all`. A product with nothing relevant in common is left out, so
- * the list can be shorter than `limit` or empty.
+ * the list can be shorter than `limit` or empty. `limit` may be `Infinity`.
  */
 export function getAlternatives(
   product: Product,
@@ -164,14 +204,18 @@ export function getAlternatives(
   limit: number = DEFAULT_ALTERNATIVES_LIMIT,
   labels?: AlternativeLabels,
 ): Alternative[] {
-  if (!Number.isFinite(limit) && limit !== Infinity) return [];
-  if (limit <= 0) return [];
+  if (Number.isNaN(limit) || limit <= 0) return [];
   const seen = new Set<string>([product.slug]);
-  const scored: Alternative[] = [];
+  const others: Product[] = [];
   for (const other of all) {
     if (seen.has(other.slug)) continue;
     seen.add(other.slug);
-    const alternative = scoreOne(product, other, labels);
+    others.push(other);
+  }
+  const distinctive = distinctiveFeatures([product, ...others]);
+  const scored: Alternative[] = [];
+  for (const other of others) {
+    const alternative = scoreOne(product, other, distinctive, labels);
     if (alternative) scored.push(alternative);
   }
   return scored.sort(compareAlternatives).slice(0, Math.floor(limit));

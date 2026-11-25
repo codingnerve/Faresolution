@@ -16,6 +16,7 @@ import {
   allIndustriesLink,
   allResourcesLink,
   categoryHref,
+  compareHref,
   industryHref,
   resourceLinks,
   type NavLink,
@@ -75,7 +76,7 @@ async function buildGroups(): Promise<FooterGroup[]> {
     .slice(0, 5)
     .map((c) => ({
       label: c.slugs.map((s) => productName.get(s)).join(" vs "),
-      href: `/compare/${c.slugs.join("-vs-")}`,
+      href: compareHref(c.slugs),
     }));
 
   const alternativeLinks: NavLink[] = FEATURED_ALTERNATIVES.filter((s) => productName.has(s))

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { config } from "@/proxy";
-import { guardSamplePaths, isKnownPath, matcherCovers, routeGuards, type RouteGuard } from "./route-guards";
+import { canonicalPath, guardSamplePaths, isKnownPath, matcherCovers, routeGuards, type RouteGuard } from "./route-guards";
 
 describe("isKnownPath: categories", () => {
   it("is true for a known slug", () => {
@@ -91,9 +91,63 @@ describe("isKnownPath: products and their tabs", () => {
   });
 });
 
+describe("isKnownPath and canonicalPath: comparisons", () => {
+  it("is true for 2 to 4 unique known products, canonical order or not", () => {
+    expect(isKnownPath("/compare/hubspot-crm-vs-zoho-crm")).toBe(true);
+    expect(isKnownPath("/compare/zoho-crm-vs-hubspot-crm")).toBe(true);
+    expect(isKnownPath("/compare/asana-vs-clickup-vs-trello")).toBe(true);
+    expect(isKnownPath("/compare/jira-vs-asana-vs-trello-vs-clickup")).toBe(true);
+    // Valid but not an editorial pick: rendered on request.
+    expect(isKnownPath("/compare/gusto-vs-xero")).toBe(true);
+    expect(isKnownPath("/compare/hubspot-crm-vs-zoho-crm/")).toBe(true);
+  });
+
+  it("is false for one product, more than four, duplicates and unknown products", () => {
+    for (const path of [
+      "/compare/hubspot-crm",
+      "/compare/a-vs-b-vs-c-vs-d-vs-e",
+      "/compare/asana-vs-clickup-vs-trello-vs-jira-vs-notion",
+      "/compare/hubspot-crm-vs-hubspot-crm",
+      "/compare/a-vs-a",
+      "/compare/nope-vs-hubspot-crm",
+      "/compare/-vs-",
+      "/compare/hubspot-crm-vs-",
+      "/compare/HubSpot-CRM-vs-zoho-crm",
+      "/compare/hubspot-crm-vs-zoho-crm/extra",
+      "/compare/hubspot-crm%2F-vs-zoho-crm",
+      "/compare/%E0%A4%A",
+    ]) {
+      expect(isKnownPath(path), path).toBe(false);
+    }
+  });
+
+  it("never resolves prototype keys", () => {
+    for (const key of ["__proto__", "constructor", "toString"]) {
+      expect(isKnownPath(`/compare/${key}`), key).toBe(false);
+      expect(isKnownPath(`/compare/${key}-vs-hubspot-crm`), key).toBe(false);
+      expect(isKnownPath(`/compare/${key}-vs-${key}`), key).toBe(false);
+    }
+  });
+
+  it("gives the canonical path for a valid comparison in another order", () => {
+    expect(canonicalPath("/compare/zoho-crm-vs-hubspot-crm")).toBe("/compare/hubspot-crm-vs-zoho-crm");
+    expect(canonicalPath("/compare/trello-vs-asana-vs-clickup")).toBe("/compare/asana-vs-clickup-vs-trello");
+    expect(canonicalPath("/compare/zoho-crm-vs-hubspot-crm/")).toBe("/compare/hubspot-crm-vs-zoho-crm");
+  });
+
+  it("gives no canonical path when the path is already canonical, unknown or unguarded", () => {
+    expect(canonicalPath("/compare/hubspot-crm-vs-zoho-crm")).toBeNull();
+    expect(canonicalPath("/compare/hubspot-crm%2Dvs-zoho-crm")).toBeNull();
+    expect(canonicalPath("/compare/zoho-crm-vs-nope")).toBeNull();
+    expect(canonicalPath("/compare/hubspot-crm")).toBeNull();
+    expect(canonicalPath("/products/hubspot-crm")).toBeNull();
+    expect(canonicalPath("/software")).toBeNull();
+  });
+});
+
 describe("isKnownPath: unguarded paths", () => {
   it("is null when no guard applies", () => {
-    for (const path of ["/", "/software", "/categories", "/categories/", "/products", "/products/", "/software/free", "/unknown/thing"]) {
+    for (const path of ["/", "/software", "/categories", "/categories/", "/products", "/products/", "/software/free", "/unknown/thing", "/compare", "/compare/"]) {
       expect(isKnownPath(path), path).toBeNull();
     }
   });

@@ -11,12 +11,18 @@
  * covers every path shape of every guard, sub-paths included), and cover the
  * guard in `route-guards.test.ts`.
  *
- * Guards use slug sets built from the content arrays, not the async data
- * layer, to keep the proxy bundle small. Lookups use `Set.has` with the
- * decoded string, so keys such as `__proto__` or `constructor` never resolve.
+ * A guard may also name a canonical form of a known slug (comparisons list
+ * their products in sorted order); `canonicalPath` gives the path the proxy
+ * permanently redirects to. Like a 404, a redirect issued while the page
+ * streams would arrive as a client-side meta refresh, not a real 308.
+ *
+ * Guards use the slug-only lists in `lib/data/content/slugs.ts`, not the
+ * content arrays or the async data layer, to keep the proxy bundle small.
+ * Lookups use `Set.has` with the decoded string, so keys such as `__proto__`
+ * or `constructor` never resolve.
  */
-import { categories } from "@/lib/data/content/categories";
-import { products } from "@/lib/data/content/products";
+import { resolveCompareSlug } from "@/lib/compare/slug";
+import { categorySlugSet, productSlugSet } from "@/lib/data/content/slugs";
 import { PRODUCT_TAB_SEGMENTS } from "@/lib/products/tabs";
 
 export interface RouteGuard {
@@ -31,15 +37,55 @@ export interface RouteGuard {
    */
   subpaths?: readonly string[];
   exists: (slug: string) => boolean;
+  /** For a slug that exists: its canonical form when different, else null. */
+  canonical?: (slug: string) => string | null;
 }
 
-const categorySlugs: ReadonlySet<string> = new Set(categories.map((c) => c.slug));
-const productSlugs: ReadonlySet<string> = new Set(products.map((p) => p.slug));
-
 export const routeGuards: readonly RouteGuard[] = [
-  { prefix: "/categories/", exists: (slug) => categorySlugs.has(slug) },
-  { prefix: "/products/", subpaths: PRODUCT_TAB_SEGMENTS, exists: (slug) => productSlugs.has(slug) },
+  { prefix: "/categories/", exists: (slug) => categorySlugSet.has(slug) },
+  { prefix: "/products/", subpaths: PRODUCT_TAB_SEGMENTS, exists: (slug) => productSlugSet.has(slug) },
+  {
+    // 2 to 4 unique known products in any order; other orders redirect (R12).
+    prefix: "/compare/",
+    exists: (slug) => resolveCompareSlug(slug, productSlugSet).ok,
+    canonical: (slug) => {
+      const resolved = resolveCompareSlug(slug, productSlugSet);
+      return resolved.ok && !resolved.isCanonical ? resolved.canonical : null;
+    },
+  },
 ];
+
+type GuardMatch =
+  | { kind: "unguarded" }
+  | { kind: "unknown" }
+  | { kind: "match"; guard: RouteGuard; slug: string; subpath: string | null };
+
+function matchGuard(pathname: string): GuardMatch {
+  for (const guard of routeGuards) {
+    if (!pathname.startsWith(guard.prefix)) continue;
+    // One trailing slash is normalised away by Next.js before rendering.
+    const rest = pathname.slice(guard.prefix.length).replace(/\/$/, "");
+    if (rest === "") return { kind: "unguarded" };
+    const parts = rest.split("/");
+    const segments = guard.segments ?? 1;
+    if (parts.length !== segments && parts.length !== segments + 1) return { kind: "unknown" };
+    const decoded: string[] = [];
+    for (const part of parts) {
+      try {
+        decoded.push(decodeURIComponent(part));
+      } catch {
+        return { kind: "unknown" };
+      }
+    }
+    // A decoded slash would make a different path than the one routed.
+    if (decoded.some((part) => part === "" || part.includes("/"))) return { kind: "unknown" };
+    const subpath = decoded.length > segments ? decoded[segments] : null;
+    if (subpath !== null && !(guard.subpaths ?? []).includes(subpath)) return { kind: "unknown" };
+    const slug = decoded.slice(0, segments).join("/");
+    return guard.exists(slug) ? { kind: "match", guard, slug, subpath } : { kind: "unknown" };
+  }
+  return { kind: "unguarded" };
+}
 
 /**
  * `true`/`false` when a guard covers the path and the slug does/does not exist
@@ -47,28 +93,21 @@ export const routeGuards: readonly RouteGuard[] = [
  * unknown), `null` when no guard applies. Case sensitive.
  */
 export function isKnownPath(pathname: string): boolean | null {
-  for (const guard of routeGuards) {
-    if (!pathname.startsWith(guard.prefix)) continue;
-    // One trailing slash is normalised away by Next.js before rendering.
-    const rest = pathname.slice(guard.prefix.length).replace(/\/$/, "");
-    if (rest === "") return null;
-    const parts = rest.split("/");
-    const segments = guard.segments ?? 1;
-    if (parts.length !== segments && parts.length !== segments + 1) return false;
-    const decoded: string[] = [];
-    for (const part of parts) {
-      try {
-        decoded.push(decodeURIComponent(part));
-      } catch {
-        return false;
-      }
-    }
-    // A decoded slash would make a different path than the one routed.
-    if (decoded.some((part) => part === "" || part.includes("/"))) return false;
-    if (decoded.length > segments && !(guard.subpaths ?? []).includes(decoded[segments])) return false;
-    return guard.exists(decoded.slice(0, segments).join("/"));
-  }
-  return null;
+  const match = matchGuard(pathname);
+  return match.kind === "unguarded" ? null : match.kind === "match";
+}
+
+/**
+ * The canonical path for a known path whose guard defines a canonical form
+ * that differs from the requested slug (sub-path kept, trailing slash
+ * dropped); null otherwise.
+ */
+export function canonicalPath(pathname: string): string | null {
+  const match = matchGuard(pathname);
+  if (match.kind !== "match") return null;
+  const canonical = match.guard.canonical?.(match.slug) ?? null;
+  if (canonical === null) return null;
+  return match.guard.prefix + canonical + (match.subpath === null ? "" : `/${match.subpath}`);
 }
 
 /**

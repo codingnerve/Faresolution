@@ -11,6 +11,12 @@ export interface DirectoryPreset {
   /** Path of the listing, e.g. "/software/free". */
   basePath: string;
   locked?: LockedQuery;
+  /**
+   * Narrows the listing to one category (and its subcategories, R10), as on a
+   * category page. The category filter then only offers its subcategories, and
+   * a `category` URL value outside the scope is ignored.
+   */
+  scope?: { category: string; name: string };
 }
 
 /**
@@ -21,9 +27,12 @@ export interface DirectoryPreset {
 export function effectiveQuery(
   parsed: DirectoryQuery,
   locked: LockedQuery | undefined,
-  { ratingsAvailable }: { ratingsAvailable: boolean },
+  { ratingsAvailable, allowedCategories }: { ratingsAvailable: boolean; allowedCategories?: readonly string[] },
 ): DirectoryQuery {
   const query: DirectoryQuery = { ...parsed, ...locked };
+  if (allowedCategories && query.category !== undefined && !allowedCategories.includes(query.category)) {
+    delete query.category;
+  }
   if (!ratingsAvailable) {
     delete query.minRating;
     if (query.sort === "rating") query.sort = DEFAULT_QUERY.sort;

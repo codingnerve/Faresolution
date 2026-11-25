@@ -23,6 +23,33 @@ describe("effectiveQuery", () => {
   });
 });
 
+describe("effectiveQuery with allowedCategories (category pages)", () => {
+  const allowed = ["crm-software", "sales-software"];
+
+  it("keeps a category inside the scope", () => {
+    const query = effectiveQuery(parseQuery({ category: "sales-software" }), undefined, {
+      ratingsAvailable: true,
+      allowedCategories: allowed,
+    });
+    expect(query.category).toBe("sales-software");
+  });
+
+  it("drops a category outside the scope so users cannot filter out of the page", () => {
+    const query = effectiveQuery(parseQuery({ category: "help-desk", q: "x" }), undefined, {
+      ratingsAvailable: true,
+      allowedCategories: allowed,
+    });
+    expect(query.category).toBeUndefined();
+    expect(query.q).toBe("x");
+  });
+
+  it("leaves the category alone without a scope", () => {
+    expect(
+      effectiveQuery(parseQuery({ category: "help-desk" }), undefined, { ratingsAvailable: true }).category,
+    ).toBe("help-desk");
+  });
+});
+
 describe("isPageOnlyChange", () => {
   it("is true when only the page changes", () => {
     expect(isPageOnlyChange(q({ page: 1, freePlan: true }), q({ page: 2, freePlan: true }))).toBe(true);

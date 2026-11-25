@@ -9,7 +9,7 @@ import {
   labelFor,
   pricingModelLabel,
 } from "@/lib/directory/labels";
-import type { LockedQuery } from "@/lib/directory/preset";
+import type { DirectoryPreset, LockedQuery } from "@/lib/directory/preset";
 import type { DirectoryQuery, FacetCounts, FacetValue } from "@/lib/directory/query";
 import { MAX_QUERY_LENGTH } from "@/lib/search";
 import { cn } from "@/lib/utils";
@@ -24,6 +24,8 @@ export interface FilterPanelProps {
   labels: DirectoryLabels;
   ratingsAvailable: boolean;
   locked?: LockedQuery;
+  /** Set on a category page: only the category's subcategories are offered. */
+  scope?: DirectoryPreset["scope"];
   onChange: (patch: QueryPatch) => void;
   className?: string;
 }
@@ -43,6 +45,7 @@ export function FilterPanel({
   labels,
   ratingsAvailable,
   locked,
+  scope,
   onChange,
   className,
 }: FilterPanelProps) {
@@ -74,23 +77,42 @@ export function FilterPanel({
       );
     });
   const unknownCategory = query.category !== undefined && !categoryName.has(query.category);
+  const subcategories = scope
+    ? labels.categories.filter((c) => c.parentSlug === scope.category && shownCategory(c.slug))
+    : [];
 
   return (
     <div className={cn("divide-y divide-line", className)}>
       <KeywordSearch value={query.q} onSubmit={(q) => onChange({ q })} />
 
-      <Section title="Category">
-        <Select
-          id={`${ids}-category`}
-          label="Category"
-          value={query.category ?? ""}
-          onChange={(v) => onChange({ category: v || undefined })}
-        >
-          <option value="">All categories</option>
-          {unknownCategory && <option value={query.category}>Unknown category (0)</option>}
-          {categoryTree}
-        </Select>
-      </Section>
+      {scope ? (
+        subcategories.length > 0 && (
+          <Section title="Subcategory">
+            <Select
+              id={`${ids}-category`}
+              label="Subcategory"
+              value={query.category ?? ""}
+              onChange={(v) => onChange({ category: v || undefined })}
+            >
+              <option value="">{`All of ${scope.name}`}</option>
+              {subcategories.map((c) => categoryOption(c.slug, c.name))}
+            </Select>
+          </Section>
+        )
+      ) : (
+        <Section title="Category">
+          <Select
+            id={`${ids}-category`}
+            label="Category"
+            value={query.category ?? ""}
+            onChange={(v) => onChange({ category: v || undefined })}
+          >
+            <option value="">All categories</option>
+            {unknownCategory && <option value={query.category}>Unknown category (0)</option>}
+            {categoryTree}
+          </Select>
+        </Section>
+      )}
 
       <Section title="Pricing">
         <Select

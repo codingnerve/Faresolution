@@ -3,6 +3,7 @@
  * `<script type="application/ld+json">` via `dangerouslySetInnerHTML`.
  * Product JSON-LD is added by the product profile task.
  */
+import type { FaqItem } from "@/lib/data/types";
 import { SITE_TAGLINE } from "@/lib/site";
 import { SITE_NAME, SITE_URL, absoluteUrl } from "@/lib/utils";
 
@@ -51,5 +52,22 @@ export function organizationJsonLd(): Record<string, unknown> {
         },
       },
     ],
+  };
+}
+
+/**
+ * FAQPage for questions that are visible on the page, or `null` when there are
+ * none (Google requires the marked-up Q&A to appear on the page).
+ */
+export function faqJsonLd(faq: readonly FaqItem[]): Record<string, unknown> | null {
+  if (faq.length === 0) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faq.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
   };
 }

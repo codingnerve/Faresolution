@@ -78,11 +78,20 @@ export function DirectoryHeader({
 }
 
 /**
- * Static server shell for a directory route. The listing is a client
- * component inside `<Suspense>`: the prerendered HTML holds the unfiltered
- * first page (the fallback), and the browser re-renders it for the URL's
- * query params.
+ * The listing on its own (filters, results, pagination). The listing is a
+ * client component inside `<Suspense>`: the prerendered HTML holds the
+ * unfiltered first page (the fallback), and the browser re-renders it for the
+ * URL's query params.
  */
+export function DirectoryListing({ data, preset }: { data: DirectoryData; preset: DirectoryPreset }) {
+  return (
+    <Suspense fallback={<DirectoryView data={data} preset={preset} params={{}} />}>
+      <DirectoryClient data={data} preset={preset} />
+    </Suspense>
+  );
+}
+
+/** Static server shell for a directory route: a header, the demo-data notice and the listing. */
 export function DirectoryPage({
   data,
   preset,
@@ -97,9 +106,7 @@ export function DirectoryPage({
       {header}
       <Container className="py-8 sm:py-10">
         <DemoDataNotice className="mb-8" />
-        <Suspense fallback={<DirectoryView data={data} preset={preset} params={{}} />}>
-          <DirectoryClient data={data} preset={preset} />
-        </Suspense>
+        <DirectoryListing data={data} preset={preset} />
       </Container>
     </>
   );

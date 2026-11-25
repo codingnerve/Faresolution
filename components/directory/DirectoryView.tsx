@@ -51,9 +51,14 @@ export function DirectoryView({ data, preset, params }: DirectoryViewProps) {
   const locked = preset.locked;
   const lockedKeys = Object.keys(locked ?? {});
 
+  const scope = preset.scope;
+  const allowedCategories = useMemo(
+    () => (scope ? [scope.category, ...(categoryChildren[scope.category] ?? [])] : undefined),
+    [scope, categoryChildren],
+  );
   const query = useMemo(
-    () => effectiveQuery(parseQuery(params), locked, { ratingsAvailable }),
-    [params, locked, ratingsAvailable],
+    () => effectiveQuery(parseQuery(params), locked, { ratingsAvailable, allowedCategories }),
+    [params, locked, ratingsAvailable, allowedCategories],
   );
   const ctx = useMemo<DirectoryContext>(() => ({ searchIndex, categoryChildren }), [searchIndex, categoryChildren]);
   const results = useMemo(() => applyQuery(products, query, ctx), [products, query, ctx]);
@@ -135,6 +140,7 @@ export function DirectoryView({ data, preset, params }: DirectoryViewProps) {
       labels={labels}
       ratingsAvailable={ratingsAvailable}
       locked={locked}
+      scope={scope}
       onChange={(patch) => update(patch)}
     />
   );

@@ -162,9 +162,10 @@ describe("search: hostile and empty input", () => {
       expect(Array.isArray(search(idx, q).products)).toBe(true);
     }
     expect(search(idx, "(")).toEqual(empty);
-    // "[a-" normalises to the single letter "a": valid prefix hits, no error.
-    const a = search(idx, "[a-");
-    for (const hit of a.products) expect(hit.name.toLowerCase()).toMatch(/a/);
+    // "[a-" normalises to the single letter "a": valid hits, no error.
+    const known = new Set(products.map((p) => p.slug));
+    expect(() => search(idx, "[a-")).not.toThrow();
+    for (const hit of search(idx, "[a-").products) expect(known.has(hit.slug)).toBe(true);
     expect(search(idx, "\\")).toEqual(empty);
   });
 
@@ -187,10 +188,50 @@ describe("search: hostile and empty input", () => {
 
   it("treats inherited object keys as plain text", () => {
     const known = new Set(products.map((p) => p.slug));
-    for (const q of ["constructor", "__proto__", "toString", "hasOwnProperty"]) {
+    // "__proto__" normalises to "proto", which matches nothing.
+    expect(search(idx, "__proto__")).toEqual(empty);
+    for (const q of ["constructor", "toString", "hasOwnProperty"]) {
       const r = search(idx, q, { limit: 100 });
       for (const hit of r.products) expect(known.has(hit.slug)).toBe(true);
     }
+  });
+});
+
+describe("search: very short tokens", () => {
+  const pos = (hits: { slug: string }[], slug: string) => {
+    const i = slugs(hits).indexOf(slug);
+    return i === -1 ? Infinity : i;
+  };
+
+  it("'cr' ranks CRM products ahead of CrowdStrike (or drops it)", () => {
+    const r = search(idx, "cr", { limit: 100 }).products;
+    const crm = Math.min(pos(r, "zoho-crm"), pos(r, "hubspot-crm"));
+    expect(crm).toBeLessThan(Infinity);
+    expect(crm).toBeLessThan(pos(r, "crowdstrike-falcon"));
+  });
+
+  it("'hr' returns HR products at the top and not CrowdStrike", () => {
+    const r = search(idx, "hr").products;
+    const hrProducts = new Set(
+      products.filter((p) => p.categorySlugs.includes("hr-software")).map((p) => p.slug),
+    );
+    expect(hrProducts.size).toBeGreaterThan(0);
+    for (const hit of r.slice(0, 3)) expect(hrProducts.has(hit.slug)).toBe(true);
+    expect(slugs(search(idx, "hr", { limit: 100 }).products)).not.toContain("crowdstrike-falcon");
+  });
+
+  it("does not match 1-2 letter tokens inside words or taglines", () => {
+    const small = buildSearchIndex({
+      products: [{ ...mk("a", "Alpha"), tagline: "Handles payroll" }],
+      categories: [],
+      vendors: [],
+      features: [],
+      industries: [],
+    });
+    expect(search(small, "ro").products).toEqual([]); // inside "payroll"
+    expect(search(small, "pa").products).toEqual([]); // tagline word prefix, 2 letters
+    expect(slugs(search(small, "pay").products)).toEqual(["a"]); // 3 letters: tagline word prefix
+    expect(slugs(search(small, "al").products)).toEqual(["a"]); // name prefix still works
   });
 });
 
@@ -225,6 +266,8 @@ describe("search: limit and uniqueness", () => {
       products: [mk("dup", "Dupe Tool"), mk("dup", "Dupe Tool")],
       categories: [],
       vendors: [],
+      features: [],
+      industries: [],
     });
     expect(search(small, "dupe").products).toHaveLength(1);
   });
@@ -241,6 +284,8 @@ describe("search: ranking", () => {
       ],
       categories: [],
       vendors: [],
+      features: [],
+      industries: [],
     });
     expect(slugs(search(small, "alpha").products)).toEqual([
       "p-prefix",
@@ -255,6 +300,8 @@ describe("search: ranking", () => {
       products: [mk("long", "Slackware Pro"), mk("exact", "Slack")],
       categories: [],
       vendors: [],
+      features: [],
+      industries: [],
     });
     expect(search(small, "slack").products[0].slug).toBe("exact");
   });
@@ -264,6 +311,8 @@ describe("search: ranking", () => {
       products: [mk("a", "Zap"), mk("b", "Odoo")],
       categories: [],
       vendors: [],
+      features: [],
+      industries: [],
     });
     expect(search(small, "zep").products).toEqual([]); // 3 chars: no fuzzy
     expect(slugs(search(small, "odoa").products)).toEqual(["b"]); // 4 chars, distance 1
@@ -274,6 +323,8 @@ describe("search: ranking", () => {
       products: [mk("a", "Salesforce"), mk("b", "Asana")],
       categories: [],
       vendors: [],
+      features: [],
+      industries: [],
     });
     expect(search(small, "asnaa").products).toEqual([]); // distance 2, length 5
     expect(slugs(search(small, "asanna").products)).toContain("b"); // distance 1

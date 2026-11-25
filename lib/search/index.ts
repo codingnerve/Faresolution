@@ -62,10 +62,10 @@ export interface BuildInput {
   products: Product[];
   categories: Category[];
   vendors: Vendor[];
-  /** Optional: enables matching products by feature name. */
-  features?: Feature[];
-  /** Optional: enables matching products by industry name. */
-  industries?: Industry[];
+  /** Required: feature names are searchable (pass `[]` only if there are none). */
+  features: Feature[];
+  /** Required: industry names are searchable (pass `[]` only if there are none). */
+  industries: Industry[];
 }
 
 export interface ProductHit {
@@ -128,8 +128,8 @@ export function buildSearchIndex(input: BuildInput): SearchIndex {
 
   const categoryName = new Map(categories.map((c) => [c.slug, c.name]));
   const vendorName = new Map(vendors.map((v) => [v.slug, v.name]));
-  const industryName = new Map((input.industries ?? []).map((i) => [i.slug, i.name]));
-  const featureName = new Map((input.features ?? []).map((f) => [f.slug, f.name]));
+  const industryName = new Map(input.industries.map((i) => [i.slug, i.name]));
+  const featureName = new Map(input.features.map((f) => [f.slug, f.name]));
 
   const categoryCount = new Map<string, number>();
   const vendorCount = new Map<string, number>();
@@ -192,12 +192,18 @@ interface Tiers {
   substring: number;
   /** Base score for a typo match (reduced by 5 per edit). */
   fuzzy: number;
+  /** Tokens shorter than this never match this field. */
+  minToken: number;
 }
 
-const NAME_TIERS: Tiers = { exact: 1000, prefix: 900, word: 800, substring: 600, fuzzy: 60 };
-const VENDOR_TIERS: Tiers = { exact: 500, prefix: 450, word: 400, substring: 300, fuzzy: 40 };
-const TERM_TIERS: Tiers = { exact: 300, prefix: 250, word: 220, substring: 200, fuzzy: 30 };
-const TAGLINE_TIERS: Tiers = { exact: 0, prefix: 100, word: 100, substring: 80, fuzzy: 0 };
+const NAME_TIERS: Tiers = { exact: 1000, prefix: 900, word: 800, substring: 600, fuzzy: 60, minToken: 1 };
+const VENDOR_TIERS: Tiers = { exact: 500, prefix: 450, word: 400, substring: 300, fuzzy: 40, minToken: 1 };
+const TERM_TIERS: Tiers = { exact: 300, prefix: 250, word: 220, substring: 200, fuzzy: 30, minToken: 1 };
+// Taglines match on word starts only, and never for 1-2 letter tokens.
+const TAGLINE_TIERS: Tiers = { exact: 0, prefix: 100, word: 100, substring: 0, fuzzy: 0, minToken: 3 };
+
+/** Shortest token allowed to match inside a word (below this it is noise). */
+const MIN_SUBSTRING_TOKEN = 3;
 
 /** Largest edit distance tolerated for a token, or -1 when typos are not allowed. */
 function maxDistance(token: string): number {
@@ -217,11 +223,15 @@ function field(raw: string): Field {
 
 /** Score of one token against one field (0 = no match). */
 function scoreToken(f: Field, token: string, tiers: Tiers): number {
-  if (f.text === "") return 0;
+  if (f.text === "" || token.length < tiers.minToken) return 0;
   if (f.text === token) return tiers.exact;
-  if (f.text.startsWith(token)) return tiers.prefix;
+  // A 1-2 letter token says nothing about position, so a name start is no
+  // better than a word start (otherwise "cr" favours CrowdStrike over Zoho CRM).
+  if (f.text.startsWith(token)) {
+    return token.length < MIN_SUBSTRING_TOKEN ? tiers.word : tiers.prefix;
+  }
   if (f.words.some((w) => w.startsWith(token))) return tiers.word;
-  if (token.length >= 2 && f.text.includes(token)) return tiers.substring;
+  if (token.length >= MIN_SUBSTRING_TOKEN && f.text.includes(token)) return tiers.substring;
 
   const limit = maxDistance(token);
   if (limit < 0 || tiers.fuzzy <= 0) return 0;

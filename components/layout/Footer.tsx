@@ -38,7 +38,8 @@ const FEATURED_ALTERNATIVES = [
 
 const exploreLinks: NavLink[] = [
   { label: "All software", href: "/software" },
-  { label: "Trending", href: "/software/trending" },
+  // Editorial ordering, not measured popularity (see Product.trendingRank).
+  { label: "Editor's picks", href: "/software/trending" },
   { label: "Recently added", href: "/software/new" },
   { label: "Free software", href: "/software/free" },
   { label: "Top rated", href: "/software/top-rated" },

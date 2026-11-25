@@ -114,6 +114,10 @@ export async function getFeatures(): Promise<Feature[]> {
   return [...features];
 }
 
+export async function getIntegrations(): Promise<Integration[]> {
+  return [...integrations];
+}
+
 export async function getIntegration(slug: string): Promise<Integration | null> {
   return integrationBySlug.get(slug) ?? null;
 }

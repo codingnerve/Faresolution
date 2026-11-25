@@ -6,6 +6,13 @@ const nextConfig: NextConfig = {
     agentFeedback: true,
   },
   cacheComponents: true,
+  async redirects() {
+    return [
+      // The directory's sibling indexes live at the top level.
+      { source: "/software/categories", destination: "/categories", permanent: true },
+      { source: "/software/alternatives", destination: "/alternatives", permanent: true },
+    ];
+  },
   partialPrefetching: true,
   turbopack: {
     rules: {

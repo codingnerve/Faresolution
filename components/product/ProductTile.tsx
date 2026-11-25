@@ -1,15 +1,13 @@
-import { ArrowRight, Check } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { productHref } from "@/components/layout/navigation";
-import { Badge } from "@/components/ui/Badge";
 import { LogoMark } from "@/components/ui/LogoMark";
 import { Rating } from "@/components/ui/Rating";
-import type { Pricing, Product } from "@/lib/data";
 import { cn } from "@/lib/utils";
+import { HighlightList, PricingFacts, ViewDetailsLink, type ProductCardData } from "./card-parts";
 
 export interface ProductTileProps {
-  product: Product;
+  product: ProductCardData;
   /** Display name of the product's vendor (resolved by the caller). */
   vendorName: string | null;
   /** Heading level for the product name; h3 under a section h2 by default. */
@@ -17,24 +15,6 @@ export interface ProductTileProps {
   /** Extra controls in the footer next to "View details" (e.g. a compare button). */
   actions?: ReactNode;
   className?: string;
-}
-
-interface PricingFact {
-  label: string;
-  tone: "success" | "neutral";
-}
-
-/**
- * Plan facts we actually know. Only free-plan and free-trial flags that are
- * set (true or false) are shown; prices are never derived here.
- */
-function pricingFacts(pricing: Pricing): PricingFact[] {
-  const facts: PricingFact[] = [];
-  if (pricing.freePlan === true) facts.push({ label: "Free plan", tone: "success" });
-  if (pricing.freePlan === false) facts.push({ label: "No free plan", tone: "neutral" });
-  if (pricing.freeTrial === true) facts.push({ label: "Free trial", tone: "success" });
-  if (pricing.freeTrial === false) facts.push({ label: "No free trial", tone: "neutral" });
-  return facts;
 }
 
 /**
@@ -49,8 +29,6 @@ export function ProductTile({
   className,
 }: ProductTileProps) {
   const href = productHref(product.slug);
-  const facts = pricingFacts(product.pricing);
-  const highlights = product.highlights.slice(0, 3);
 
   return (
     <article
@@ -82,44 +60,16 @@ export function ProductTile({
         </div>
         <div className="flex items-center">
           <dt className="sr-only">Plans</dt>
-          <dd className="flex flex-wrap gap-1.5">
-            {facts.length > 0 ? (
-              facts.map((fact) => (
-                <Badge key={fact.label} tone={fact.tone}>
-                  {fact.label}
-                </Badge>
-              ))
-            ) : (
-              <span className="type-meta">Pricing not verified</span>
-            )}
+          <dd>
+            <PricingFacts pricing={product.pricing} />
           </dd>
         </div>
       </dl>
 
-      {highlights.length > 0 && (
-        <ul className="mt-4 space-y-2.5">
-          {highlights.map((highlight) => (
-            <li key={highlight} className="flex gap-2.5 text-[0.8125rem] leading-5 text-subtle">
-              <Check aria-hidden="true" className="mt-0.5 size-3.5 shrink-0 text-blue" strokeWidth={2.25} />
-              <span>{highlight}</span>
-            </li>
-          ))}
-        </ul>
-      )}
+      <HighlightList highlights={product.highlights} className="mt-4" />
 
       <div className="mt-auto flex items-center justify-between gap-3 pt-5">
-        <Link
-          href={href}
-          aria-label={`View details for ${product.name}`}
-          className="inline-flex items-center gap-1.5 rounded-xs text-sm font-medium text-blue-ink hover:text-navy"
-        >
-          View details
-          <ArrowRight
-            aria-hidden="true"
-            className="size-4 transition-transform duration-200 group-hover:translate-x-0.5"
-            strokeWidth={2}
-          />
-        </Link>
+        <ViewDetailsLink href={href} name={product.name} />
         {actions}
       </div>
     </article>

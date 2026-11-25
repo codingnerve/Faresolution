@@ -44,6 +44,7 @@ export const vendorsLink: NavLink = { label: "For Vendors", href: "/vendors" };
 export const categoryHref = (slug: string) => `/categories/${slug}`;
 export const industryHref = (slug: string) => `/industries/${slug}`;
 export const productHref = (slug: string) => `/products/${slug}`;
+export const reviewWriteHref = (slug: string) => `/reviews/write/${slug}`;
 export const softwareSearchHref = (query: string) =>
   `/software?q=${encodeURIComponent(query.trim())}`;
 /** Comparison URL; popular comparisons already list slugs in canonical order. */

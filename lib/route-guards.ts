@@ -6,28 +6,39 @@
  * a noindex tag. Checking the slug here, before streaming starts, gives a true
  * 404. Pages still call `notFound()` as defence in depth.
  *
- * To add a dynamic route (R12): add a guard to `routeGuards` AND a matching
- * `:param` entry to `config.matcher` in `proxy.ts` (a test fails if the matcher
- * is missing), and cover the guard in `route-guards.test.ts`.
+ * To add a dynamic route (R12): add a guard to `routeGuards` AND matching
+ * entries to `config.matcher` in `proxy.ts` (a test fails unless the matcher
+ * covers every path shape of every guard, sub-paths included), and cover the
+ * guard in `route-guards.test.ts`.
  *
  * Guards use slug sets built from the content arrays, not the async data
  * layer, to keep the proxy bundle small. Lookups use `Set.has` with the
  * decoded string, so keys such as `__proto__` or `constructor` never resolve.
  */
 import { categories } from "@/lib/data/content/categories";
+import { products } from "@/lib/data/content/products";
+import { PRODUCT_TAB_SEGMENTS } from "@/lib/products/tabs";
 
 export interface RouteGuard {
   /** Path before the dynamic part, with leading and trailing slash, e.g. "/categories/". */
   prefix: string;
   /** Number of path segments after the prefix (default 1). More are joined with "/" for `exists`. */
   segments?: number;
+  /**
+   * Static sub-paths allowed after the dynamic part, one segment each (e.g.
+   * product tabs). The bare dynamic path is always allowed; any other trailing
+   * segment is unknown.
+   */
+  subpaths?: readonly string[];
   exists: (slug: string) => boolean;
 }
 
 const categorySlugs: ReadonlySet<string> = new Set(categories.map((c) => c.slug));
+const productSlugs: ReadonlySet<string> = new Set(products.map((p) => p.slug));
 
 export const routeGuards: readonly RouteGuard[] = [
   { prefix: "/categories/", exists: (slug) => categorySlugs.has(slug) },
+  { prefix: "/products/", subpaths: PRODUCT_TAB_SEGMENTS, exists: (slug) => productSlugs.has(slug) },
 ];
 
 /**
@@ -42,7 +53,8 @@ export function isKnownPath(pathname: string): boolean | null {
     const rest = pathname.slice(guard.prefix.length).replace(/\/$/, "");
     if (rest === "") return null;
     const parts = rest.split("/");
-    if (parts.length !== (guard.segments ?? 1)) return false;
+    const segments = guard.segments ?? 1;
+    if (parts.length !== segments && parts.length !== segments + 1) return false;
     const decoded: string[] = [];
     for (const part of parts) {
       try {
@@ -53,12 +65,51 @@ export function isKnownPath(pathname: string): boolean | null {
     }
     // A decoded slash would make a different path than the one routed.
     if (decoded.some((part) => part === "" || part.includes("/"))) return false;
-    return guard.exists(decoded.join("/"));
+    if (decoded.length > segments && !(guard.subpaths ?? []).includes(decoded[segments])) return false;
+    return guard.exists(decoded.slice(0, segments).join("/"));
   }
   return null;
 }
 
-/** True when some matcher is `<prefix>:param` (optionally with a modifier), e.g. "/categories/:slug". */
-export function matcherCoversPrefix(matchers: readonly string[], prefix: string): boolean {
-  return matchers.some((m) => m.startsWith(prefix) && m.slice(prefix.length).startsWith(":"));
+/**
+ * One concrete path per shape a guard accepts: the bare dynamic path and each
+ * sub-path, with "sample" standing in for every dynamic segment.
+ */
+export function guardSamplePaths(guard: RouteGuard): string[] {
+  const base = guard.prefix + Array.from({ length: guard.segments ?? 1 }, () => "sample").join("/");
+  return [base, ...(guard.subpaths ?? []).map((subpath) => `${base}/${subpath}`)];
+}
+
+/** Path-to-regexp meaning of a `:param` segment, by modifier. */
+const PARAM_PATTERN = {
+  "": "/[^/]+",
+  "?": "(?:/[^/]+)?",
+  "*": "(?:/[^/]+)*",
+  "+": "(?:/[^/]+)+",
+} as const;
+
+/**
+ * Regex for a proxy matcher path (the subset used here): literal segments and
+ * `:param` segments with an optional `?`, `*` or `+` modifier, as in
+ * path-to-regexp. Returns null for anything else.
+ */
+function matcherRegex(matcher: string): RegExp | null {
+  if (!matcher.startsWith("/")) return null;
+  let source = "";
+  for (const segment of matcher.slice(1).split("/")) {
+    const param = /^:[A-Za-z_]\w*([?*+]?)$/.exec(segment);
+    if (param) {
+      source += PARAM_PATTERN[param[1] as keyof typeof PARAM_PATTERN];
+    } else if (/^[\w~-]+$/.test(segment)) {
+      source += `/${segment}`;
+    } else {
+      return null;
+    }
+  }
+  return new RegExp(`^${source}$`);
+}
+
+/** True when some matcher in the list matches `pathname` (see `matcherRegex`). */
+export function matcherCovers(matchers: readonly string[], pathname: string): boolean {
+  return matchers.some((matcher) => matcherRegex(matcher)?.test(pathname) ?? false);
 }

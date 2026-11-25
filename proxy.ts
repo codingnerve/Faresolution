@@ -13,7 +13,8 @@ export function proxy(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Must be a static literal. One entry per guard in lib/route-guards.ts.
+// Must be a static literal. Covers every path shape of every guard in
+// lib/route-guards.ts (route-guards.test.ts checks this).
 export const config = {
-  matcher: ["/categories/:slug"],
+  matcher: ["/categories/:slug", "/products/:slug", "/products/:slug/:tab"],
 };

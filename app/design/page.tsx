@@ -164,7 +164,7 @@ function Swatch({ token, hex, use }: { token: string; hex: string; use: string }
 
 export default function DesignSystemPage() {
   return (
-    <main className="flex-1 pb-24">
+    <div className="flex-1 pb-24">
       <Container>
         <header className="pt-10 pb-12 sm:pt-14 sm:pb-16">
           <Logo />
@@ -533,6 +533,6 @@ export default function DesignSystemPage() {
           </div>
         </Section>
       </Container>
-    </main>
+    </div>
   );
 }

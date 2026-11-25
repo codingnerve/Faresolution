@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Newsreader } from "next/font/google";
+import { Footer } from "@/components/layout/Footer";
+import { Header } from "@/components/layout/Header";
+import { getSearchIndex } from "@/lib/search/get-index";
 import { SITE_NAME, SITE_URL } from "@/lib/utils";
 import "./globals.css";
 
@@ -36,14 +39,20 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  // Built once from static data; no request-time APIs, so the shell prerenders.
+  const searchIndex = await getSearchIndex();
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-surface font-sans text-ink">
-        {children}
+        <Header searchIndex={searchIndex} />
+        <main id="main-content" tabIndex={-1} className="flex flex-1 flex-col focus:outline-none">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );

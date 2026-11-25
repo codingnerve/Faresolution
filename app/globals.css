@@ -22,6 +22,8 @@
   --color-navy-soft: #22324d;
   --color-blue-ink: #2b4cb3;
   --color-blue-tint: #eef2fd;
+  /* Blue for icons and links on navy (7:1 on navy). */
+  --color-blue-light: #9fb4f2;
   --color-violet-ink: #5545b8;
   --color-violet-tint: #f2f0fc;
   --color-success: #1e7a55;
@@ -30,6 +32,8 @@
   --color-sponsored-tint: #faf3e6;
   --color-danger: #b42335;
   --color-danger-tint: #fcedef;
+  /* Error text on navy. */
+  --color-danger-light: #f3a6b1;
 
   /* Corner radius never exceeds 8px: the larger steps are capped. */
   --radius-xs: 2px;
@@ -126,6 +130,8 @@
   html {
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
+    /* Keep anchor targets clear of the 64px sticky header. */
+    scroll-padding-top: 5rem;
   }
 
   body {
@@ -142,6 +148,11 @@
   :focus-visible {
     outline: 2px solid var(--color-blue);
     outline-offset: 2px;
+  }
+
+  /* On navy surfaces the blue ring is too faint (about 3:1), so it turns white. */
+  .on-dark :focus-visible {
+    outline-color: var(--color-surface);
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -1,6 +1,7 @@
 import { Check } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { CompareButton } from "@/components/compare/CompareButton";
 import { productHref } from "@/components/layout/navigation";
 import { LogoMark } from "@/components/ui/LogoMark";
 import { Rating } from "@/components/ui/Rating";
@@ -12,6 +13,8 @@ export interface ProductCompactProps {
   vendorName: string | null;
   headingLevel?: "h2" | "h3" | "h4";
   actions?: ReactNode;
+  /** Show the Compare toggle (default true). */
+  compare?: boolean;
   className?: string;
 }
 
@@ -24,6 +27,7 @@ export function ProductCompact({
   vendorName,
   headingLevel: Heading = "h3",
   actions,
+  compare = true,
   className,
 }: ProductCompactProps) {
   const href = productHref(product.slug);
@@ -78,7 +82,12 @@ export function ProductCompact({
 
       <div className="mt-auto flex items-center justify-between gap-3 pt-4">
         <ViewDetailsLink href={href} name={product.name} className="text-[0.8125rem]" />
-        {actions}
+        {(compare || actions) && (
+          <div className="flex items-center gap-2">
+            {actions}
+            {compare && <CompareButton slug={product.slug} name={product.name} />}
+          </div>
+        )}
       </div>
     </article>
   );

@@ -2,6 +2,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { ProductCompact } from "@/components/product/ProductCompact";
 import { ProductRow } from "@/components/product/ProductRow";
+import { ProductTile } from "@/components/product/ProductTile";
 import { getProduct } from "@/lib/data";
 import type { Product } from "@/lib/data";
 import { toDirectoryProduct } from "@/lib/directory/data";
@@ -13,6 +14,7 @@ async function sample(): Promise<Product> {
 }
 
 const cards = [
+  ["ProductTile", ProductTile],
   ["ProductRow", ProductRow],
   ["ProductCompact", ProductCompact],
 ] as const;
@@ -46,6 +48,16 @@ describe.each(cards)("%s", (_, Card) => {
     expect(html).toContain("Free plan");
     expect(html).toContain("No free trial");
     expect(html).not.toContain("Pricing not verified");
+  });
+
+  it("has a Compare toggle named after the product, off on the server render, unless turned off", async () => {
+    const product = await sample();
+    const html = render(product);
+    expect(html).toMatch(/<button[^>]*aria-pressed="false"[^>]*aria-label="Compare HubSpot CRM"/);
+    const without = renderToStaticMarkup(
+      <Card product={toDirectoryProduct(product, "HubSpot")} vendorName="HubSpot" compare={false} />,
+    );
+    expect(without).not.toContain("Compare HubSpot CRM");
   });
 
   it("caps highlights at three", async () => {

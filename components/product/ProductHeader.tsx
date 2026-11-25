@@ -1,5 +1,6 @@
 import { ArrowUpRight, CalendarCheck, PenLine } from "lucide-react";
 import Link from "next/link";
+import { CompareButton } from "@/components/compare/CompareButton";
 import { categoryHref, reviewWriteHref } from "@/components/layout/navigation";
 import { Badge } from "@/components/ui/Badge";
 import { Button, buttonClasses } from "@/components/ui/Button";
@@ -69,6 +70,7 @@ export function ProductHeader({ product, vendor, primaryCategory }: ProductHeade
           Write review
         </Button>
         <SaveButton slug={product.slug} name={product.name} />
+        <CompareButton slug={product.slug} name={product.name} size="md" />
       </div>
     </div>
   );

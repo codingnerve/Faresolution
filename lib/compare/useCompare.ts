@@ -8,7 +8,7 @@
  * Also holds a small "notice" (e.g. why a fifth product was refused) that the
  * compare tray and picker show and announce.
  */
-import { useMemo, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useSyncExternalStore } from "react";
 import { productSlugSet } from "@/lib/data/content/slugs";
 import { readList, useStoredList, writeList } from "@/lib/storage";
 import { addToSelection, normalizeSelection, removeFromSelection } from "./selection";
@@ -102,7 +102,16 @@ function subscribeNotice(listener: () => void): () => void {
   };
 }
 
-/** The latest compare notice (empty text when there is none). */
+/** How long a notice stays up before it clears itself. */
+export const COMPARE_NOTICE_MS = 6000;
+
+/** The latest compare notice (empty text when there is none); clears itself after a few seconds. */
 export function useCompareNotice(): CompareNotice {
-  return useSyncExternalStore(subscribeNotice, getCompareNotice, () => NO_NOTICE);
+  const current = useSyncExternalStore(subscribeNotice, getCompareNotice, () => NO_NOTICE);
+  useEffect(() => {
+    if (!current.text) return;
+    const timer = setTimeout(dismissCompareNotice, COMPARE_NOTICE_MS);
+    return () => clearTimeout(timer);
+  }, [current]);
+  return current;
 }

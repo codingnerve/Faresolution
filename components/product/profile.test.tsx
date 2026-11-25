@@ -17,7 +17,7 @@ async function profile(slug = "hubspot-crm") {
 const text = (html: string) => html.replace(/<[^>]+>/g, " ");
 
 describe("ProductHeader", () => {
-  it("renders the H1, vendor and the profile actions, with no Compare button", async () => {
+  it("renders the H1, vendor and the profile actions, including Compare (R4)", async () => {
     const { product, vendor, primaryCategory } = await profile();
     const html = renderToStaticMarkup(
       <ProductHeader product={product} vendor={vendor} primaryCategory={primaryCategory} />,
@@ -27,7 +27,9 @@ describe("ProductHeader", () => {
     expect(html).toContain('href="/contact?product=hubspot-crm"');
     expect(html).toContain('href="/reviews/write/hubspot-crm"');
     expect(html).toContain('aria-pressed="false"');
-    expect(text(html)).not.toMatch(/Compare/);
+    // Compare toggle with a stable name; not selected on the server render.
+    expect(html).toMatch(/<button[^>]*aria-pressed="false"[^>]*aria-label="Compare HubSpot CRM"/);
+    expect(text(html)).toMatch(/Compare/);
     expect(html).toContain("No reviews yet");
   });
 

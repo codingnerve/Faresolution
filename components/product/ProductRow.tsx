@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { CompareButton } from "@/components/compare/CompareButton";
 import { productHref } from "@/components/layout/navigation";
 import { LogoMark } from "@/components/ui/LogoMark";
 import { Rating } from "@/components/ui/Rating";
@@ -10,8 +11,10 @@ export interface ProductRowProps {
   product: ProductCardData;
   vendorName: string | null;
   headingLevel?: "h2" | "h3" | "h4";
-  /** Extra controls next to "View details" (e.g. a compare button). */
+  /** Extra controls next to "View details" (e.g. an "Add to comparison" link). */
   actions?: ReactNode;
+  /** Show the Compare toggle (default true). */
+  compare?: boolean;
   className?: string;
 }
 
@@ -19,7 +22,14 @@ export interface ProductRowProps {
  * List-view card: identity and highlights on the left, review status, known
  * plan facts and the profile link in a side column (stacked on small screens).
  */
-export function ProductRow({ product, vendorName, headingLevel: Heading = "h3", actions, className }: ProductRowProps) {
+export function ProductRow({
+  product,
+  vendorName,
+  headingLevel: Heading = "h3",
+  actions,
+  compare = true,
+  className,
+}: ProductRowProps) {
   const href = productHref(product.slug);
 
   return (
@@ -61,6 +71,7 @@ export function ProductRow({ product, vendorName, headingLevel: Heading = "h3", 
         <div className="mt-auto flex flex-wrap items-center justify-between gap-3">
           <ViewDetailsLink href={href} name={product.name} />
           {actions}
+          {compare && <CompareButton slug={product.slug} name={product.name} />}
         </div>
       </div>
     </article>

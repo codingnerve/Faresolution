@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { CompareButton } from "@/components/compare/CompareButton";
 import { productHref } from "@/components/layout/navigation";
 import { LogoMark } from "@/components/ui/LogoMark";
 import { Rating } from "@/components/ui/Rating";
@@ -12,8 +13,10 @@ export interface ProductTileProps {
   vendorName: string | null;
   /** Heading level for the product name; h3 under a section h2 by default. */
   headingLevel?: "h2" | "h3" | "h4";
-  /** Extra controls in the footer next to "View details" (e.g. a compare button). */
+  /** Extra controls in the footer next to "View details" (e.g. an "Add to comparison" link). */
   actions?: ReactNode;
+  /** Show the Compare toggle (default true). */
+  compare?: boolean;
   className?: string;
 }
 
@@ -26,6 +29,7 @@ export function ProductTile({
   vendorName,
   headingLevel: Heading = "h3",
   actions,
+  compare = true,
   className,
 }: ProductTileProps) {
   const href = productHref(product.slug);
@@ -70,7 +74,12 @@ export function ProductTile({
 
       <div className="mt-auto flex items-center justify-between gap-3 pt-5">
         <ViewDetailsLink href={href} name={product.name} />
-        {actions}
+        {(compare || actions) && (
+          <div className="flex items-center gap-2">
+            {actions}
+            {compare && <CompareButton slug={product.slug} name={product.name} />}
+          </div>
+        )}
       </div>
     </article>
   );

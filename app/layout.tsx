@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Newsreader } from "next/font/google";
+import { CompareTray } from "@/components/compare/CompareTray";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { SearchIndexProvider } from "@/components/layout/SearchIndexProvider";
@@ -56,6 +57,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
             {children}
           </main>
           <Footer />
+          <CompareTray />
         </SearchIndexProvider>
       </body>
     </html>

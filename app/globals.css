@@ -1,26 +1,157 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Light theme only: `dark:` utilities only apply under an explicit .dark
+   class (never set), so they can never follow the OS colour scheme. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Brand palette (fixed) */
+  --color-navy: #17243a;
+  --color-blue: #4169e1;
+  --color-violet: #7767d8;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f6f7fa;
+  --color-ink: #202a39;
+  --color-muted: #737d8c;
+  --color-line: #e7eaf0;
+
+  /* Derived support tones. `subtle` is the AA-safe (5.5:1) secondary text
+     colour for small type; `muted` (4.2:1) is for icons, rules and large text. */
+  --color-subtle: #5f6978;
+  --color-line-strong: #d5dae3;
+  --color-navy-soft: #22324d;
+  --color-blue-ink: #2b4cb3;
+  --color-blue-tint: #eef2fd;
+  --color-violet-ink: #5545b8;
+  --color-violet-tint: #f2f0fc;
+  --color-success: #1e7a55;
+  --color-success-tint: #e8f4ee;
+  --color-sponsored: #85570f;
+  --color-sponsored-tint: #faf3e6;
+  --color-danger: #b42335;
+  --color-danger-tint: #fcedef;
+
+  /* Corner radius never exceeds 8px: the larger steps are capped. */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 8px;
+  --radius-2xl: 8px;
+  --radius-3xl: 8px;
+  --radius-4xl: 8px;
+
+  /* Elevation: hairline-led, low-contrast shadows tinted with navy. */
+  --shadow-card: 0 1px 2px 0 rgb(23 36 58 / 0.05);
+  --shadow-raised: 0 1px 2px 0 rgb(23 36 58 / 0.04), 0 6px 16px -4px rgb(23 36 58 / 0.1);
+  --shadow-overlay: 0 2px 4px 0 rgb(23 36 58 / 0.05), 0 16px 40px -8px rgb(23 36 58 / 0.18);
+
+  --container-page: 76rem;
+  --container-reading: 42rem;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-newsreader), ui-serif, Georgia, serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
+/* Type scale. Serif (Newsreader) for editorial headlines, Geist for UI. */
+@utility type-display {
+  font-family: var(--font-serif);
+  font-size: clamp(2.5rem, 1.75rem + 3.2vw, 4.5rem);
+  font-weight: 400;
+  line-height: 1.04;
+  letter-spacing: -0.022em;
+  text-wrap: balance;
+}
+
+@utility type-h1 {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 1.6rem + 1.8vw, 3rem);
+  font-weight: 420;
+  line-height: 1.1;
+  letter-spacing: -0.018em;
+  text-wrap: balance;
+}
+
+@utility type-h2 {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 1.3rem + 0.9vw, 2rem);
+  font-weight: 440;
+  line-height: 1.18;
+  letter-spacing: -0.012em;
+  text-wrap: balance;
+}
+
+@utility type-h3 {
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.012em;
+}
+
+@utility type-body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+@utility type-meta {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--color-subtle);
+}
+
+@utility type-label {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-subtle);
+}
+
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    color-scheme: light;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
+
+  ::selection {
+    background-color: var(--color-blue-tint);
+    color: var(--color-navy);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }

@@ -389,11 +389,14 @@ export default function DesignSystemPage() {
         <Section
           id="rating"
           title="Rating"
-          note="No value means no stars: the component reads 'No reviews yet'. Filled previews use sample input only."
+          note="Stars need a positive value and at least one review; otherwise the component reads 'No reviews yet'. Filled previews use sample input only."
         >
-          <div className="grid gap-6 sm:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <Specimen label="value: null">
               <Rating value={null} count={0} />
+            </Specimen>
+            <Specimen label="value: 4.5, count: 0">
+              <Rating value={4.5} count={0} />
             </Specimen>
             <Specimen label="Sample input, sm">
               <Rating value={4.3} count={128} />

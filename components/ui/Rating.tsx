@@ -12,13 +12,14 @@ type RatingProps = {
 const countFormat = new Intl.NumberFormat("en-US");
 
 /**
- * Star rating that never fabricates: with no value (or an unusable one) it
- * reads "No reviews yet" instead of showing empty stars or 0.0.
+ * Star rating that never fabricates: stars appear only for a positive value
+ * backed by at least one review. Anything else (null, NaN, 0, or a value
+ * with no reviews) reads "No reviews yet" instead of empty stars or 0.0.
  */
 export function Rating({ value, count, size = "sm", className }: RatingProps) {
   const safeCount = Number.isFinite(count) && count > 0 ? Math.floor(count) : 0;
 
-  if (value === null || !Number.isFinite(value)) {
+  if (value === null || !Number.isFinite(value) || value <= 0 || safeCount === 0) {
     return (
       <span className={cn("type-meta inline-flex items-center", className)}>
         No reviews yet
@@ -26,11 +27,9 @@ export function Rating({ value, count, size = "sm", className }: RatingProps) {
     );
   }
 
-  const rating = Math.min(5, Math.max(0, value));
-  const label = `Rated ${rating.toFixed(1)} out of 5${
-    safeCount > 0
-      ? ` from ${countFormat.format(safeCount)} ${safeCount === 1 ? "review" : "reviews"}`
-      : ""
+  const rating = Math.min(5, value);
+  const label = `Rated ${rating.toFixed(1)} out of 5 from ${countFormat.format(safeCount)} ${
+    safeCount === 1 ? "review" : "reviews"
   }`;
   const iconSize = size === "md" ? "size-4" : "size-3.5";
 
@@ -71,11 +70,9 @@ export function Rating({ value, count, size = "sm", className }: RatingProps) {
       >
         {rating.toFixed(1)}
       </span>
-      {safeCount > 0 && (
-        <span className="type-meta tabular-nums" aria-hidden="true">
-          ({countFormat.format(safeCount)})
-        </span>
-      )}
+      <span className="type-meta tabular-nums" aria-hidden="true">
+        ({countFormat.format(safeCount)})
+      </span>
     </span>
   );
 }

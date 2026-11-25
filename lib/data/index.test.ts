@@ -16,6 +16,7 @@ import {
   getProductsByCategory,
   getProductsByIndustry,
   getVendor,
+  getVendors,
 } from "@/lib/data";
 import type { ArticleKind } from "@/lib/data";
 
@@ -54,6 +55,7 @@ describe("list accessors", () => {
       [await getProducts(), await getProducts()],
       [await getCategories(), await getCategories()],
       [await getIndustries(), await getIndustries()],
+      [await getVendors(), await getVendors()],
       [await getFeatures(), await getFeatures()],
       [await getArticles(), await getArticles()],
       [await getPopularComparisons(), await getPopularComparisons()],
@@ -102,6 +104,12 @@ describe("taxonomy lookups", () => {
     expect((await getIndustry("healthcare"))?.name).toBe("Healthcare");
     expect((await getVendor("hubspot"))?.name).toBe("HubSpot");
     expect((await getIntegration("slack"))?.name).toBe("Slack");
+  });
+
+  it("lists vendors including every product's vendor", async () => {
+    const slugs = new Set((await getVendors()).map((v) => v.slug));
+    expect(slugs.has("zoho")).toBe(true);
+    for (const p of await getProducts()) expect(slugs.has(p.vendorSlug)).toBe(true);
   });
 });
 

@@ -91,6 +91,10 @@ export async function getIndustry(slug: string): Promise<Industry | null> {
   return industryBySlug.get(slug) ?? null;
 }
 
+export async function getVendors(): Promise<Vendor[]> {
+  return [...vendors];
+}
+
 export async function getVendor(slug: string): Promise<Vendor | null> {
   return vendorBySlug.get(slug) ?? null;
 }

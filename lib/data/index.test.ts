@@ -157,6 +157,122 @@ describe("content collections owned by later parts", () => {
   });
 });
 
+describe("products", () => {
+  it("resolves the anchor CRM products", async () => {
+    const hubspot = await getProduct("hubspot-crm");
+    expect(hubspot?.name).toBe("HubSpot CRM");
+    expect(hubspot?.vendorSlug).toBe("hubspot");
+    expect((await getProduct("zoho-crm"))?.vendorSlug).toBe("zoho");
+    const crm = (await getProductsByCategory("crm-software")).map((p) => p.slug);
+    expect(crm).toEqual(expect.arrayContaining(["hubspot-crm", "zoho-crm"]));
+  });
+
+  it("has 55-60 products with unique, URL-safe slugs", async () => {
+    const products = await getProducts();
+    expect(products.length).toBeGreaterThanOrEqual(55);
+    expect(products.length).toBeLessThanOrEqual(60);
+    const slugs = products.map((p) => p.slug);
+    expect(new Set(slugs).size).toBe(slugs.length);
+    for (const s of slugs) {
+      expect(s).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);
+      // "-vs-" is the compare-URL separator.
+      expect(s).not.toContain("-vs-");
+    }
+  });
+
+  it("only references taxonomy entries that exist", async () => {
+    const categories = new Set((await getCategories()).map((c) => c.slug));
+    const industries = new Set((await getIndustries()).map((i) => i.slug));
+    const features = new Set((await getFeatures()).map((f) => f.slug));
+    for (const p of await getProducts()) {
+      expect(await getVendor(p.vendorSlug), `${p.slug} vendor`).not.toBeNull();
+      expect(p.categorySlugs, p.slug).toContain(p.primaryCategory);
+      for (const c of p.categorySlugs) expect(categories.has(c), `${p.slug} -> ${c}`).toBe(true);
+      for (const i of p.industrySlugs) expect(industries.has(i), `${p.slug} -> ${i}`).toBe(true);
+      for (const f of p.featureSlugs) expect(features.has(f), `${p.slug} -> ${f}`).toBe(true);
+      for (const i of p.integrationSlugs) {
+        expect(await getIntegration(i), `${p.slug} -> ${i}`).not.toBeNull();
+      }
+      for (const list of [p.categorySlugs, p.industrySlugs, p.featureSlugs, p.integrationSlugs]) {
+        expect(new Set(list).size, p.slug).toBe(list.length);
+      }
+    }
+  });
+
+  it("gives every category and industry at least two products", async () => {
+    for (const c of await getCategories()) {
+      expect((await getProductsByCategory(c.slug)).length, c.slug).toBeGreaterThanOrEqual(2);
+    }
+    for (const i of await getIndustries()) {
+      expect((await getProductsByIndustry(i.slug)).length, i.slug).toBeGreaterThanOrEqual(2);
+    }
+  });
+
+  it("never invents ratings, reviews or verification", async () => {
+    for (const p of await getProducts()) {
+      expect(p.rating, p.slug).toBeNull();
+      expect(p.reviewCount, p.slug).toBe(0);
+      expect(p.verified, p.slug).toBe(false);
+    }
+  });
+
+  it("has complete editorial fields", async () => {
+    for (const p of await getProducts()) {
+      expect(p.website, p.slug).toMatch(/^https:\/\//);
+      expect(p.brandColor, p.slug).toMatch(/^#[0-9A-Fa-f]{6}$/);
+      expect(p.tagline.length, p.slug).toBeGreaterThan(10);
+      expect(p.description.length, p.slug).toBeGreaterThan(80);
+      expect(p.highlights.length, p.slug).toBeGreaterThanOrEqual(3);
+      expect(p.highlights.length, p.slug).toBeLessThanOrEqual(4);
+      for (const list of [p.pros, p.cons]) {
+        expect(list.length, p.slug).toBeGreaterThanOrEqual(2);
+        expect(list.length, p.slug).toBeLessThanOrEqual(4);
+      }
+      expect(p.faq.length, p.slug).toBeGreaterThanOrEqual(3);
+      expect(p.deployment.length, p.slug).toBeGreaterThan(0);
+      expect(p.platforms.length, p.slug).toBeGreaterThan(0);
+      expect(p.companySizes.length, p.slug).toBeGreaterThan(0);
+      expect(p.addedAt, p.slug).toMatch(/^202[56]-\d{2}-\d{2}$/);
+      expect(Number.isNaN(Date.parse(p.addedAt)), p.slug).toBe(false);
+      expect(p.pricing.plans.length, p.slug).toBeGreaterThan(0);
+    }
+  });
+
+  it("uses a contiguous editor-curated trending order and a curated featured set", async () => {
+    const products = await getProducts();
+    const ranks = products
+      .map((p) => p.trendingRank)
+      .filter((r): r is number => r !== null)
+      .sort((a, b) => a - b);
+    expect(ranks.length).toBeGreaterThanOrEqual(10);
+    expect(ranks).toEqual(ranks.map((_, i) => i + 1));
+    const featured = products.filter((p) => p.featured).length;
+    expect(featured).toBeGreaterThanOrEqual(10);
+    expect(featured).toBeLessThanOrEqual(14);
+  });
+
+  it("contains no placeholder text", async () => {
+    expect(JSON.stringify(await getProducts()).toLowerCase()).not.toContain("lorem");
+  });
+});
+
+describe("popular comparisons", () => {
+  it("lists 8+ comparisons of 2-4 existing products in canonical order", async () => {
+    const comparisons = await getPopularComparisons();
+    expect(comparisons.length).toBeGreaterThanOrEqual(8);
+    for (const { slugs } of comparisons) {
+      expect(slugs.length).toBeGreaterThanOrEqual(2);
+      expect(slugs.length).toBeLessThanOrEqual(4);
+      expect(new Set(slugs).size).toBe(slugs.length);
+      expect(slugs).toEqual([...slugs].sort());
+      for (const s of slugs) expect(await getProduct(s), s).not.toBeNull();
+    }
+    const keys = comparisons.map((c) => c.slugs.join("|"));
+    expect(new Set(keys).size).toBe(keys.length);
+    expect(keys).toContain("hubspot-crm|zoho-crm");
+  });
+});
+
 describe("content hygiene", () => {
   it("has unique slugs and no placeholder text", async () => {
     const collections = {

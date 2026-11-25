@@ -4,6 +4,7 @@
  * React `cache`.
  */
 import { cache } from "react";
+import { getAlternatives } from "@/lib/alternatives/score";
 import {
   getCategories,
   getFeatures,
@@ -13,7 +14,6 @@ import {
   getVendors,
   type Product,
 } from "@/lib/data";
-import { similarProducts } from "@/lib/products/similar";
 import { absoluteUrl } from "@/lib/utils";
 import { buildFeatureRows, buildRows, COMPARE_SECTION_LABEL, type CompareRow, type CompareSection } from "./diff";
 import { buildCompareSlug, compareHref, compareHrefWith, compareHrefWithout, resolveCompareSlug } from "./slug";
@@ -121,7 +121,7 @@ async function loadComparePage(slug: string): Promise<ComparePageResult> {
   const inComparison = new Set(slugs);
   const score = new Map<string, { hits: number; best: number }>();
   for (const product of compared) {
-    similarProducts(product, products, 8).forEach((other, rank) => {
+    getAlternatives(product, products, 8).forEach(({ product: other }, rank) => {
       if (inComparison.has(other.slug)) return;
       const current = score.get(other.slug) ?? { hits: 0, best: Infinity };
       score.set(other.slug, { hits: current.hits + 1, best: Math.min(current.best, rank) });

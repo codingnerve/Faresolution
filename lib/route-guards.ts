@@ -44,6 +44,8 @@ export interface RouteGuard {
 export const routeGuards: readonly RouteGuard[] = [
   { prefix: "/categories/", exists: (slug) => categorySlugSet.has(slug) },
   { prefix: "/products/", subpaths: PRODUCT_TAB_SEGMENTS, exists: (slug) => productSlugSet.has(slug) },
+  // Every product has an alternatives page; there are no sub-pages.
+  { prefix: "/alternatives/", exists: (slug) => productSlugSet.has(slug) },
   {
     // 2 to 4 unique known products in any order; other orders redirect (R12).
     prefix: "/compare/",

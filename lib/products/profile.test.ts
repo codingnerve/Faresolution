@@ -28,7 +28,7 @@ describe("getProductProfile", () => {
       expect(c.products[0].slug).toBe("hubspot-crm");
       expect(c.products).toHaveLength(c.slugs.length);
     }
-    expect(p.similar.map((s) => s.slug)).not.toContain("hubspot-crm");
+    expect(p.alternatives.map((a) => a.product.slug)).not.toContain("hubspot-crm");
   });
 
   it("builds a profile for every product, with no dangling references", async () => {

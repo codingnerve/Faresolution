@@ -84,7 +84,7 @@ export default async function ComparisonPage({ params }: PageProps<"/compare/[sl
             <h2 id="related-alternatives" className="type-h2 text-navy">
               Related alternatives
             </h2>
-            <p className="type-meta mt-2">Matched on category and shared features, not on reviews.</p>
+            <p className="type-meta mt-2">Matched on categories, features, pricing model, industries and deployment, not on reviews.</p>
             <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {related.map(({ product, vendorName, addHref }) => (
                 <li key={product.slug}>

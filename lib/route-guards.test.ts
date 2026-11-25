@@ -145,6 +145,49 @@ describe("isKnownPath and canonicalPath: comparisons", () => {
   });
 });
 
+describe("isKnownPath: alternatives", () => {
+  it("is true for every kind of known product slug", () => {
+    expect(isKnownPath("/alternatives/hubspot-crm")).toBe(true);
+    expect(isKnownPath("/alternatives/jira")).toBe(true);
+    expect(isKnownPath("/alternatives/terraform")).toBe(true);
+  });
+
+  it("is false for an unknown product", () => {
+    expect(isKnownPath("/alternatives/nope")).toBe(false);
+    // A category slug is not a product slug.
+    expect(isKnownPath("/alternatives/crm-software")).toBe(false);
+  });
+
+  it("is false for extra segments, including a product tab", () => {
+    expect(isKnownPath("/alternatives/hubspot-crm/x")).toBe(false);
+    expect(isKnownPath("/alternatives/hubspot-crm/pricing")).toBe(false);
+    expect(isKnownPath("/alternatives/hubspot-crm//")).toBe(false);
+  });
+
+  it("never resolves prototype keys", () => {
+    for (const key of ["__proto__", "constructor", "toString", "hasOwnProperty"]) {
+      expect(isKnownPath(`/alternatives/${key}`), key).toBe(false);
+    }
+  });
+
+  it("is false for malformed escapes and encoded slashes, and case sensitive", () => {
+    expect(isKnownPath("/alternatives/%E0%A4%A")).toBe(false);
+    expect(isKnownPath("/alternatives/hubspot-crm%2Fx")).toBe(false);
+    expect(isKnownPath("/alternatives/HubSpot-CRM")).toBe(false);
+  });
+
+  it("decodes escapes and allows one trailing slash, like the other routes", () => {
+    expect(isKnownPath("/alternatives/hubspot%2Dcrm")).toBe(true);
+    expect(isKnownPath("/alternatives/hubspot-crm/")).toBe(true);
+  });
+
+  it("is unguarded for the index and has no canonical redirect", () => {
+    expect(isKnownPath("/alternatives")).toBeNull();
+    expect(isKnownPath("/alternatives/")).toBeNull();
+    expect(canonicalPath("/alternatives/hubspot-crm")).toBeNull();
+  });
+});
+
 describe("isKnownPath: unguarded paths", () => {
   it("is null when no guard applies", () => {
     for (const path of ["/", "/software", "/categories", "/categories/", "/products", "/products/", "/software/free", "/unknown/thing", "/compare", "/compare/"]) {

@@ -27,7 +27,7 @@ export default async function ProductOverviewPage({ params }: PageProps<"/produc
   const profile = await getProductProfile(slug);
   if (!profile) notFound();
 
-  const { product, vendor, primaryCategory, categories, featureGroups, featureCount, similar, vendorNames, comparisons } =
+  const { product, vendor, primaryCategory, categories, featureGroups, featureCount, alternatives, vendorNames, comparisons } =
     profile;
   const tab = (segment: Parameters<typeof productTabHref>[1]) => productTabHref(slug, segment);
   const faqLd = faqJsonLd(product.faq);
@@ -109,7 +109,7 @@ export default async function ProductOverviewPage({ params }: PageProps<"/produc
       </ProfileSection>
 
       {/* 7. Similar products */}
-      {similar.length > 0 && (
+      {alternatives.length > 0 && (
         <ProfileSection
           id="similar"
           title="Similar products"
@@ -121,7 +121,7 @@ export default async function ProductOverviewPage({ params }: PageProps<"/produc
           more={{ href: tab("alternatives"), label: "All alternatives" }}
         >
           <ul className="grid gap-4 sm:grid-cols-2">
-            {similar.slice(0, SIMILAR_ON_OVERVIEW).map((p) => (
+            {alternatives.slice(0, SIMILAR_ON_OVERVIEW).map(({ product: p }) => (
               <li key={p.slug}>
                 <ProductCompact product={p} vendorName={vendorNames.get(p.vendorSlug) ?? null} />
               </li>

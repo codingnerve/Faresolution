@@ -71,6 +71,24 @@ export function faqJsonLd(faq: readonly FaqItem[]): Record<string, unknown> | nu
   };
 }
 
+/**
+ * ItemList of pages (names and absolute URLs only, in the order shown), or
+ * `null` when there are none. Carries no ratings, ranks or prices.
+ */
+export function itemListJsonLd(items: readonly { name: string; path: string }[]): Record<string, unknown> | null {
+  if (items.length === 0) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      url: absoluteUrl(item.path),
+    })),
+  };
+}
+
 /** Operating systems a product runs on; "api" is not one, so it is left out. */
 const OPERATING_SYSTEM: Partial<Record<Platform, string>> = {
   web: "Web browser",

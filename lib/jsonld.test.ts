@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getProduct } from "@/lib/data";
-import { faqJsonLd, organizationJsonLd, productJsonLd, safeJsonLd } from "@/lib/jsonld";
+import { faqJsonLd, itemListJsonLd, organizationJsonLd, productJsonLd, safeJsonLd } from "@/lib/jsonld";
 
 describe("safeJsonLd", () => {
   it("escapes < so text can never close the script tag", () => {
@@ -134,5 +134,23 @@ describe("productJsonLd", () => {
     const out = safeJsonLd(productJsonLd({ ...product, name: "</script><b>", description: "a < b" }));
     expect(out).not.toContain("<");
     expect(JSON.parse(out).name).toBe("</script><b>");
+  });
+});
+
+describe("itemListJsonLd", () => {
+  it("is null for an empty list", () => {
+    expect(itemListJsonLd([])).toBeNull();
+  });
+
+  it("lists names and absolute urls in order, and nothing else", () => {
+    const ld = itemListJsonLd([
+      { name: "Zoho CRM", path: "/products/zoho-crm" },
+      { name: "Pipedrive", path: "/products/pipedrive" },
+    ]);
+    expect(ld).toMatchObject({ "@type": "ItemList" });
+    expect(ld?.itemListElement).toEqual([
+      { "@type": "ListItem", position: 1, name: "Zoho CRM", url: "https://faresolution.com/products/zoho-crm" },
+      { "@type": "ListItem", position: 2, name: "Pipedrive", url: "https://faresolution.com/products/pipedrive" },
+    ]);
   });
 });

@@ -24,5 +24,11 @@ export function proxy(request: NextRequest) {
 // Must be a static literal. Covers every path shape of every guard in
 // lib/route-guards.ts (route-guards.test.ts checks this).
 export const config = {
-  matcher: ["/categories/:slug", "/products/:slug", "/products/:slug/:tab", "/compare/:slug"],
+  matcher: [
+    "/categories/:slug",
+    "/products/:slug",
+    "/products/:slug/:tab",
+    "/compare/:slug",
+    "/alternatives/:product",
+  ],
 };

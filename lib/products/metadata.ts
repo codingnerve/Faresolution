@@ -34,7 +34,7 @@ function copy(profile: ProductProfile, segment: ProductTabSegment | null): { tit
     case "alternatives":
       return {
         title: `${name} Alternatives`,
-        description: `Products similar to ${name}${inCategory}, matched on category and shared features.`,
+        description: `Products similar to ${name}${inCategory}, matched on categories, features, pricing model, industries and deployment.`,
       };
     case "integrations":
       return {

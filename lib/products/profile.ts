@@ -20,7 +20,7 @@ import {
   type Product,
   type Vendor,
 } from "@/lib/data";
-import { similarProducts } from "./similar";
+import { buildAlternativeLabels, getAlternatives, type Alternative } from "@/lib/alternatives/score";
 
 export interface FeatureGroup {
   group: string;
@@ -51,13 +51,14 @@ export interface ProductProfile {
   featureGroups: FeatureGroup[];
   featureCount: number;
   integrations: ProfileIntegration[];
-  similar: Product[];
-  /** Vendor display names for `similar` (and any other product on the page). */
+  /** Products like this one from the alternatives engine, most similar first. */
+  alternatives: Alternative[];
+  /** Vendor display names for `alternatives` (and any other product on the page). */
   vendorNames: Map<string, string>;
   comparisons: ProfileComparison[];
 }
 
-/** How many similar products the profile computes (the overview shows fewer). */
+/** How many alternatives the profile computes (the overview shows fewer). */
 export const SIMILAR_LIMIT = 6;
 
 function pickInOrder<T extends { slug: string }>(items: readonly T[], slugs: readonly string[]): T[] {
@@ -119,7 +120,7 @@ async function loadProductProfile(slug: string): Promise<ProductProfile | null> 
       integration,
       productSlug: productBySlug.has(integration.slug) ? integration.slug : null,
     })),
-    similar: similarProducts(product, products, SIMILAR_LIMIT),
+    alternatives: getAlternatives(product, products, SIMILAR_LIMIT, buildAlternativeLabels(categories, industries)),
     vendorNames,
     comparisons: ownComparisons,
   };

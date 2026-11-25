@@ -11,13 +11,15 @@ import {
   useId,
   useRef,
   useState,
-  useSyncExternalStore,
   type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
 import { Logo } from "@/components/ui/Logo";
+import { useFocusTrap } from "@/lib/hooks/useFocusTrap";
+import { useMounted } from "@/lib/hooks/useMounted";
+import { useScrollLock } from "@/lib/hooks/useScrollLock";
 import { cn } from "@/lib/utils";
 import {
   allCategoriesLink,
@@ -27,20 +29,6 @@ import {
   type NavLink,
   type NavModel,
 } from "./navigation";
-
-const FOCUSABLE =
-  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
-
-const noopSubscribe = () => () => {};
-
-/** True once hydrated on the client (portals need `document`). */
-function useMounted(): boolean {
-  return useSyncExternalStore(
-    noopSubscribe,
-    () => true,
-    () => false,
-  );
-}
 
 /**
  * Calls `onChange` whenever the pathname changes (not on first render). Kept
@@ -84,15 +72,12 @@ export function MobileNav({ nav, className }: { nav: NavModel; className?: strin
     if (returnFocus) triggerRef.current?.focus();
   }
 
+  // Lock page scroll behind the drawer and keep focus inside it.
+  useScrollLock(open);
+  const trapFocus = useFocusTrap(panelRef, { active: open, initialFocusRef: closeRef });
+
   useEffect(() => {
     if (!open) return;
-    // Lock page scroll behind the drawer.
-    const { documentElement: html, body } = document;
-    const previous = { html: html.style.overflow, body: body.style.overflow };
-    html.style.overflow = "hidden";
-    body.style.overflow = "hidden";
-    closeRef.current?.focus();
-
     // The drawer is for small screens only: close it if the viewport grows.
     const desktop = window.matchMedia("(min-width: 64rem)");
     const onResize = () => {
@@ -102,11 +87,7 @@ export function MobileNav({ nav, className }: { nav: NavModel; className?: strin
       }
     };
     desktop.addEventListener("change", onResize);
-    return () => {
-      html.style.overflow = previous.html;
-      body.style.overflow = previous.body;
-      desktop.removeEventListener("change", onResize);
-    };
+    return () => desktop.removeEventListener("change", onResize);
   }, [open]);
 
   function onKeyDown(event: KeyboardEvent<HTMLDivElement>) {
@@ -115,21 +96,7 @@ export function MobileNav({ nav, className }: { nav: NavModel; className?: strin
       close(true);
       return;
     }
-    if (event.key !== "Tab" || !panelRef.current) return;
-    const focusable = Array.from(panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE)).filter(
-      (el) => el.offsetParent !== null || el === document.activeElement,
-    );
-    if (focusable.length === 0) return;
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-    const activeEl = document.activeElement;
-    if (event.shiftKey && (activeEl === first || !panelRef.current.contains(activeEl))) {
-      event.preventDefault();
-      last.focus();
-    } else if (!event.shiftKey && (activeEl === last || !panelRef.current.contains(activeEl))) {
-      event.preventDefault();
-      first.focus();
-    }
+    trapFocus(event);
   }
 
   function onPanelClick(event: MouseEvent<HTMLDivElement>) {

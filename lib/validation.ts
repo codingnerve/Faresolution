@@ -67,10 +67,7 @@ function slugField(error: string) {
 export const HONEYPOT_FIELD = "hp_7f3c" as const;
 
 /** Shown when the honeypot was filled: neutral and actionable, never says why. */
-export const HONEYPOT_ERROR = "We couldn't save this draft. Please try again.";
-
-/** The same neutral message for forms that are not drafts (contact, claim, vendor interest). */
-export const FORM_RETRY_ERROR = "We couldn't save this. Please try again.";
+export const HONEYPOT_ERROR = "We couldn't save this. Please try again.";
 
 const honeypotField = z.string().max(0, { error: HONEYPOT_ERROR }).optional();
 

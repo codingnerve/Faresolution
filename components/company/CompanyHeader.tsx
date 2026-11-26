@@ -8,11 +8,14 @@ import { cn } from "@/lib/utils";
 export function CompanyHeader({
   eyebrow,
   title,
+  crumbLabel,
   intro,
   children,
 }: {
   eyebrow: string;
   title: string;
+  /** Breadcrumb label when it should differ from the title. */
+  crumbLabel?: string;
   intro: ReactNode;
   /** Extra content under the intro, such as a draft notice. */
   children?: ReactNode;
@@ -20,7 +23,7 @@ export function CompanyHeader({
   return (
     <header className="border-b border-line bg-surface-alt">
       <Container className="py-8 sm:py-12">
-        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: title }]} />
+        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: crumbLabel ?? title }]} />
         <p className="type-label mt-6">{eyebrow}</p>
         <h1 className="type-h1 mt-2 max-w-3xl text-navy">{title}</h1>
         <div className="type-body mt-3 max-w-2xl text-subtle">{intro}</div>
@@ -54,5 +57,17 @@ export function LegalDraftNotice({ className }: { className?: string }) {
         before Faresolution launches. Draft prepared {LEGAL_DRAFT_DATE}.
       </p>
     </div>
+  );
+}
+
+/**
+ * A visibly marked gap in a legal draft: something that must be filled in
+ * before launch (such as the operator's legal name), never ordinary prose.
+ */
+export function Placeholder({ children }: { children: ReactNode }) {
+  return (
+    <mark className="rounded-xs border border-dashed border-sponsored/50 bg-sponsored-tint px-1 py-0.5 font-medium text-sponsored [box-decoration-break:clone]">
+      <span className="sr-only">Placeholder: </span>[To be added before launch: {children}]
+    </mark>
   );
 }

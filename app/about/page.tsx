@@ -9,7 +9,7 @@ import { articleHref } from "@/lib/editorial";
 import { SITE_TAGLINE } from "@/lib/site";
 import { SITE_NAME } from "@/lib/utils";
 
-const title = "About Faresolution";
+const title = "About";
 const description =
   "Why Faresolution exists, how the software directory works, how products are listed, how editorial independence is kept and what is still demonstration data.";
 
@@ -44,7 +44,7 @@ const HOW_IT_WORKS = [
 const PRINCIPLES = [
   {
     title: "Facts we can stand behind",
-    body: "A listing records only what we are confident of. Anything else says “Not verified” rather than a guess, and prices appear only when they can be checked.",
+    body: "At launch, a fact, a price included, will be shown only when it can be checked against a source. Today's sample listings have not been checked; where a fact is unknown they say “Not verified” rather than guess.",
   },
   {
     title: "No borrowed or invented ratings",
@@ -72,6 +72,7 @@ export default async function AboutPage() {
       <CompanyHeader
         eyebrow="About"
         title="About Faresolution"
+        crumbLabel="About"
         intro={
           <p>
             An independent directory for finding, comparing and shortlisting business software. {SITE_TAGLINE}

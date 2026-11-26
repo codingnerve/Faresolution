@@ -7,7 +7,7 @@ import { SITE_NAME } from "@/lib/utils";
 
 const title = "Register interest";
 const description =
-  "Join the waitlist for the Faresolution vendor programme, which opens at launch. No account is created; in this demo your entry stays in your browser.";
+  "Register interest in the Faresolution vendor programme, which opens at launch. In this demo nothing is sent, so this does not put you on a list; no account is created.";
 
 export const metadata: Metadata = {
   title,
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 const AT_LAUNCH = [
   {
     title: "Programme opens",
-    body: "Plans and pricing will be published, and everyone on the waitlist will be able to review them before choosing anything.",
+    body: "Plans and pricing will be published on the plans page before any plan can be bought, and registering interest will add you to the waitlist.",
   },
   {
     title: "Vendor accounts",
@@ -39,8 +39,9 @@ export default function VendorRegisterPage() {
         title="Register interest"
         intro={
           <p>
-            Join the waitlist for the vendor programme. This is not a sign-up: no account is created, no password is
-            set and nothing is charged.
+            Tell us you are interested in the vendor programme. In this demo nothing is sent, so this does not put you
+            on a list; at launch, registering will add you to the waitlist. No account is created, no password is set
+            and nothing is charged.
           </p>
         }
       />

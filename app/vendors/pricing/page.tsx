@@ -29,7 +29,7 @@ const NEVER_FOR_SALE = [
 const FAQ: FaqItem[] = [
   {
     q: "Why are there no prices?",
-    a: "Because none have been set. We would rather show nothing than a number we might change. Pricing will be announced at launch, and anyone who registers interest will be able to see it before committing to anything.",
+    a: "Because none have been set. We would rather show nothing than a number we might change. Pricing will be announced at launch and published on this page before any plan can be bought.",
   },
   {
     q: "Will my product stay listed if I don't take a plan?",
@@ -41,7 +41,7 @@ const FAQ: FaqItem[] = [
   },
   {
     q: "What does registering interest commit me to?",
-    a: "Nothing. In this demo your entry is kept only in your browser; no account is created and nobody will contact you from it. At launch, registering will mean being told when the programme opens.",
+    a: "Nothing. In this demo nothing is sent, so registering does not put you on a list: your entry is kept only in your browser, no account is created and nobody will contact you from it. At launch, registering interest will add you to the waitlist for the programme.",
   },
   {
     q: "When can I claim my listing?",
@@ -104,7 +104,7 @@ export default function VendorPricingPage() {
                     href="#register-interest"
                     className="mt-auto inline-flex items-center gap-1.5 self-start rounded-xs pt-6 text-sm font-medium text-blue-ink hover:text-navy"
                   >
-                    Register interest in {plan.name}
+                    Register interest
                   </a>
                 </li>
               );
@@ -129,7 +129,7 @@ export default function VendorPricingPage() {
             tabIndex={0}
             className="relative mt-8 overflow-x-auto rounded-lg border border-line bg-surface shadow-card"
           >
-            <table className="w-full min-w-[26rem] border-collapse text-left text-sm sm:min-w-[40rem]">
+            <table className="w-full min-w-[19rem] table-fixed border-collapse text-left text-sm sm:min-w-[40rem]">
               <caption className="sr-only">
                 Capabilities included in each vendor plan. {PLAN_PRICING_STATUS}.
               </caption>
@@ -137,12 +137,16 @@ export default function VendorPricingPage() {
                 <tr className="border-b border-line">
                   <th
                     scope="col"
-                    className="sticky left-0 z-10 w-[10.5rem] bg-surface px-4 py-3.5 font-semibold text-navy sm:static sm:w-[46%] sm:px-5"
+                    className="sticky left-0 z-10 w-[40%] bg-surface px-3 py-3.5 font-semibold text-navy sm:static sm:w-[46%] sm:px-5"
                   >
                     Capability
                   </th>
                   {VENDOR_PLANS.map((plan) => (
-                    <th key={plan.id} scope="col" className="px-2 py-3.5 text-center font-semibold text-navy sm:px-5">
+                    <th
+                      key={plan.id}
+                      scope="col"
+                      className="px-1 py-3.5 text-center text-xs font-semibold text-navy sm:px-5 sm:text-sm"
+                    >
                       {plan.name}
                     </th>
                   ))}
@@ -154,24 +158,25 @@ export default function VendorPricingPage() {
                     <th
                       scope="colgroup"
                       colSpan={VENDOR_PLANS.length + 1}
-                      className="px-4 py-2 text-xs font-semibold tracking-[0.08em] text-subtle uppercase sm:px-5"
+                      className="px-3 py-2 text-xs font-semibold tracking-[0.08em] text-subtle uppercase sm:px-5"
                     >
-                      <span className="sticky left-4">{group}</span>
+                      <span className="sticky left-3">{group}</span>
                     </th>
                   </tr>
                   {PLAN_CAPABILITIES.filter((capability) => capability.group === group).map((capability) => (
                     <tr key={capability.id} className="border-t border-line">
                       <th
                         scope="row"
-                        className="sticky left-0 z-10 bg-surface px-4 py-3.5 align-top font-normal sm:static sm:px-5"
+                        className="sticky left-0 z-10 bg-surface px-3 py-3.5 align-top font-normal sm:static sm:px-5"
                       >
                         <span className="block font-medium text-navy">{capability.label}</span>
+                        {/* Phones get these in the list below the table, where they fit. */}
                         <span className="type-meta mt-0.5 hidden sm:block">{capability.description}</span>
                       </th>
                       {VENDOR_PLANS.map((plan) => {
                         const included = planIncludes(plan, capability.id);
                         return (
-                          <td key={plan.id} className="px-2 py-3.5 text-center align-top sm:px-5">
+                          <td key={plan.id} className="px-1 py-3.5 text-center align-top sm:px-5">
                             {included ? (
                               <Check aria-hidden="true" className="mx-auto size-4 text-success" strokeWidth={2.25} />
                             ) : (
@@ -187,9 +192,17 @@ export default function VendorPricingPage() {
               ))}
             </table>
           </div>
-          <p className="type-meta mt-3 sm:hidden">
-            Scroll the table sideways to see every plan. Wider screens also show what each capability means.
-          </p>
+          <div className="mt-8 sm:hidden">
+            <h3 className="type-h3 text-navy">What each capability means</h3>
+            <dl className="mt-3 divide-y divide-line border-y border-line">
+              {PLAN_CAPABILITIES.map((capability) => (
+                <div key={capability.id} className="py-3">
+                  <dt className="text-sm font-medium text-navy">{capability.label}</dt>
+                  <dd className="type-meta mt-0.5">{capability.description}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
         </Container>
       </section>
 
@@ -236,13 +249,13 @@ export default function VendorPricingPage() {
       >
         <Container className="grid gap-10 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-16">
           <div>
-            <p className="type-label mb-3">Waitlist</p>
+            <p className="type-label mb-3">Register interest</p>
             <h2 id="register-interest-title" className="type-h2 text-navy">
               Register your interest
             </h2>
             <p className="type-body mt-3 text-subtle">
-              Tell us which plan fits. In this demo your entry stays in your browser; no account is created and nothing
-              is sent.
+              Tell us which plan fits. In this demo nothing is sent, so this does not put you on a list: your entry stays
+              in your browser and no account is created.
             </p>
           </div>
           <div className="rounded-lg border border-line bg-surface p-5 shadow-card sm:p-7">

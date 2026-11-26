@@ -18,7 +18,7 @@ import { submissionNotice } from "@/lib/forms/submission-notice";
 import { saveSubmission } from "@/lib/submissions";
 import { cn } from "@/lib/utils";
 import {
-  FORM_RETRY_ERROR,
+  HONEYPOT_ERROR,
   HONEYPOT_FIELD,
   isHoneypotOnly,
   vendorInterestSchema,
@@ -51,7 +51,7 @@ const EMPTY_VALUES: VendorInterestInput = {
 };
 
 /**
- * Vendor programme interest (the waitlist). Validates with
+ * Vendor programme interest. Validates with
  * `vendorInterestSchema` and stores the entry locally via
  * `saveSubmission('vendor-interest', ...)`. No account is created and nothing
  * is sent; the confirmation says so.
@@ -154,7 +154,7 @@ export function VendorInterestForm({
         showSummary={showSummary}
         items={summaryItems}
         summaryTitle={(count) => fixFieldsTitle(count, "saving your interest")}
-        retryMessage={retryNeeded ? FORM_RETRY_ERROR : null}
+        retryMessage={retryNeeded ? HONEYPOT_ERROR : null}
         fieldHref={(name) => `#${fieldId(name)}`}
         onJump={(name) => document.getElementById(fieldId(name))?.focus()}
       />

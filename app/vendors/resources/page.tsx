@@ -50,7 +50,7 @@ const SECTIONS: PolicySection[] = [
     id: "pricing",
     heading: "Pricing information",
     paragraphs: [
-      "The directory shows a pricing fact only when it can be checked against a public source. Anything else reads “Not verified”, which buyers will see on many listings today. Publishing your prices on your own site, and linking to that page, is the surest way to have them shown.",
+      "At launch, a pricing fact will be shown only when it can be checked against a public source. Today's listings are sample data and their pricing has not been checked; where nothing is known a listing reads “Not verified”, as many do now. Publishing your prices on your own site, and linking to that page, will be the surest way to have them shown.",
       "Please don't send prices that apply only to some customers or regions without saying so. Starting prices are useful only if a buyer could actually pay them.",
     ],
   },

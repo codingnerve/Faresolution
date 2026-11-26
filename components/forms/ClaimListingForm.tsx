@@ -23,7 +23,7 @@ import { isFreeWebmail } from "@/lib/forms/webmail";
 import { saveSubmission } from "@/lib/submissions";
 import { cn } from "@/lib/utils";
 import {
-  FORM_RETRY_ERROR,
+  HONEYPOT_ERROR,
   HONEYPOT_FIELD,
   claimSchema,
   isHoneypotOnly,
@@ -171,7 +171,7 @@ export function ClaimListingForm({ className }: { className?: string }) {
         showSummary={showSummary}
         items={summaryItems}
         summaryTitle={(count) => fixFieldsTitle(count, "saving your claim request")}
-        retryMessage={retryNeeded ? FORM_RETRY_ERROR : null}
+        retryMessage={retryNeeded ? HONEYPOT_ERROR : null}
         fieldHref={(name) => `#${fieldId(name)}`}
         onJump={(name) => document.getElementById(fieldId(name))?.focus()}
       />
@@ -213,7 +213,7 @@ export function ClaimListingForm({ className }: { className?: string }) {
             aria-invalid={errors.email ? true : undefined}
             aria-describedby={describedBy(
               `${fieldId("email")}-hint`,
-              webmail && `${fieldId("email")}-webmail`,
+              webmail && !errors.email && `${fieldId("email")}-webmail`,
               errors.email && errorId("email"),
             )}
             {...register("email")}

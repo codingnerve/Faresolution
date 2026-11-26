@@ -32,7 +32,7 @@ export const PLAN_CAPABILITIES = [
     id: "corrections",
     group: "Listing",
     label: "Priority fact corrections",
-    description: "Corrections to your listing's facts are checked and applied ahead of general requests.",
+    description: "Corrections to your listing's facts will be checked and applied ahead of general requests.",
   },
   {
     id: "media",
@@ -159,8 +159,4 @@ export const PLAN_IDS = VENDOR_PLANS.map((plan) => plan.id) as [PlanId, ...PlanI
 
 export function planIncludes(plan: VendorPlan, capability: string): boolean {
   return (plan.capabilities as readonly string[]).includes(capability);
-}
-
-export function getPlan(id: string): VendorPlan | null {
-  return VENDOR_PLANS.find((plan) => plan.id === id) ?? null;
 }

@@ -5,7 +5,6 @@ import {
   COMPANY_SIZE_VALUES,
   CONTACT_TOPIC_OPTIONS,
   contactSchema,
-  FORM_RETRY_ERROR,
   HONEYPOT_ERROR,
   HONEYPOT_FIELD,
   isHoneypotOnly,
@@ -386,12 +385,11 @@ describe("honeypot", () => {
   });
 
   it("has a neutral, actionable message that does not mention bots or spam", () => {
-    expect(HONEYPOT_ERROR).toBe("We couldn't save this draft. Please try again.");
+    expect(HONEYPOT_ERROR).toBe("We couldn't save this. Please try again.");
     expect(HONEYPOT_ERROR).not.toMatch(/bot|spam|hidden|honeypot/i);
   });
 
-  it("has an equally neutral message for the other forms, which are not drafts", () => {
-    expect(FORM_RETRY_ERROR).toMatch(/try again/i);
-    expect(FORM_RETRY_ERROR).not.toMatch(/bot|spam|hidden|honeypot|draft/i);
+  it("does not name a form type, so every form can show it", () => {
+    expect(HONEYPOT_ERROR).not.toMatch(/draft|message|claim|interest/i);
   });
 });

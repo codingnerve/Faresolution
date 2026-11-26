@@ -1,9 +1,11 @@
+import type { ReactNode } from "react";
 import { Container } from "@/components/ui/Container";
 
 export interface PolicySection {
   id: string;
   heading: string;
-  paragraphs?: string[];
+  /** Plain text, or rich content such as a marked placeholder. */
+  paragraphs?: ReactNode[];
   items?: { title?: string; body: string }[];
 }
 
@@ -33,8 +35,8 @@ export function PolicyPage({ sections }: { sections: PolicySection[] }) {
               <h2 id={`${section.id}-title`} className="type-h2 text-navy">
                 {section.heading}
               </h2>
-              {section.paragraphs?.map((paragraph) => (
-                <p key={paragraph} className="type-body mt-3 text-ink">
+              {section.paragraphs?.map((paragraph, index) => (
+                <p key={`${section.id}-${index}`} className="type-body mt-3 text-ink">
                   {paragraph}
                 </p>
               ))}

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { CompanyHeader, LegalDraftNotice } from "@/components/company/CompanyHeader";
+import { CompanyHeader, LegalDraftNotice, Placeholder } from "@/components/company/CompanyHeader";
 import { PolicyPage, type PolicySection } from "@/components/reviews/PolicyPage";
 import { SITE_NAME } from "@/lib/utils";
 
@@ -19,7 +19,10 @@ const SECTIONS: PolicySection[] = [
     id: "scope",
     heading: "What this notice covers",
     paragraphs: [
-      "This notice describes how the Faresolution demonstration site handles information today. The site is a preview of a software directory before launch. The legal name and address of the organisation responsible for the site will be added here before launch.",
+      "This notice describes how the Faresolution demonstration site handles information today. The site is a preview of a software directory before launch.",
+      <>
+        The organisation responsible for the site is <Placeholder>operator legal name and address</Placeholder>.
+      </>,
       "It will be rewritten before Faresolution collects any personal information on its own systems, such as for accounts, newsletters or reviews.",
     ],
   },
@@ -57,7 +60,12 @@ const SECTIONS: PolicySection[] = [
     id: "server",
     heading: "What reaches the server",
     paragraphs: [
-      "Like any website, the server that delivers these pages receives the technical details your browser sends with each request, such as your IP address, browser type and the page requested. The site does not add anything to them. Whether these details are logged, and for how long, depends on the hosting provider; that will be stated here before launch.",
+      <>
+        Like any website, the server that delivers these pages receives the technical details your browser sends with
+        each request, such as your IP address, browser type and the page requested. The site does not add anything to
+        them. Whether these details are logged, and for how long:{" "}
+        <Placeholder>hosting provider, server log contents and retention period</Placeholder>.
+      </>,
       "Searches, filters and comparisons are worked out in your browser or from the page address, not stored by us.",
     ],
   },
@@ -93,7 +101,10 @@ const SECTIONS: PolicySection[] = [
     id: "contact",
     heading: "Questions",
     paragraphs: [
-      "You can use the contact form and choose “Privacy or my data”. Because the demo isn't connected to email yet, the message is kept in your browser and not received by anyone; a monitored privacy contact will be published here before launch.",
+      "You can use the contact form and choose “Privacy or my data”. Because the demo isn't connected to email yet, the message is kept in your browser and not received by anyone.",
+      <>
+        Privacy contact: <Placeholder>a monitored privacy contact address</Placeholder>.
+      </>,
     ],
   },
   {

@@ -164,8 +164,8 @@ export default async function VendorsPage() {
                 <dl className="mt-5 divide-y divide-line border-y border-line text-sm">
                   {[
                     ["Facts", "Deployment, platforms, company sizes, integrations"],
-                    ["Pricing", "Only facts we are confident in; otherwise “Not verified”"],
-                    ["Reviews", "Shown once collected and checked; none today"],
+                    ["Pricing", "At launch, only what can be checked; today's sample pricing is unchecked"],
+                    ["Reviews", "Will be shown once collected and checked; none today"],
                     ["Vendor response", "Your public reply under each review"],
                   ].map(([term, detail]) => (
                     <div key={term} className="grid grid-cols-[7.5rem_minmax(0,1fr)] gap-3 py-2.5">

@@ -21,7 +21,7 @@ import { saveSubmission } from "@/lib/submissions";
 import { cn } from "@/lib/utils";
 import {
   CONTACT_TOPIC_OPTIONS,
-  FORM_RETRY_ERROR,
+  HONEYPOT_ERROR,
   HONEYPOT_FIELD,
   contactSchema,
   isHoneypotOnly,
@@ -98,6 +98,8 @@ export function ContactForm({ className }: { className?: string }) {
   } = useForm<ContactInput, unknown, ContactValues>({
     resolver: zodResolver(contactSchema),
     defaultValues: EMPTY_VALUES,
+    // Focus is moved by onInvalid, in page order, as in the other forms.
+    shouldFocusError: false,
   });
 
   const applyPrefill = useCallback(
@@ -187,7 +189,7 @@ export function ContactForm({ className }: { className?: string }) {
         showSummary={showSummary}
         items={summaryItems}
         summaryTitle={(count) => fixFieldsTitle(count, "saving your message")}
-        retryMessage={retryNeeded ? FORM_RETRY_ERROR : null}
+        retryMessage={retryNeeded ? HONEYPOT_ERROR : null}
         fieldHref={(name) => `#${fieldId(name)}`}
         onJump={(name) => document.getElementById(fieldId(name))?.focus()}
       />

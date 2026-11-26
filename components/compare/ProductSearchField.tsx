@@ -84,9 +84,11 @@ export function ProductSearchField({
       const step = event.key === "ArrowDown" ? 1 : -1;
       setActive((activeIndex + step + results.length) % results.length);
     } else if (event.key === "Enter") {
-      if (!expanded || results.length === 0) return;
+      // With a query, Enter belongs to this field: it picks a result or does
+      // nothing, and never submits a surrounding form (e.g. the claim form).
+      if (!hasQuery) return;
       event.preventDefault();
-      pick(results[activeIndex].slug);
+      if (expanded && results.length > 0) pick(results[activeIndex].slug);
     } else if (event.key === "Escape") {
       if (query === "" && !open) return;
       event.preventDefault();

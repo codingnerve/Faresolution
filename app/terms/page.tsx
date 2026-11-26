@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { CompanyHeader, LegalDraftNotice } from "@/components/company/CompanyHeader";
+import { CompanyHeader, LegalDraftNotice, Placeholder } from "@/components/company/CompanyHeader";
 import { PolicyPage, type PolicySection } from "@/components/reviews/PolicyPage";
 import { SITE_NAME } from "@/lib/utils";
 
@@ -19,7 +19,11 @@ const SECTIONS: PolicySection[] = [
     id: "about",
     heading: "About these terms",
     paragraphs: [
-      "These terms cover your use of the Faresolution demonstration site, a preview of a software directory before launch. By using the site you agree to them. The legal name of the organisation responsible for the site, and the law that governs these terms, will be added before launch.",
+      "These terms cover your use of the Faresolution demonstration site, a preview of a software directory before launch. By using the site you agree to them.",
+      <>
+        The site is operated by <Placeholder>operator legal name and address</Placeholder>. These terms are governed by{" "}
+        <Placeholder>governing law and jurisdiction</Placeholder>.
+      </>,
     ],
   },
   {

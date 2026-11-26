@@ -43,7 +43,8 @@ const exploreLinks: NavLink[] = [
   { label: "Editor's picks", href: "/software/trending" },
   { label: "Recently added", href: "/software/new" },
   { label: "Free software", href: "/software/free" },
-  { label: "Top rated", href: "/software/top-rated" },
+  // No "Top rated": nothing is rated until reviews open (R14). The placeholder
+  // page stays reachable from the directory view links on /software.
   { label: "Reviews", href: "/reviews" },
   { label: "All categories", href: allCategoriesLink.href },
   { label: "Saved items", href: "/saved" },

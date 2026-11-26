@@ -143,7 +143,7 @@ export default async function CategoryPage({ params }: PageProps<"/categories/[s
                   <div>
                     <p className="type-label mb-3">Our shortlist</p>
                     <h2 id="top-products-title" className="type-h2 text-navy">
-                      Top products in {category.name}
+                      Editor&rsquo;s picks in {category.name}
                     </h2>
                     <p className="type-body mt-3 text-subtle">
                       Ordered by editorial pick, then by our trending order. Reviews are not open yet, so this is not a

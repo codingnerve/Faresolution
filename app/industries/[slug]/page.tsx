@@ -149,7 +149,7 @@ export default async function IndustryPage({ params }: PageProps<"/industries/[s
                     <h2 id="picks-title" className="type-h2 text-navy">
                       {picksInRecommended
                         ? `Editor's picks for ${industry.name}`
-                        : `Featured products serving ${industry.name}`}
+                        : `Products serving ${industry.name}`}
                     </h2>
                     <p className="type-body mt-3 text-subtle">
                       {picksInRecommended

@@ -9,7 +9,7 @@ import { getArticle, getProduct } from "@/lib/data";
 // Review collection is not open yet: every step is described as planned (R11).
 const STEPS = [
   {
-    title: "Written by people who use the product",
+    title: "Written by people who use the product (planned)",
     body: "When reviews open, reviewers will describe how their team uses the tool and rate ease of use, value, features and support separately.",
   },
   {

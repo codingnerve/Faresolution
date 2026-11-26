@@ -52,6 +52,8 @@ describe("isKnownPath: products and their tabs", () => {
     expect(isKnownPath("/products/hubspot-crm")).toBe(true);
     expect(isKnownPath("/products/jira")).toBe(true);
     for (const tab of tabs) expect(isKnownPath(`/products/hubspot-crm/${tab}`), tab).toBe(true);
+    expect(isKnownPath("/products/hubspot-crm/opengraph-image")).toBe(true);
+    expect(isKnownPath("/products/nope/opengraph-image")).toBe(false);
     expect(isKnownPath("/products/hubspot-crm/pricing/")).toBe(true);
   });
 

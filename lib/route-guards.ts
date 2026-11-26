@@ -46,7 +46,7 @@ export interface RouteGuard {
 export const routeGuards: readonly RouteGuard[] = [
   { prefix: "/categories/", exists: (slug) => categorySlugSet.has(slug) },
   { prefix: "/industries/", exists: (slug) => industrySlugSet.has(slug) },
-  { prefix: "/products/", subpaths: PRODUCT_TAB_SEGMENTS, exists: (slug) => productSlugSet.has(slug) },
+  { prefix: "/products/", subpaths: [...PRODUCT_TAB_SEGMENTS, "opengraph-image"], exists: (slug) => productSlugSet.has(slug) },
   // Every product has an alternatives page; there are no sub-pages.
   { prefix: "/alternatives/", exists: (slug) => productSlugSet.has(slug) },
   // Every product has a review draft page; /reviews, /reviews/latest and /reviews/helpful are static.

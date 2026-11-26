@@ -3,8 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleCheck, Star, TriangleAlert } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useForm, useWatch, type FieldErrors, type Path } from "react-hook-form";
+import { Field, FormAlert, HoneypotInput, describedBy, fixFieldsTitle, inputClass } from "@/components/forms/fields";
 import { Button } from "@/components/ui/Button";
 import { useMounted } from "@/lib/hooks/useMounted";
 import { draftNotice } from "@/lib/reviews/draft-notice";
@@ -115,9 +116,6 @@ function findDraft(slug: string): StoredDraft | null {
   return null;
 }
 
-const inputClass =
-  "block w-full rounded-md border border-line-strong bg-surface px-3.5 text-sm text-ink placeholder:text-subtle hover:border-muted/60 focus-visible:border-blue aria-[invalid=true]:border-danger";
-
 /**
  * Review draft form. Validates with `reviewDraftSchema` and stores the draft
  * locally via `saveSubmission('review-draft', ...)`. Nothing is sent or
@@ -221,6 +219,7 @@ export function ReviewDraftForm({ product, industries, className }: ReviewDraftF
 
   const summaryItems = FIELD_ORDER.filter((name) => errors[name]).map((name) => ({
     name,
+    label: FIELD_LABEL[name],
     message: errors[name]?.message ?? "Check this field.",
   }));
   const showSummary = isSubmitted && summaryItems.length > 0;
@@ -299,41 +298,14 @@ export function ReviewDraftForm({ product, industries, className }: ReviewDraftF
         )}
       </div>
 
-      <div role="alert">
-        {retryNeeded && !showSummary && (
-          <p className="flex items-center gap-2 rounded-lg border border-danger/30 bg-danger-tint p-4 text-sm font-semibold text-danger sm:p-5">
-            <TriangleAlert aria-hidden="true" className="size-4 shrink-0" strokeWidth={2} />
-            {HONEYPOT_ERROR}
-          </p>
-        )}
-        {showSummary && (
-          <div className="rounded-lg border border-danger/30 bg-danger-tint p-4 sm:p-5">
-            <p className="flex items-center gap-2 text-sm font-semibold text-danger">
-              <TriangleAlert aria-hidden="true" className="size-4 shrink-0" strokeWidth={2} />
-              {`Please fix ${summaryItems.length} ${summaryItems.length === 1 ? "field" : "fields"} before saving your draft.`}
-            </p>
-            {summaryItems.length > 0 && (
-              <ul className="mt-2 list-disc space-y-1 pl-9 text-sm text-ink">
-                {summaryItems.map((item) => (
-                  <li key={item.name}>
-                    <a
-                      href={`#${fieldId(item.name)}`}
-                      onClick={(event) => {
-                        event.preventDefault();
-                        focusField(item.name);
-                      }}
-                      className="rounded-xs underline underline-offset-2 hover:text-navy"
-                    >
-                      {FIELD_LABEL[item.name]}
-                    </a>
-                    : {item.message}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        )}
-      </div>
+      <FormAlert
+        showSummary={showSummary}
+        items={summaryItems}
+        summaryTitle={(count) => fixFieldsTitle(count, "saving your draft")}
+        retryMessage={retryNeeded ? HONEYPOT_ERROR : null}
+        fieldHref={(name) => `#${fieldId(name)}`}
+        onJump={focusField}
+      />
 
       <fieldset className="min-w-0 space-y-7">
         <legend className="type-h3 mb-3 text-navy">Your ratings</legend>
@@ -536,10 +508,7 @@ export function ReviewDraftForm({ product, industries, className }: ReviewDraftF
         </div>
       </fieldset>
 
-      {/* Honeypot: hidden from people and assistive technology; bots tend to fill it. */}
-      <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
-        <input id={fieldId("x")} type="text" tabIndex={-1} autoComplete="off" {...register(HONEYPOT_FIELD)} />
-      </div>
+      <HoneypotInput id={fieldId("x")} registration={register(HONEYPOT_FIELD)} />
 
       <div className="border-t border-line pt-6">
         <p className="type-body max-w-2xl text-subtle">
@@ -560,48 +529,6 @@ export function ReviewDraftForm({ product, industries, className }: ReviewDraftF
         </div>
       </div>
     </form>
-  );
-}
-
-/** Joins the ids that describe a control, skipping empty ones. */
-function describedBy(...ids: (string | false | undefined | null)[]): string | undefined {
-  const joined = ids.filter(Boolean).join(" ");
-  return joined === "" ? undefined : joined;
-}
-
-function Field({
-  id,
-  label,
-  hint,
-  error,
-  errorId,
-  children,
-}: {
-  id: string;
-  label: string;
-  hint?: string;
-  error?: string;
-  errorId: string;
-  children: ReactNode;
-}) {
-  return (
-    <div>
-      <label htmlFor={id} className="block text-sm font-medium text-navy">
-        {label}
-      </label>
-      {hint && (
-        <p id={`${id}-hint`} className="type-meta mt-0.5 mb-1.5">
-          {hint}
-        </p>
-      )}
-      {!hint && <div className="mb-1.5" />}
-      {children}
-      {error && (
-        <p id={errorId} className="mt-1.5 text-[0.8125rem] text-danger">
-          {error}
-        </p>
-      )}
-    </div>
   );
 }
 

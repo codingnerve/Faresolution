@@ -18,6 +18,12 @@ type ProductSearchFieldProps = {
   disabledReason?: string | null;
   placeholder?: string;
   className?: string;
+  /** Id for the input (so a form can focus it or link to it); generated when omitted. */
+  inputId?: string;
+  /** Marks the input invalid (a form's inline error). */
+  invalid?: boolean;
+  /** Extra ids that describe the input, such as a form's hint and error. */
+  describedBy?: string;
 };
 
 /**
@@ -32,6 +38,9 @@ export function ProductSearchField({
   disabledReason = null,
   placeholder = "Search by product, vendor or category",
   className,
+  inputId,
+  invalid = false,
+  describedBy,
 }: ProductSearchFieldProps) {
   const index = useSearchIndex();
   const id = useId();
@@ -54,6 +63,8 @@ export function ProductSearchField({
   const expanded = open && hasQuery && !disabled;
   const listId = `${id}-list`;
   const hintId = `${id}-hint`;
+  const controlId = inputId ?? `${id}-input`;
+  const describedByIds = [disabledReason ? hintId : null, describedBy].filter(Boolean).join(" ") || undefined;
   const optionId = (i: number) => `${id}-option-${i}`;
   const activeIndex = Math.min(active, Math.max(results.length - 1, 0));
 
@@ -92,7 +103,7 @@ export function ProductSearchField({
 
   return (
     <div className={cn("relative", className)}>
-      <label htmlFor={`${id}-input`} className="mb-1.5 block text-sm font-medium text-navy">
+      <label htmlFor={controlId} className="mb-1.5 block text-sm font-medium text-navy">
         {label}
       </label>
       <div className="relative">
@@ -103,7 +114,7 @@ export function ProductSearchField({
         />
         <input
           ref={inputRef}
-          id={`${id}-input`}
+          id={controlId}
           type="search"
           role="combobox"
           autoComplete="off"
@@ -113,7 +124,8 @@ export function ProductSearchField({
           aria-expanded={expanded}
           aria-controls={listId}
           aria-activedescendant={expanded && results.length > 0 ? optionId(activeIndex) : undefined}
-          aria-describedby={disabledReason ? hintId : undefined}
+          aria-describedby={describedByIds}
+          aria-invalid={invalid ? true : undefined}
           disabled={disabled}
           value={query}
           placeholder={placeholder}
@@ -125,7 +137,7 @@ export function ProductSearchField({
           onFocus={() => setOpen(true)}
           onBlur={() => setOpen(false)}
           onKeyDown={onKeyDown}
-          className="h-11 w-full rounded-md border border-line-strong bg-surface pr-3 pl-9 text-[0.9375rem] text-ink shadow-card placeholder:text-subtle focus:border-blue focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-blue disabled:cursor-not-allowed disabled:bg-surface-alt disabled:opacity-70"
+          className="h-11 w-full rounded-md border border-line-strong bg-surface pr-3 pl-9 text-[0.9375rem] text-ink shadow-card placeholder:text-subtle focus:border-blue focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-blue aria-[invalid=true]:border-danger disabled:cursor-not-allowed disabled:bg-surface-alt disabled:opacity-70"
         />
       </div>
       {disabledReason && (

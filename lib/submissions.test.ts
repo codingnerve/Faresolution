@@ -242,6 +242,17 @@ describe("saveSubmission: persisted flag and replacement", () => {
     expect(saveSubmission("newsletter", { email: "a@example.com" })).toMatchObject({ ok: true, persisted: true });
   });
 
+  it("stores the Task 14 form kinds (contact, claim, vendor interest) and lists them by kind", async () => {
+    vi.stubGlobal("localStorage", createStorage());
+    const { saveSubmission, listSubmissions } = await load();
+    for (const kind of ["contact", "claim", "vendor-interest"] as const) {
+      expect(saveSubmission(kind, { email: "a@example.com" }), kind).toMatchObject({ ok: true, persisted: true });
+    }
+    expect(listSubmissions("vendor-interest")).toHaveLength(1);
+    expect(listSubmissions("claim")).toHaveLength(1);
+    expect(listSubmissions()).toHaveLength(3);
+  });
+
   it("reports persisted: false when setItem throws, and when storage is missing", async () => {
     const storage = createStorage();
     storage.setItem.mockImplementation(() => {

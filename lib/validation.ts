@@ -1,9 +1,11 @@
 /**
  * Zod schemas for every form on the site. Forms validate on the client with
  * these and store via `lib/submissions.ts`; a real API can reuse the same
- * schemas server side later. Task 11 adds the review, contact and claim schemas.
+ * schemas server side later. Task 11 adds the review, contact and claim
+ * schemas; Task 14 adds contact topics and the vendor interest schema.
  */
 import { z } from "zod";
+import { PLAN_IDS, type PlanId } from "@/lib/data/content/plans";
 import type { CompanySize } from "@/lib/data/types";
 
 /** RFC 5321 caps a forward path at 254 characters. */
@@ -66,6 +68,9 @@ export const HONEYPOT_FIELD = "hp_7f3c" as const;
 
 /** Shown when the honeypot was filled: neutral and actionable, never says why. */
 export const HONEYPOT_ERROR = "We couldn't save this draft. Please try again.";
+
+/** The same neutral message for forms that are not drafts (contact, claim, vendor interest). */
+export const FORM_RETRY_ERROR = "We couldn't save this. Please try again.";
 
 const honeypotField = z.string().max(0, { error: HONEYPOT_ERROR }).optional();
 
@@ -144,9 +149,24 @@ const optionalProductField = z
   .union([z.literal("").transform(() => undefined), slugField("Choose a product from the list.")])
   .optional();
 
+/** What a contact message is about (stored value, label). */
+export const CONTACT_TOPIC_OPTIONS = [
+  { value: "general", label: "A general question" },
+  { value: "demo", label: "A demo or a question for a vendor" },
+  { value: "correction", label: "A correction to a listing" },
+  { value: "vendor", label: "Listing my product or the vendor programme" },
+  { value: "editorial", label: "Editorial, press or partnerships" },
+  { value: "privacy", label: "Privacy or my data" },
+] as const;
+
+export type ContactTopic = (typeof CONTACT_TOPIC_OPTIONS)[number]["value"];
+
+const CONTACT_TOPIC_VALUES = CONTACT_TOPIC_OPTIONS.map((option) => option.value) as [ContactTopic, ...ContactTopic[]];
+
 export const contactSchema = z.object({
   name: textField("your name", 2, 100),
   email: emailField,
+  topic: z.enum(CONTACT_TOPIC_VALUES, { error: "Choose what your message is about." }).default("general"),
   product: optionalProductField,
   message: textField("a message", 10, 5000, "Your message must be at least 10 characters."),
   [HONEYPOT_FIELD]: honeypotField,
@@ -173,3 +193,53 @@ export const claimSchema = z.object({
 
 export type ClaimInput = z.input<typeof claimSchema>;
 export type ClaimValues = z.output<typeof claimSchema>;
+
+// --- Vendor interest ----------------------------------------------------------------
+
+const MAX_URL_LENGTH = 200;
+
+/**
+ * True for an absolute http(s) URL whose host has at least one dot (so
+ * `https://localhost` and bare words are rejected). Other schemes, such as
+ * `javascript:` or `mailto:`, are never accepted.
+ */
+export function isHttpUrl(value: string): boolean {
+  if (!/^https?:\/\//i.test(value)) return false;
+  let url: URL;
+  try {
+    url = new URL(value);
+  } catch {
+    return false;
+  }
+  if (url.protocol !== "http:" && url.protocol !== "https:") return false;
+  const host = url.hostname;
+  return host.includes(".") && !host.startsWith(".") && !host.endsWith(".") && !/\s/.test(value);
+}
+
+/** An optional website: blank means none; otherwise a full http(s) address. */
+const optionalWebsiteField = z
+  .string()
+  .trim()
+  .max(MAX_URL_LENGTH, { error: `The website address must be at most ${MAX_URL_LENGTH} characters.` })
+  .refine((value) => value === "" || isHttpUrl(value), {
+    error: "Enter the full website address, starting with https://",
+  })
+  .transform((value) => (value === "" ? undefined : value))
+  .optional();
+
+/** Plans a vendor can register interest in, plus "not sure yet". */
+export const PLAN_INTEREST_VALUES = [...PLAN_IDS, "undecided"] as [PlanId | "undecided", ...(PlanId | "undecided")[]];
+
+export type PlanInterest = (typeof PLAN_INTEREST_VALUES)[number];
+
+export const vendorInterestSchema = z.object({
+  name: textField("your name", 2, 100),
+  email: emailField,
+  company: textField("your company", 2, 120),
+  website: optionalWebsiteField,
+  plan: z.enum(PLAN_INTEREST_VALUES, { error: "Choose the plan you are interested in, or Not sure yet." }),
+  [HONEYPOT_FIELD]: honeypotField,
+});
+
+export type VendorInterestInput = z.input<typeof vendorInterestSchema>;
+export type VendorInterestValues = z.output<typeof vendorInterestSchema>;

@@ -5,7 +5,7 @@
  */
 import { readJson, writeJson } from "@/lib/storage";
 
-export type SubmissionKind = "newsletter" | "contact" | "review-draft" | "claim";
+export type SubmissionKind = "newsletter" | "contact" | "review-draft" | "claim" | "vendor-interest";
 
 export interface Submission {
   id: string;

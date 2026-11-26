@@ -1,11 +1,17 @@
 import { describe, expect, it } from "vitest";
+import { PLAN_IDS } from "@/lib/data/content/plans";
 import {
   claimSchema,
   COMPANY_SIZE_VALUES,
+  CONTACT_TOPIC_OPTIONS,
   contactSchema,
+  FORM_RETRY_ERROR,
   HONEYPOT_ERROR,
   HONEYPOT_FIELD,
   isHoneypotOnly,
+  isHttpUrl,
+  PLAN_INTEREST_VALUES,
+  vendorInterestSchema,
   newsletterSchema,
   reviewDraftSchema,
   USAGE_LENGTH_OPTIONS,
@@ -218,6 +224,115 @@ describe("contactSchema", () => {
     expect(contactSchema.safeParse({ ...validContact, product: "Not A Slug" }).success).toBe(false);
     expect(contactSchema.safeParse({ ...validContact, [HONEYPOT_FIELD]: "spam" }).success).toBe(false);
   });
+
+  it("defaults the topic to a general question and accepts every listed topic", () => {
+    expect(contactSchema.parse(validContact).topic).toBe("general");
+    for (const option of CONTACT_TOPIC_OPTIONS) {
+      expect(contactSchema.safeParse({ ...validContact, topic: option.value }).success, option.value).toBe(true);
+    }
+    expect(contactSchema.safeParse({ ...validContact, topic: "sales" }).success).toBe(false);
+  });
+});
+
+describe("isHttpUrl", () => {
+  it("accepts http and https addresses with a dotted host", () => {
+    expect(isHttpUrl("https://acme.example")).toBe(true);
+    expect(isHttpUrl("http://acme.example/path?x=1")).toBe(true);
+    expect(isHttpUrl("HTTPS://Acme.Example")).toBe(true);
+  });
+
+  it("rejects other schemes, bare domains and malformed input", () => {
+    for (const value of [
+      "acme.example",
+      "www.acme.example",
+      "ftp://acme.example",
+      "javascript:alert(1)",
+      "mailto:someone@acme.example",
+      "data:text/html,hi",
+      "https://",
+      "https://localhost",
+      "https:/acme.example",
+      "https://acme .example",
+      "",
+    ]) {
+      expect(isHttpUrl(value), value).toBe(false);
+    }
+  });
+});
+
+const validInterest = {
+  name: "Priya Shah",
+  email: "priya@acme-software.example",
+  company: "Acme Software",
+  website: "https://acme-software.example",
+  plan: PLAN_IDS[0],
+  [HONEYPOT_FIELD]: "",
+};
+
+describe("vendorInterestSchema", () => {
+  it("accepts a valid entry, with or without a website", () => {
+    expect(vendorInterestSchema.safeParse(validInterest).success).toBe(true);
+    expect(vendorInterestSchema.safeParse(without(validInterest, "website")).success).toBe(true);
+    const empty = vendorInterestSchema.safeParse({ ...validInterest, website: "   " });
+    expect(empty.success).toBe(true);
+    expect(empty.data?.website).toBeUndefined();
+  });
+
+  it("trims text and the website", () => {
+    const result = vendorInterestSchema.safeParse({
+      ...validInterest,
+      name: "  Priya Shah ",
+      website: "  https://acme-software.example  ",
+    });
+    expect(result.success).toBe(true);
+    expect(result.data?.name).toBe("Priya Shah");
+    expect(result.data?.website).toBe("https://acme-software.example");
+  });
+
+  it("accepts only http and https websites", () => {
+    for (const website of ["acme.example", "ftp://acme.example", "javascript:alert(1)", "https://localhost"]) {
+      const result = vendorInterestSchema.safeParse({ ...validInterest, website });
+      expect(result.success, website).toBe(false);
+      expect(result.error?.issues[0]?.path, website).toEqual(["website"]);
+    }
+    expect(vendorInterestSchema.safeParse({ ...validInterest, website: "http://acme.example" }).success).toBe(true);
+  });
+
+  it("limits the website length", () => {
+    const website = `https://acme.example/${"x".repeat(300)}`;
+    expect(vendorInterestSchema.safeParse({ ...validInterest, website }).success).toBe(false);
+  });
+
+  it("requires a name, a valid email and a company", () => {
+    for (const key of ["name", "email", "company"] as const) {
+      expect(vendorInterestSchema.safeParse({ ...validInterest, [key]: "" }).success, key).toBe(false);
+      expect(vendorInterestSchema.safeParse(without(validInterest, key)).success, key).toBe(false);
+    }
+    expect(vendorInterestSchema.safeParse({ ...validInterest, email: "priya.acme.example" }).success).toBe(false);
+  });
+
+  it("accepts every plan and 'not sure yet', and rejects other plans", () => {
+    expect([...PLAN_INTEREST_VALUES]).toEqual([...PLAN_IDS, "undecided"]);
+    for (const plan of PLAN_INTEREST_VALUES) {
+      expect(vendorInterestSchema.safeParse({ ...validInterest, plan }).success, plan).toBe(true);
+    }
+    expect(vendorInterestSchema.safeParse({ ...validInterest, plan: "platinum" }).success).toBe(false);
+    expect(vendorInterestSchema.safeParse({ ...validInterest, plan: "" }).success).toBe(false);
+    expect(vendorInterestSchema.safeParse(without(validInterest, "plan")).success).toBe(false);
+  });
+
+  it("rejects a filled honeypot, and accepts the same entry once it is cleared", () => {
+    const tripped = vendorInterestSchema.safeParse({ ...validInterest, [HONEYPOT_FIELD]: "autofilled" });
+    expect(tripped.success).toBe(false);
+    expect(tripped.error?.issues.map((issue) => issue.path.join("."))).toEqual([HONEYPOT_FIELD]);
+    expect(vendorInterestSchema.safeParse({ ...validInterest, [HONEYPOT_FIELD]: "" }).success).toBe(true);
+  });
+
+  it("drops unknown keys", () => {
+    const result = vendorInterestSchema.safeParse({ ...validInterest, admin: true });
+    expect(result.success).toBe(true);
+    expect(result.data).not.toHaveProperty("admin");
+  });
 });
 
 const validClaim = {
@@ -273,5 +388,10 @@ describe("honeypot", () => {
   it("has a neutral, actionable message that does not mention bots or spam", () => {
     expect(HONEYPOT_ERROR).toBe("We couldn't save this draft. Please try again.");
     expect(HONEYPOT_ERROR).not.toMatch(/bot|spam|hidden|honeypot/i);
+  });
+
+  it("has an equally neutral message for the other forms, which are not drafts", () => {
+    expect(FORM_RETRY_ERROR).toMatch(/try again/i);
+    expect(FORM_RETRY_ERROR).not.toMatch(/bot|spam|hidden|honeypot|draft/i);
   });
 });

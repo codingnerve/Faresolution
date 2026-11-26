@@ -2,7 +2,7 @@
  * Slug lists for the route guards (proxy.ts) and client code that only needs
  * to know which slugs exist, so neither bundles the full content files
  * (products.ts alone is ~170KB). Kept in catalogue order; `slugs.test.ts`
- * fails if these drift from `products` / `categories`.
+ * fails if these drift from `products` / `categories` / `industries`.
  */
 
 export const PRODUCT_SLUGS: readonly string[] = [
@@ -96,5 +96,21 @@ export const CATEGORY_SLUGS: readonly string[] = [
   "workflow-automation",
 ];
 
+export const INDUSTRY_SLUGS: readonly string[] = [
+  "healthcare",
+  "education",
+  "retail",
+  "finance",
+  "real-estate",
+  "manufacturing",
+  "construction",
+  "hospitality",
+  "transportation",
+  "legal",
+  "marketing",
+  "professional-services",
+];
+
 export const productSlugSet: ReadonlySet<string> = new Set(PRODUCT_SLUGS);
 export const categorySlugSet: ReadonlySet<string> = new Set(CATEGORY_SLUGS);
+export const industrySlugSet: ReadonlySet<string> = new Set(INDUSTRY_SLUGS);

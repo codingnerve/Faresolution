@@ -22,7 +22,7 @@
  * or `constructor` never resolve.
  */
 import { resolveCompareSlug } from "@/lib/compare/slug";
-import { categorySlugSet, productSlugSet } from "@/lib/data/content/slugs";
+import { categorySlugSet, industrySlugSet, productSlugSet } from "@/lib/data/content/slugs";
 import { PRODUCT_TAB_SEGMENTS } from "@/lib/products/tabs";
 
 export interface RouteGuard {
@@ -43,6 +43,7 @@ export interface RouteGuard {
 
 export const routeGuards: readonly RouteGuard[] = [
   { prefix: "/categories/", exists: (slug) => categorySlugSet.has(slug) },
+  { prefix: "/industries/", exists: (slug) => industrySlugSet.has(slug) },
   { prefix: "/products/", subpaths: PRODUCT_TAB_SEGMENTS, exists: (slug) => productSlugSet.has(slug) },
   // Every product has an alternatives page; there are no sub-pages.
   { prefix: "/alternatives/", exists: (slug) => productSlugSet.has(slug) },

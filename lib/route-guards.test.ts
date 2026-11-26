@@ -231,6 +231,49 @@ describe("isKnownPath: review drafts", () => {
   });
 });
 
+describe("isKnownPath: industries", () => {
+  it("is true for every known industry", () => {
+    expect(isKnownPath("/industries/healthcare")).toBe(true);
+    expect(isKnownPath("/industries/professional-services")).toBe(true);
+    expect(isKnownPath("/industries/real-estate")).toBe(true);
+  });
+
+  it("is false for an unknown industry; categories and products are not industries", () => {
+    expect(isKnownPath("/industries/nope")).toBe(false);
+    expect(isKnownPath("/industries/crm-software")).toBe(false);
+    expect(isKnownPath("/industries/hubspot-crm")).toBe(false);
+  });
+
+  it("is false for extra segments", () => {
+    expect(isKnownPath("/industries/healthcare/x")).toBe(false);
+    expect(isKnownPath("/industries/nope/x")).toBe(false);
+    expect(isKnownPath("/industries/healthcare//")).toBe(false);
+  });
+
+  it("never resolves prototype keys", () => {
+    for (const key of ["__proto__", "constructor", "toString", "hasOwnProperty"]) {
+      expect(isKnownPath(`/industries/${key}`), key).toBe(false);
+    }
+  });
+
+  it("is false for malformed escapes and encoded slashes, and case sensitive", () => {
+    expect(isKnownPath("/industries/%E0%A4%A")).toBe(false);
+    expect(isKnownPath("/industries/healthcare%2Fx")).toBe(false);
+    expect(isKnownPath("/industries/Healthcare")).toBe(false);
+  });
+
+  it("decodes escapes and allows one trailing slash, like the other routes", () => {
+    expect(isKnownPath("/industries/real%2Destate")).toBe(true);
+    expect(isKnownPath("/industries/healthcare/")).toBe(true);
+  });
+
+  it("leaves the index unguarded and has no canonical redirect", () => {
+    expect(isKnownPath("/industries")).toBeNull();
+    expect(isKnownPath("/industries/")).toBeNull();
+    expect(canonicalPath("/industries/healthcare")).toBeNull();
+  });
+});
+
 describe("isKnownPath: unguarded paths", () => {
   it("is null when no guard applies", () => {
     for (const path of ["/", "/software", "/categories", "/categories/", "/products", "/products/", "/software/free", "/unknown/thing", "/compare", "/compare/"]) {

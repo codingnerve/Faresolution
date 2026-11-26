@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { ArrowRight, Search, SearchX, ShieldCheck } from "lucide-react";
 import type { ReactNode } from "react";
 import {
@@ -16,14 +17,20 @@ import {
 } from "@/components/ui";
 import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = buildMetadata({
-  title: "Design system",
-  description: "Internal reference for Faresolution tokens and UI components.",
-  path: "/design",
-  // Internal page: not indexed, links not followed, left out of the sitemap.
-  noindex: true,
-  nofollow: true,
-});
+const IS_PRODUCTION = process.env.NODE_ENV === "production";
+
+// Internal page, development only: production builds answer 404 (below) with
+// the plain not-found title. In development: not indexed, links not followed,
+// left out of the sitemap.
+export const metadata: Metadata = IS_PRODUCTION
+  ? { title: "Page not found", robots: { index: false, follow: false } }
+  : buildMetadata({
+      title: "Design system",
+      description: "Internal reference for Faresolution tokens and UI components.",
+      path: "/design",
+      noindex: true,
+      nofollow: true,
+    });
 
 const palette = [
   { token: "navy", hex: "#17243A", use: "Headlines, primary actions, brand tile" },
@@ -167,6 +174,9 @@ function Swatch({ token, hex, use }: { token: string; hex: string; use: string }
 }
 
 export default function DesignSystemPage() {
+  // Development only: the specimens (sample ratings, inert buttons) must not
+  // be reachable on a production build. NODE_ENV is set by Next.js itself.
+  if (IS_PRODUCTION) notFound();
   return (
     <div className="flex-1 pb-24">
       <Container>

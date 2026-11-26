@@ -125,16 +125,17 @@
 @layer base {
   :root {
     color-scheme: light;
-    /* Sticky site header: h-16 plus its 1px bottom border. Things that stick
-       under the header (the compare product bar) offset by this. */
+    /* Sticky site header height, 1px bottom border included (64px bar +
+       1px). The header itself, anchor scroll padding and things that stick
+       under the header (the compare product bar) all read this. */
     --header-h: 65px;
   }
 
   html {
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
-    /* Keep anchor targets clear of the 64px sticky header. */
-    scroll-padding-top: 5rem;
+    /* Keep anchor targets clear of the sticky header, with 1rem of air. */
+    scroll-padding-top: calc(var(--header-h) + 1rem);
   }
 
   body {

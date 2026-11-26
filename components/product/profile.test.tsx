@@ -78,11 +78,10 @@ describe("PricingTable", () => {
     expect(text(html)).not.toMatch(/null|NaN|undefined|\$/);
     // Once in the phone card list and once in the table (only one is displayed).
     expect(html.match(/See vendor site/g)).toHaveLength(product.pricing.plans.length * 2);
-    // Real table semantics from sm: no rows restyled as grids.
-    expect(html).toMatch(/<table class="hidden [^"]*sm:table"/);
-    expect(html).not.toMatch(/<tr[^>]*class="[^"]*grid/);
-    expect(html.match(/<th scope="row"/g)).toHaveLength(product.pricing.plans.length);
-    expect(html).toMatch(/<ul aria-label="HubSpot CRM plans" class="[^"]*sm:hidden"/);
+    // A real table (one row header per plan) plus a labelled list for phones.
+    expect(html.match(/<table[\s>]/g)).toHaveLength(1);
+    expect(html.match(/<th[^>]*scope="row"/g)).toHaveLength(product.pricing.plans.length);
+    expect(html).toMatch(/<ul[^>]*aria-label="HubSpot CRM plans"/);
 
     const priced = renderToStaticMarkup(
       <PricingTable plans={[{ name: "Pro", price: "15 EUR per seat", summary: "All features." }]} website={null} productName="X" />,

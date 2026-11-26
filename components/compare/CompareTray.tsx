@@ -37,7 +37,7 @@ function Tray() {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const [height, setHeight] = useState(0);
   // Announced from a region that stays mounted after the tray itself unmounts.
-  // Shown only while the selection is empty, so it is never out of date.
+  // Shown only while the selection is empty, and reset by the next selection.
   const [emptied, setEmptied] = useState(false);
 
   /** The tray is about to unmount: keep focus off <body> and say what happened. */
@@ -50,6 +50,9 @@ function Tray() {
   // of exactly the selected products.
   const visible = slugs.length > 0 && pathname !== "/compare" && pathname !== compareHref(slugs);
   const count = slugs.length;
+  // A new selection ends the "cleared" state, so emptying it later some other
+  // way (a card's Compare button) does not announce "cleared" again.
+  if (emptied && count > 0) setEmptied(false);
 
   useEffect(() => {
     const bar = barRef.current;

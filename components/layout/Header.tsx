@@ -18,14 +18,15 @@ export async function Header() {
   const nav = buildNavModel(tree, industries);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-surface">
+    // Height from --header-h (globals.css): border-box, so the bar inside is 1px less.
+    <header className="sticky top-0 z-40 h-(--header-h) border-b border-line bg-surface">
       <a
         href="#main-content"
         className="sr-only rounded-md bg-navy px-4 py-2 text-sm font-medium text-white focus:not-sr-only focus:absolute focus:top-3 focus:left-4 focus:z-50"
       >
         Skip to content
       </a>
-      <Container className="flex h-16 items-center gap-4 lg:gap-6">
+      <Container className="flex h-full items-center gap-4 lg:gap-6">
         <Link href="/" aria-label="Faresolution home" className="shrink-0 rounded-sm">
           <Logo />
         </Link>

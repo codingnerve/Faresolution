@@ -17,6 +17,7 @@ import { getIndustries, getVendors } from "@/lib/data";
 import { getDirectoryData } from "@/lib/directory/data";
 import { INDUSTRY_PICK_LIMIT, getIndustryPageData } from "@/lib/industries/page-data";
 import { faqJsonLd, safeJsonLd } from "@/lib/jsonld";
+import { buildMetadata } from "@/lib/seo";
 
 // Every industry is generated at build time. With `cacheComponents` the
 // `dynamicParams` option is not available: any other slug is rendered on
@@ -34,12 +35,7 @@ export async function generateMetadata({ params }: PageProps<"/industries/[slug]
   const title = industry.seoTitle.trim() || `Software for ${industry.name}`;
   const description = industry.seoDescription.trim() || industry.tagline;
   const path = industryHref(slug);
-  return {
-    title,
-    description,
-    alternates: { canonical: path },
-    openGraph: { type: "website", url: path, title, description },
-  };
+  return buildMetadata({ title, description, path });
 }
 
 export default async function IndustryPage({ params }: PageProps<"/industries/[slug]">) {

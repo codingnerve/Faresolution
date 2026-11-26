@@ -7,18 +7,13 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Container } from "@/components/ui/Container";
 import { getArticle, getArticles, getAuthor, type Article } from "@/lib/data";
 import { ARTICLE_KINDS, ARTICLE_SECTIONS, articleHref, articleIndexHref, sortByNewest, toArticleCard } from "@/lib/editorial";
-import { SITE_NAME } from "@/lib/utils";
+import { buildMetadata } from "@/lib/seo";
 
 const title = "Resources";
 const description =
   "Guides, buying guides, editor shortlists and research from Faresolution on choosing, buying and rolling out business software.";
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/resources" },
-  openGraph: { type: "website", siteName: SITE_NAME, url: "/resources", title, description },
-};
+export const metadata: Metadata = buildMetadata({ title, description, path: "/resources" });
 
 const LATEST_LIMIT = 5;
 

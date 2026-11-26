@@ -6,18 +6,13 @@ import { Faq } from "@/components/ui/Faq";
 import { VendorProgrammeStatus, VendorsHeader } from "@/components/vendors/VendorsHeader";
 import { PLAN_CAPABILITIES, PLAN_PRICING_STATUS, VENDOR_PLANS, planIncludes } from "@/lib/data/content/plans";
 import type { FaqItem } from "@/lib/data/types";
-import { SITE_NAME } from "@/lib/utils";
+import { buildMetadata } from "@/lib/seo";
 
 const title = "Vendor plans";
 const description =
   "The plans Faresolution will offer software vendors at launch, who each is for and what it includes. Pricing will be announced at launch; register your interest now.";
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/vendors/pricing" },
-  openGraph: { type: "website", siteName: SITE_NAME, url: "/vendors/pricing", title, description },
-};
+export const metadata: Metadata = buildMetadata({ title, description, path: "/vendors/pricing" });
 
 const NEVER_FOR_SALE = [
   { title: "Reviews", body: "No plan will let a vendor edit, hide, reorder or remove a review, or change how reviews are checked." },

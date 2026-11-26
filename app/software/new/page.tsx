@@ -1,17 +1,13 @@
 import type { Metadata } from "next";
 import { DirectoryHeader, DirectoryPage } from "@/components/directory/DirectoryPage";
 import { getDirectoryData } from "@/lib/directory/data";
+import { buildMetadata } from "@/lib/seo";
 
 const title = "Recently added software";
 const description =
   "The newest profiles in the Faresolution software directory, most recently added first.";
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/software/new" },
-  openGraph: { url: "/software/new", title, description },
-};
+export const metadata: Metadata = buildMetadata({ title, description, path: "/software/new" });
 
 export default async function NewSoftwarePage() {
   const data = await getDirectoryData();

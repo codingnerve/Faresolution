@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { popularComparisons } from "@/lib/data/content/comparisons";
-import { getComparePage, getPopularCompareSlugs, joinNames } from "./page-data";
+import { compareTitle, getComparePage, getPopularCompareSlugs, joinNames } from "./page-data";
 import { MAX_COMPARE } from "./slug";
 
 async function ok(slug: string) {
@@ -14,11 +14,17 @@ describe("getComparePage", () => {
     const data = await ok("hubspot-crm-vs-zoho-crm");
     expect(data.items.map((i) => i.product.slug)).toEqual(["hubspot-crm", "zoho-crm"]);
     expect(data.versusLabel).toBe("HubSpot CRM vs Zoho CRM");
-    expect(data.title).toBe("HubSpot CRM vs Zoho CRM: Compare Features and Pricing");
+    expect(data.title).toBe("HubSpot CRM vs Zoho CRM Comparison");
     expect(data.path).toBe("/compare/hubspot-crm-vs-zoho-crm");
     expect(data.shareUrl).toBe("https://faresolution.com/compare/hubspot-crm-vs-zoho-crm");
     expect(data.isPopular).toBe(true);
     for (const group of data.groups) for (const row of group.rows) expect(row.cells).toHaveLength(2);
+  });
+
+  it("drops the word Comparison from titles that would not fit the 45-character budget", () => {
+    expect(compareTitle("Asana vs Trello")).toBe("Asana vs Trello Comparison");
+    const long = "HubSpot CRM vs Pipedrive vs Salesforce Sales Cloud";
+    expect(compareTitle(long)).toBe(long);
   });
 
   it("asks for a redirect when the order is not canonical", async () => {

@@ -2,18 +2,13 @@ import type { Metadata } from "next";
 import { PolicyPage, type PolicySection } from "@/components/reviews/PolicyPage";
 import { Container } from "@/components/ui/Container";
 import { VendorProgrammeStatus, VendorsHeader } from "@/components/vendors/VendorsHeader";
-import { SITE_NAME } from "@/lib/utils";
+import { buildMetadata } from "@/lib/seo";
 
 const title = "Vendor resources";
 const description =
   "Practical guidance for software vendors: preparing a listing, what to have ready for a claim, how reviews will be collected and answered, and how advertising will be labelled.";
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/vendors/resources" },
-  openGraph: { type: "website", siteName: SITE_NAME, url: "/vendors/resources", title, description },
-};
+export const metadata: Metadata = buildMetadata({ title, description, path: "/vendors/resources" });
 
 const SECTIONS: PolicySection[] = [
   {

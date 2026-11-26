@@ -144,6 +144,12 @@ export interface Article {
   kind: ArticleKind;
   slug: string;
   title: string;
+  /**
+   * Short title for the <title> tag and social cards, set when `title` is
+   * longer than 45 characters (the template adds " | Faresolution"; R13).
+   * A real short title, never a truncation.
+   */
+  seoTitle?: string;
   excerpt: string;
   body: Block[];
   authorSlug: string;

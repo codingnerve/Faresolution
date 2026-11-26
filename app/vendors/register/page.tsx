@@ -3,18 +3,13 @@ import Link from "next/link";
 import { VendorInterestForm } from "@/components/forms/VendorInterestForm";
 import { Container } from "@/components/ui/Container";
 import { VendorProgrammeStatus, VendorsHeader } from "@/components/vendors/VendorsHeader";
-import { SITE_NAME } from "@/lib/utils";
+import { buildMetadata } from "@/lib/seo";
 
 const title = "Register interest";
 const description =
   "Register interest in the Faresolution vendor programme, which opens at launch. In this demo nothing is sent, so this does not put you on a list; no account is created.";
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/vendors/register" },
-  openGraph: { type: "website", siteName: SITE_NAME, url: "/vendors/register", title, description },
-};
+export const metadata: Metadata = buildMetadata({ title, description, path: "/vendors/register" });
 
 const AT_LAUNCH = [
   {

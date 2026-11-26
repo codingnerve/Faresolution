@@ -7,17 +7,13 @@ import { Container } from "@/components/ui/Container";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { getDirectoryData, hasRating } from "@/lib/directory/data";
 import { applyQuery, DEFAULT_QUERY } from "@/lib/directory/query";
+import { buildMetadata } from "@/lib/seo";
 
 const title = "Top rated software";
 const description =
   "This page will rank business software by ratings from verified reviews once review collection opens. No products are rated yet.";
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/software/top-rated" },
-  openGraph: { url: "/software/top-rated", title, description },
-};
+export const metadata: Metadata = buildMetadata({ title, description, path: "/software/top-rated" });
 
 const crumbs = [
   { label: "Home", href: "/" },

@@ -6,17 +6,13 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Container } from "@/components/ui/Container";
 import { DemoDataNotice } from "@/components/ui/DemoDataNotice";
 import { getIndustryIndexData } from "@/lib/industries/page-data";
+import { buildMetadata } from "@/lib/seo";
 
 const title = "Software by industry";
 const description =
   "Business software shaped by the work you do. Pick an industry for common needs, selection advice, the categories to start with and the products that serve it.";
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/industries" },
-  openGraph: { type: "website", url: "/industries", title, description },
-};
+export const metadata: Metadata = buildMetadata({ title, description, path: "/industries" });
 
 /** Industry index: one editorial row per industry, large numeral first, the whole row is the link. */
 export default async function IndustriesPage() {

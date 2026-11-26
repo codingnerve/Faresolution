@@ -14,12 +14,16 @@ import {
   SectionHeader,
   Tabs,
 } from "@/components/ui";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "Design system",
   description: "Internal reference for Faresolution tokens and UI components.",
-  robots: { index: false, follow: false },
-};
+  path: "/design",
+  // Internal page: not indexed, links not followed, and disallowed in robots.txt.
+  noindex: true,
+  nofollow: true,
+});
 
 const palette = [
   { token: "navy", hex: "#17243A", use: "Headlines, primary actions, brand tile" },

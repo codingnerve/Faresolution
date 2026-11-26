@@ -1,17 +1,13 @@
 import type { Metadata } from "next";
 import { DirectoryHeader, DirectoryPage } from "@/components/directory/DirectoryPage";
 import { getDirectoryData } from "@/lib/directory/data";
+import { buildMetadata } from "@/lib/seo";
 
 const title = "Editor's picks: software worth a look";
 const description =
   "A shortlist of business software picked and ordered by Faresolution's editors. Editorial judgement, not traffic or review data.";
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/software/trending" },
-  openGraph: { url: "/software/trending", title, description },
-};
+export const metadata: Metadata = buildMetadata({ title, description, path: "/software/trending" });
 
 export default async function TrendingSoftwarePage() {
   // Only products the editors have ranked; the order is the editorial ranking.

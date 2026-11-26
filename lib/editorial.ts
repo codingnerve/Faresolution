@@ -18,6 +18,9 @@ export const articleIndexHref: Readonly<Record<ArticleKind, string>> = {
 
 export const articleHref = (kind: ArticleKind, slug: string): string => `${articleIndexHref[kind]}/${slug}`;
 
+/** The page title for an article: its short `seoTitle` when it has one, else its headline. */
+export const articleTitle = (article: Pick<Article, "title" | "seoTitle">): string => article.seoTitle ?? article.title;
+
 /** Singular label for one article of a kind ("Guide"), used on cards and in metadata. */
 export const ARTICLE_KIND_LABEL: Readonly<Record<ArticleKind, string>> = {
   blog: "Blog",

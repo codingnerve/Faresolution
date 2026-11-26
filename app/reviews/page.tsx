@@ -6,17 +6,13 @@ import { ReviewsHeader, ReviewsStatus } from "@/components/reviews/ReviewsHeader
 import { Container } from "@/components/ui/Container";
 import { DemoDataNotice } from "@/components/ui/DemoDataNotice";
 import { getCategories, getProducts, getVendors } from "@/lib/data";
+import { buildMetadata } from "@/lib/seo";
 
 const title = "Software reviews";
 const description =
   "Review collection hasn't opened yet. See how reviews on Faresolution will work, including the criteria, moderation and verification plans, and start a draft in your browser.";
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/reviews" },
-  openGraph: { type: "website", url: "/reviews", title, description },
-};
+export const metadata: Metadata = buildMetadata({ title, description, path: "/reviews" });
 
 const CRITERIA = ["Overall rating", "Ease of use", "Value for money", "Features", "Customer support"];
 

@@ -23,6 +23,7 @@ import {
   ARTICLE_SECTIONS,
   articleHref,
   articleIndexHref,
+  articleTitle,
   buildToc,
   formatArticleDate,
   readingTime,
@@ -30,7 +31,8 @@ import {
   toArticleCard,
 } from "@/lib/editorial";
 import { articleJsonLd, safeJsonLd } from "@/lib/jsonld";
-import { SITE_NAME, absoluteUrl } from "@/lib/utils";
+import { buildMetadata } from "@/lib/seo";
+import { absoluteUrl } from "@/lib/utils";
 import { ArticleBody } from "./ArticleBody";
 import { AuthorCard, AuthorMonogram } from "./AuthorCard";
 import { ArticleCard } from "./cards";
@@ -42,29 +44,28 @@ export async function articleStaticParams(kind: ArticleKind): Promise<{ slug: st
   return (await getArticles(kind)).map((a) => ({ slug: a.slug }));
 }
 
-/** Title, description from the excerpt, canonical URL and Open Graph article data. */
+/**
+ * Short page title (seoTitle when the headline is too long for the template,
+ * R13), description from the excerpt, canonical URL and Open Graph article
+ * data. Social cards use the full headline.
+ */
 export async function articleMetadata(kind: ArticleKind, slug: string): Promise<Metadata> {
   const article = await getArticle(kind, slug);
   if (!article) return {};
   const author = await getAuthor(article.authorSlug);
-  const path = articleHref(kind, slug);
-  return {
-    title: article.title,
+  return buildMetadata({
+    title: articleTitle(article),
+    ogTitle: article.title,
     description: article.excerpt,
-    alternates: { canonical: path },
-    ...(author ? { authors: [{ name: author.name }] } : {}),
-    openGraph: {
-      type: "article",
-      siteName: SITE_NAME,
-      url: path,
-      title: article.title,
-      description: article.excerpt,
+    path: articleHref(kind, slug),
+    type: "article",
+    article: {
       publishedTime: article.publishedAt,
       modifiedTime: article.updatedAt,
       section: article.categoryLabel,
-      ...(author ? { authors: [author.name] } : {}),
+      authors: author ? [author.name] : [],
     },
-  };
+  });
 }
 
 function DateLine({ label, iso }: { label: string; iso: string }) {

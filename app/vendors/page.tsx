@@ -22,18 +22,13 @@ import { VendorNav, VendorProgrammeStatus } from "@/components/vendors/VendorsHe
 import { PLAN_PRICING_STATUS, VENDOR_PLANS } from "@/lib/data/content/plans";
 import { getCategories, getIndustries, getProducts } from "@/lib/data";
 import { PRODUCT_TABS } from "@/lib/products/tabs";
-import { SITE_NAME } from "@/lib/utils";
+import { buildMetadata } from "@/lib/seo";
 
 const title = "For vendors";
 const description =
   "How software vendors will work with Faresolution at launch: accurate listings, public review responses, consent-based buyer requests, aggregate insights and clearly labelled sponsored placements.";
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/vendors" },
-  openGraph: { type: "website", siteName: SITE_NAME, url: "/vendors", title, description },
-};
+export const metadata: Metadata = buildMetadata({ title, description, path: "/vendors" });
 
 interface Benefit {
   icon: LucideIcon;

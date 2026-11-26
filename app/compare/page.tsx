@@ -9,16 +9,12 @@ import { DemoDataNotice } from "@/components/ui/DemoDataNotice";
 import { LogoMark } from "@/components/ui/LogoMark";
 import { getCategories, getPopularComparisons, getProducts, type Product } from "@/lib/data";
 import { MAX_COMPARE } from "@/lib/compare/slug";
+import { buildMetadata } from "@/lib/seo";
 
 const title = "Compare software side by side";
 const description = `Pick up to ${MAX_COMPARE} products and compare pricing model, free plan and trial, features, deployment, platforms and integrations side by side.`;
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/compare" },
-  openGraph: { type: "website", url: "/compare", title, description },
-};
+export const metadata: Metadata = buildMetadata({ title, description, path: "/compare" });
 
 export default async function ComparePage() {
   const [comparisons, products, categories] = await Promise.all([getPopularComparisons(), getProducts(), getCategories()]);

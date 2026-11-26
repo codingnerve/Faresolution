@@ -4,17 +4,13 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Container } from "@/components/ui/Container";
 import { DemoDataNotice } from "@/components/ui/DemoDataNotice";
 import { getCategories, getProducts, getVendors } from "@/lib/data";
+import { buildMetadata } from "@/lib/seo";
 
 const title = "Software alternatives";
 const description =
   "Find products similar to the software you already know, matched on categories, features, pricing model, industries and deployment. Listed by similarity, not by ratings or popularity.";
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/alternatives" },
-  openGraph: { type: "website", url: "/alternatives", title, description },
-};
+export const metadata: Metadata = buildMetadata({ title, description, path: "/alternatives" });
 
 const FACTORS: { term: string; detail: string }[] = [
   {

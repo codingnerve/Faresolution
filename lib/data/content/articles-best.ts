@@ -6,6 +6,7 @@ export const bestSoftwareArticles: Article[] = [
     kind: "best-software",
     slug: "crm-tools-to-shortlist-for-small-sales-teams",
     title: "CRM tools worth shortlisting for small sales teams",
+    seoTitle: "CRM tools to shortlist for small sales teams",
     excerpt:
       "An editor's shortlist of four CRM products to put in your first round of trials, chosen against stated criteria rather than ratings, with notes on who each one suits.",
     authorSlug: "priya-raman",
@@ -95,6 +96,7 @@ export const bestSoftwareArticles: Article[] = [
     kind: "best-software",
     slug: "project-management-tools-to-shortlist-for-small-teams",
     title: "Project management tools worth shortlisting for small teams",
+    seoTitle: "Project management shortlist for small teams",
     excerpt:
       "A criteria-led shortlist of five project and work management products for small teams, with the questions each one is best suited to answer. No rankings and no star ratings.",
     authorSlug: "daniel-whitfield",

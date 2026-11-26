@@ -4,18 +4,13 @@ import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { VendorsHeader } from "@/components/vendors/VendorsHeader";
-import { SITE_NAME } from "@/lib/utils";
+import { buildMetadata } from "@/lib/seo";
 
 const title = "Success stories";
 const description =
   "Vendor success stories on Faresolution: none are published yet. What a story will contain and the criteria it must meet before it is published.";
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/vendors/success-stories" },
-  openGraph: { type: "website", siteName: SITE_NAME, url: "/vendors/success-stories", title, description },
-};
+export const metadata: Metadata = buildMetadata({ title, description, path: "/vendors/success-stories" });
 
 const CONTENTS = [
   { title: "The starting point", body: "What the vendor wanted from its listing, and how it was handling buyer interest before." },

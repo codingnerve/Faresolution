@@ -4,17 +4,13 @@ import { ReviewsHeader, ReviewsStatus } from "@/components/reviews/ReviewsHeader
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { buildMetadata } from "@/lib/seo";
 
 const title = "Most helpful software reviews";
 const description =
   "Reviews that readers find most useful will be listed here once review collection opens. None have been collected or published yet.";
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/reviews/helpful" },
-  openGraph: { type: "website", url: "/reviews/helpful", title, description },
-};
+export const metadata: Metadata = buildMetadata({ title, description, path: "/reviews/helpful" });
 
 export default function HelpfulReviewsPage() {
   return (

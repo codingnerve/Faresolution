@@ -3,18 +3,13 @@ import Link from "next/link";
 import { ClaimListingForm } from "@/components/forms/ClaimListingForm";
 import { Container } from "@/components/ui/Container";
 import { VendorProgrammeStatus, VendorsHeader } from "@/components/vendors/VendorsHeader";
-import { SITE_NAME } from "@/lib/utils";
+import { buildMetadata } from "@/lib/seo";
 
 const title = "Claim a listing";
 const description =
   "Find your product in the Faresolution directory and prepare a claim request. Claims open at launch, when ownership will be checked before any listing changes.";
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/vendors/claim-listing" },
-  openGraph: { type: "website", siteName: SITE_NAME, url: "/vendors/claim-listing", title, description },
-};
+export const metadata: Metadata = buildMetadata({ title, description, path: "/vendors/claim-listing" });
 
 const VERIFICATION_STEPS = [
   {

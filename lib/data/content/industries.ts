@@ -84,7 +84,7 @@ export const industries: Industry[] = [
       { q: "How should we pilot a tool?", a: "Run a small pilot with a mix of enthusiastic and sceptical staff, set a clear end date, and decide in advance what result would make you adopt or drop the tool." },
       { q: "Does Faresolution list learning management systems?", a: "Not in this showcase. The categories here cover the business and operational software around teaching, such as communication, documents, HR and support." },
     ],
-    seoTitle: "Software for Schools, Colleges and Training Providers",
+    seoTitle: "Software for Schools, Colleges and Training",
     seoDescription: "Guidance on choosing communication, document, HR and support software for education, with advice on student data, single sign-on and education pricing.",
   },
   {
@@ -210,7 +210,7 @@ export const industries: Industry[] = [
       { q: "What matters most for a solo agent?", a: "Simplicity and mobile access. A tool that you will actually update from your phone after a viewing beats a powerful one that sits idle." },
       { q: "Does Faresolution cover listing portals?", a: "No. The showcase covers business software categories rather than property portals." },
     ],
-    seoTitle: "Software for Real Estate Agencies and Property Managers",
+    seoTitle: "Software for Real Estate and Property Firms",
     seoDescription: "Practical guidance for real estate teams choosing CRM, document, email marketing, website and accounting software.",
   },
   {
@@ -252,7 +252,7 @@ export const industries: Industry[] = [
       { q: "How long does implementation take?", a: "It depends on scope and data quality. Ask vendors for typical timelines for a company of your size, and treat any promise of a few days with caution." },
       { q: "Does Faresolution recommend a specific system?", a: "No. Product pages are neutral summaries and carry no ratings or rankings beyond an editor-curated order labelled as such." },
     ],
-    seoTitle: "Software for Manufacturers: ERP, Inventory and Operations",
+    seoTitle: "Software for Manufacturers: ERP and Inventory",
     seoDescription: "How manufacturers can choose ERP, inventory, accounting and automation software, with advice on traceability, implementation and shop-floor integration.",
   },
   {
@@ -378,7 +378,7 @@ export const industries: Industry[] = [
       { q: "What should we ask about uptime?", a: "Ask for the vendor's published availability commitment, how incidents are communicated and what credit or remedy applies if it is missed." },
       { q: "How do we compare support tools for delivery issues?", a: "Test the same set of realistic scenarios, such as a late delivery and a damaged parcel, in each trial and compare how many steps each takes." },
     ],
-    seoTitle: "Software for Transportation and Logistics Companies",
+    seoTitle: "Software for Transportation and Logistics",
     seoDescription: "How logistics and transportation businesses can choose customer-support, accounting, HR and automation software that connects with dispatch systems.",
   },
   {
@@ -504,7 +504,7 @@ export const industries: Industry[] = [
       { q: "Is free software enough for a solo consultant?", a: "It can be, particularly for CRM and project tracking, but check limits on contacts, projects and branding, and make sure you can export your data." },
       { q: "What if a vendor claims to be the best?", a: "Treat superlatives as marketing. Faresolution shows no ratings in this build, so compare on your own criteria and trial each tool." },
     ],
-    seoTitle: "Software for Consultancies and Professional Services Firms",
+    seoTitle: "Software for Professional Services Firms",
     seoDescription: "Choose CRM, project, accounting, collaboration and document tools for professional services firms, with advice on time tracking, billing and client work.",
   },
 ];

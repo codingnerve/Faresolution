@@ -3,18 +3,13 @@ import Link from "next/link";
 import { CompanyHeader } from "@/components/company/CompanyHeader";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { Container } from "@/components/ui/Container";
-import { SITE_NAME } from "@/lib/utils";
+import { buildMetadata } from "@/lib/seo";
 
 const title = "Contact";
 const description =
   "Write to Faresolution about the directory, a listing correction, the vendor programme or your data. This demo isn't connected to email yet, so messages stay in your browser.";
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/contact" },
-  openGraph: { type: "website", siteName: SITE_NAME, url: "/contact", title, description },
-};
+export const metadata: Metadata = buildMetadata({ title, description, path: "/contact" });
 
 const GUIDES = [
   {

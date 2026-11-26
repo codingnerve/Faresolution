@@ -6,6 +6,7 @@ export const buyingGuideArticles: Article[] = [
     kind: "buying-guide",
     slug: "how-to-choose-accounting-software",
     title: "How to choose accounting software for a growing business",
+    seoTitle: "How to choose accounting software",
     excerpt:
       "What to settle before you compare products: your accountant's role, the transactions you handle, tax and regional fit, reconciliation, reporting and the point at which a small-business tool stops being enough.",
     authorSlug: "daniel-whitfield",
@@ -94,6 +95,7 @@ export const buyingGuideArticles: Article[] = [
     kind: "buying-guide",
     slug: "hr-and-payroll-software-buying-guide",
     title: "HR and payroll software: what to settle before you buy",
+    seoTitle: "HR and payroll software buying guide",
     excerpt:
       "HR and payroll tools hold your most sensitive data and affect everyone's pay. A guide to scoping the need, understanding compliance responsibilities, testing a pay run and checking access controls.",
     authorSlug: "priya-raman",
@@ -189,6 +191,7 @@ export const buyingGuideArticles: Article[] = [
     kind: "buying-guide",
     slug: "how-to-choose-customer-support-software",
     title: "How to choose help desk and customer support software",
+    seoTitle: "How to choose customer support software",
     excerpt:
       "From shared inbox to full ticketing platform: how to size your support needs, evaluate channels and automation, judge AI features carefully and understand how support pricing is structured.",
     authorSlug: "daniel-whitfield",

@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
 import type { ProductProfile } from "./profile";
 import { productTabHref, type ProductTabSegment } from "./tabs";
 
-/** Tabs with no content yet (no reviews, no screenshots): kept out of search results. */
-const EMPTY_TABS: ReadonlySet<ProductTabSegment> = new Set(["reviews", "screenshots"]);
+/**
+ * Tabs with no content yet (no reviews, no screenshots): kept out of search
+ * results and out of the sitemap (lib/sitemap.ts).
+ */
+export const NOINDEX_PRODUCT_TABS: ReadonlySet<ProductTabSegment> = new Set(["reviews", "screenshots"]);
 
 function copy(profile: ProductProfile, segment: ProductTabSegment | null): { title: string; description: string } {
   const { product, vendor, primaryCategory } = profile;
@@ -13,7 +17,8 @@ function copy(profile: ProductProfile, segment: ProductTabSegment | null): { tit
   switch (segment) {
     case null:
       return {
-        title: `${name}: Features, Pricing and Alternatives`,
+        // Short enough for the longest product name within 45 characters (R13).
+        title: `${name}: Features and Pricing`,
         description: `${name}${by}: ${product.tagline} See its features, plans, integrations and similar products.`,
       };
     case "reviews":
@@ -65,11 +70,5 @@ export function productTabMetadata(profile: ProductProfile | null, segment: Prod
   if (!profile) return {};
   const { title, description } = copy(profile, segment);
   const path = productTabHref(profile.product.slug, segment);
-  return {
-    title,
-    description,
-    alternates: { canonical: path },
-    openGraph: { type: "website", url: path, title, description },
-    ...(segment && EMPTY_TABS.has(segment) ? { robots: { index: false, follow: true } } : {}),
-  };
+  return buildMetadata({ title, description, path, noindex: segment !== null && NOINDEX_PRODUCT_TABS.has(segment) });
 }

@@ -2,17 +2,13 @@ import type { Metadata } from "next";
 import { PolicyPage, type PolicySection } from "@/components/reviews/PolicyPage";
 import { ReviewsHeader, ReviewsStatus } from "@/components/reviews/ReviewsHeader";
 import { Container } from "@/components/ui/Container";
+import { buildMetadata } from "@/lib/seo";
 
 const title = "Review guidelines";
 const description =
   "The guidelines that will apply to reviews on Faresolution when review collection opens: what is welcome, what will be rejected, conflicts of interest, vendor responses, reporting and edit requests.";
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/review-guidelines" },
-  openGraph: { type: "website", url: "/review-guidelines", title, description },
-};
+export const metadata: Metadata = buildMetadata({ title, description, path: "/review-guidelines" });
 
 const SECTIONS: PolicySection[] = [
   {

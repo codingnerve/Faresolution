@@ -5,6 +5,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { SearchIndexProvider } from "@/components/layout/SearchIndexProvider";
 import { getSearchIndex } from "@/lib/search/get-index";
+import { OG_LOCALE } from "@/lib/seo";
 import { SITE_NAME, SITE_URL } from "@/lib/utils";
 import "./globals.css";
 
@@ -34,11 +35,15 @@ export const metadata: Metadata = {
   description:
     "Find the software that moves your business forward. Browse categories, compare products side by side and shortlist the right tools for your team.",
   applicationName: SITE_NAME,
+  // Fallback for routes without their own metadata (such as the 404 page).
+  // Pages set a complete Open Graph object through buildMetadata (lib/seo.ts),
+  // which replaces this one: Next.js merges metadata shallowly.
   openGraph: {
     type: "website",
     siteName: SITE_NAME,
-    url: "/",
+    locale: OG_LOCALE,
   },
+  twitter: { card: "summary" },
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {

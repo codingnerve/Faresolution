@@ -7,18 +7,13 @@ import { DemoDataNotice } from "@/components/ui/DemoDataNotice";
 import { getArticle, getCategories, getProducts } from "@/lib/data";
 import { articleHref } from "@/lib/editorial";
 import { SITE_TAGLINE } from "@/lib/site";
-import { SITE_NAME } from "@/lib/utils";
+import { buildMetadata } from "@/lib/seo";
 
 const title = "About";
 const description =
   "Why Faresolution exists, how the software directory works, how products are listed, how editorial independence is kept and what is still demonstration data.";
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/about" },
-  openGraph: { type: "website", siteName: SITE_NAME, url: "/about", title, description },
-};
+export const metadata: Metadata = buildMetadata({ title, description, path: "/about" });
 
 const HOW_IT_WORKS = [
   {

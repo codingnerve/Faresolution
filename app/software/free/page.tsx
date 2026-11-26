@@ -1,17 +1,13 @@
 import type { Metadata } from "next";
 import { DirectoryHeader, DirectoryPage } from "@/components/directory/DirectoryPage";
 import { getDirectoryData } from "@/lib/directory/data";
+import { buildMetadata } from "@/lib/seo";
 
 const title = "Software with a free plan";
 const description =
   "Business software that offers a free plan, filterable by category, company size, deployment, features and integrations.";
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/software/free" },
-  openGraph: { url: "/software/free", title, description },
-};
+export const metadata: Metadata = buildMetadata({ title, description, path: "/software/free" });
 
 export default async function FreeSoftwarePage() {
   const data = await getDirectoryData((p) => p.pricing.freePlan === true);

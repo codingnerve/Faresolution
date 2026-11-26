@@ -3,19 +3,14 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Container } from "@/components/ui/Container";
 import { getArticles, getAuthor, type ArticleKind } from "@/lib/data";
 import { ARTICLE_SECTIONS, articleIndexHref, categoryLabels, pickLead, toArticleCard } from "@/lib/editorial";
-import { SITE_NAME } from "@/lib/utils";
+import { buildMetadata } from "@/lib/seo";
 import { ArticleIndex } from "./ArticleIndex";
 
 /** Metadata for an editorial index page, from the section's own description. */
 export function sectionMetadata(kind: ArticleKind): Metadata {
   const { title, description } = ARTICLE_SECTIONS[kind];
   const path = articleIndexHref[kind];
-  return {
-    title,
-    description,
-    alternates: { canonical: path },
-    openGraph: { type: "website", siteName: SITE_NAME, url: path, title, description },
-  };
+  return buildMetadata({ title, description, path });
 }
 
 /**

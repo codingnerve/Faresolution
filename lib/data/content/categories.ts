@@ -24,7 +24,7 @@ export const categories: Category[] = [
       { q: "How long does it take to roll out a CRM?", a: "A basic setup can be done in days. Plan for weeks of adoption work, since habits change more slowly than software." },
     ],
     relatedSlugs: ["sales-software", "marketing-automation", "customer-support", "email-marketing"],
-    seoTitle: "CRM Software: Compare Customer Relationship Management Tools",
+    seoTitle: "CRM Software: Compare CRM Tools",
     seoDescription: "Compare CRM software for contact management, pipelines and customer history, with buying advice on process fit, data portability and total cost.",
   },
   {
@@ -46,7 +46,7 @@ export const categories: Category[] = [
       { q: "How should we measure results?", a: "Track replies, meetings booked and pipeline created rather than emails sent, and compare against a baseline from before adopting the tool." },
     ],
     relatedSlugs: ["crm-software", "email-marketing", "marketing-automation", "recruiting-software"],
-    seoTitle: "Sales Software: Prospecting and Outreach Tools Compared",
+    seoTitle: "Sales Software: Prospecting and Outreach",
     seoDescription: "Compare sales engagement and prospecting tools, with advice on data quality, CRM sync, deliverability and outreach compliance.",
   },
   {
@@ -68,7 +68,7 @@ export const categories: Category[] = [
       { q: "Can I use it for non-project work?", a: "Yes. Many teams use it for operations, content calendars and requests. Check that statuses and views are flexible enough." },
     ],
     relatedSlugs: ["collaboration-software", "workflow-automation", "document-management", "crm-software"],
-    seoTitle: "Project Management Software: Compare Tools for Teams",
+    seoTitle: "Project Management Software Compared",
     seoDescription: "Compare project and work management software, with guidance on boards versus timelines, configuration, guest access and reporting.",
   },
   {
@@ -90,7 +90,7 @@ export const categories: Category[] = [
       { q: "Is cloud accounting secure?", a: "Reputable vendors invest heavily in security, but you should still use strong sign-in, enable multi-factor authentication and restrict user access." },
     ],
     relatedSlugs: ["erp-software", "payroll-software", "inventory-management", "ecommerce"],
-    seoTitle: "Accounting Software: Compare Bookkeeping and Invoicing Tools",
+    seoTitle: "Accounting and Bookkeeping Software Compared",
     seoDescription: "Compare accounting software for invoicing, bank reconciliation and reporting, with advice on local tax support, accountant access and growth.",
   },
   {
@@ -112,7 +112,7 @@ export const categories: Category[] = [
       { q: "Is cloud ERP better than on-premise?", a: "Cloud ERP reduces infrastructure work and updates automatically, while on-premise offers more control. Your compliance and customisation needs decide." },
     ],
     relatedSlugs: ["accounting-software", "inventory-management", "business-intelligence", "workflow-automation"],
-    seoTitle: "ERP Software: Compare Enterprise Resource Planning Systems",
+    seoTitle: "ERP Software: Compare ERP Systems",
     seoDescription: "Compare ERP software that links finance, inventory and operations, with buying advice on process fit, implementation cost and partners.",
   },
   {
@@ -134,7 +134,7 @@ export const categories: Category[] = [
       { q: "What about bundles and kits?", a: "Check that bundles deduct component stock correctly and that you can sell kits and components independently if needed." },
     ],
     relatedSlugs: ["erp-software", "ecommerce", "accounting-software", "workflow-automation"],
-    seoTitle: "Inventory Management Software: Compare Stock Control Tools",
+    seoTitle: "Inventory Management Software Compared",
     seoDescription: "Compare inventory management software for stock tracking, multichannel syncing and purchasing, with advice on barcodes, costing and reorder rules.",
   },
   {
@@ -156,7 +156,7 @@ export const categories: Category[] = [
       { q: "Is an HR system worthwhile for a small team?", a: "Once you have a handful of employees, centralising records and time off typically saves effort and reduces mistakes." },
     ],
     relatedSlugs: ["payroll-software", "recruiting-software", "collaboration-software", "workflow-automation"],
-    seoTitle: "HR Software: Compare Human Resources Management Tools",
+    seoTitle: "HR Software: Compare HR Management Tools",
     seoDescription: "Compare HR software for employee records, onboarding and time off, with buying advice on country support, permissions and payroll integration.",
   },
   {
@@ -178,7 +178,7 @@ export const categories: Category[] = [
       { q: "What if I hire in another country?", a: "Many payroll products cover only one country. For international staff, look at global payroll or employer-of-record services." },
     ],
     relatedSlugs: ["hr-software", "accounting-software", "recruiting-software", "workflow-automation"],
-    seoTitle: "Payroll Software: Compare Payroll and Tax Filing Tools",
+    seoTitle: "Payroll Software: Payroll and Tax Filing",
     seoDescription: "Compare payroll software for pay runs, tax filings and payslips, with advice on jurisdiction coverage, filing liability and accounting links.",
   },
   {
@@ -200,7 +200,7 @@ export const categories: Category[] = [
       { q: "Are AI screening features advisable?", a: "Treat automated screening carefully. Check the vendor's documentation on how it works and the rules on automated decisions in your region." },
     ],
     relatedSlugs: ["hr-software", "payroll-software", "sales-software", "workflow-automation"],
-    seoTitle: "Recruiting Software: Compare Applicant Tracking Systems",
+    seoTitle: "Recruiting Software and Applicant Tracking",
     seoDescription: "Compare applicant tracking and recruiting software for job posting, candidate pipelines and interview feedback, with advice on data protection and integrations.",
   },
   {
@@ -222,7 +222,7 @@ export const categories: Category[] = [
       { q: "Can I switch platforms later?", a: "You can, but journeys and templates rarely transfer automatically. Plan time to rebuild and keep exports of contacts and consent records." },
     ],
     relatedSlugs: ["email-marketing", "crm-software", "analytics", "ecommerce"],
-    seoTitle: "Marketing Automation Software: Compare Platforms",
+    seoTitle: "Marketing Automation Software Compared",
     seoDescription: "Compare marketing automation software for behaviour-based journeys, lead nurturing and reporting, with buying advice on contact pricing and consent.",
   },
   {
@@ -244,7 +244,7 @@ export const categories: Category[] = [
       { q: "What is A/B testing in email?", a: "Sending two variants, for example different subject lines, to portions of your list and comparing results before sending the winner to the rest." },
     ],
     relatedSlugs: ["marketing-automation", "crm-software", "ecommerce", "website-builders"],
-    seoTitle: "Email Marketing Software: Compare Campaign Tools",
+    seoTitle: "Email Marketing Software: Campaign Tools",
     seoDescription: "Compare email marketing tools for newsletters, segmentation and deliverability, with advice on list pricing, consent and editor quality.",
   },
   {
@@ -266,7 +266,7 @@ export const categories: Category[] = [
       { q: "How can small teams get started?", a: "Begin with a shared inbox or simple ticketing tool and a short FAQ page, and add automation once volume justifies it." },
     ],
     relatedSlugs: ["help-desk", "ai-chatbots", "crm-software", "collaboration-software"],
-    seoTitle: "Customer Support Software: Compare Service Platforms",
+    seoTitle: "Customer Support Software Compared",
     seoDescription: "Compare customer support software across email, chat and self-service, with advice on channels, agent experience and service-level reporting.",
   },
   {
@@ -310,7 +310,7 @@ export const categories: Category[] = [
       { q: "Is disclosure to customers required?", a: "Rules vary by region. Making clear when someone is talking to a bot is good practice, and you should check local requirements." },
     ],
     relatedSlugs: ["customer-support", "help-desk", "website-builders", "workflow-automation"],
-    seoTitle: "AI Chatbots: Compare Customer Service Chatbot Platforms",
+    seoTitle: "AI Chatbots for Customer Service Compared",
     seoDescription: "Compare AI chatbot software for automated customer service, with advice on accuracy testing, human handoff, data use and answer controls.",
   },
   {
@@ -332,7 +332,7 @@ export const categories: Category[] = [
       { q: "Is free analytics good enough?", a: "For many sites, yes. Paid plans become relevant when you need higher data limits, deeper product analysis or specific privacy features." },
     ],
     relatedSlugs: ["business-intelligence", "marketing-automation", "website-builders", "ecommerce"],
-    seoTitle: "Analytics Software: Compare Web and Product Analytics Tools",
+    seoTitle: "Analytics Software: Web and Product Analytics",
     seoDescription: "Compare web and product analytics software for traffic, funnels and retention, with advice on tracking plans, privacy, consent and data export.",
   },
   {
@@ -354,7 +354,7 @@ export const categories: Category[] = [
       { q: "Can spreadsheets be enough?", a: "For small, stable reporting needs, yes. BI tools earn their cost when you need automated refresh, shared dashboards and combined sources." },
     ],
     relatedSlugs: ["analytics", "database-software", "erp-software", "workflow-automation"],
-    seoTitle: "Business Intelligence Software: Compare BI Tools",
+    seoTitle: "Business Intelligence (BI) Software Compared",
     seoDescription: "Compare business intelligence tools for dashboards and reporting, with advice on data connectors, user skills, permissions and governance.",
   },
   {
@@ -376,7 +376,7 @@ export const categories: Category[] = [
       { q: "How do I avoid being locked in?", a: "Keep your domain, export your catalogue regularly and avoid heavy reliance on proprietary apps for core functions." },
     ],
     relatedSlugs: ["website-builders", "inventory-management", "email-marketing", "accounting-software"],
-    seoTitle: "Ecommerce Platforms: Compare Online Store Software",
+    seoTitle: "Ecommerce Platforms: Online Store Software",
     seoDescription: "Compare ecommerce platforms for online stores, with advice on hosted versus self-hosted, total cost, tax and shipping coverage.",
   },
   {
@@ -398,7 +398,7 @@ export const categories: Category[] = [
       { q: "Will my site rank in search engines?", a: "Good structure, useful content and fast pages help, but no builder guarantees rankings." },
     ],
     relatedSlugs: ["ecommerce", "email-marketing", "analytics", "ai-chatbots"],
-    seoTitle: "Website Builders: Compare No-Code Site Creation Tools",
+    seoTitle: "Website Builders: Compare No-Code Tools",
     seoDescription: "Compare website builders for small businesses and portfolios, with advice on design flexibility, search controls, accessibility and portability.",
   },
   {
@@ -420,7 +420,7 @@ export const categories: Category[] = [
       { q: "Can software guarantee I will not be breached?", a: "No. Security tools reduce risk but cannot eliminate it. Backups, training and an incident plan are also essential." },
     ],
     relatedSlugs: ["cloud-management", "document-management", "collaboration-software", "database-software"],
-    seoTitle: "Cybersecurity Software: Identity and Endpoint Tools",
+    seoTitle: "Cybersecurity: Identity and Endpoint Tools",
     seoDescription: "Compare cybersecurity software for identity, passwords and endpoint protection, with advice on priorities, alert handling and independent assurance.",
   },
   {
@@ -442,7 +442,7 @@ export const categories: Category[] = [
       { q: "Are captions available?", a: "Many platforms offer live captions, sometimes only on paid plans. Check accuracy for the languages you use." },
     ],
     relatedSlugs: ["collaboration-software", "customer-support", "document-management", "project-management"],
-    seoTitle: "Video Conferencing Software: Compare Meeting Platforms",
+    seoTitle: "Video Conferencing Software Compared",
     seoDescription: "Compare video conferencing platforms for meetings, webinars and recording, with advice on guest experience, limits, security and captions.",
   },
   {
@@ -486,7 +486,7 @@ export const categories: Category[] = [
       { q: "Can I move providers later?", a: "More easily when you use open, widely supported engines and standard export formats. Proprietary features increase switching effort." },
     ],
     relatedSlugs: ["cloud-management", "business-intelligence", "cybersecurity", "workflow-automation"],
-    seoTitle: "Database Software: Compare Managed and Self-Hosted Databases",
+    seoTitle: "Database Software: Managed and Self-Hosted",
     seoDescription: "Compare database software and managed database services, with advice on data shape, SQL versus document stores, backups and pricing.",
   },
   {
@@ -508,7 +508,7 @@ export const categories: Category[] = [
       { q: "Is a suite or a set of separate tools better?", a: "A suite offers simplicity and unified billing. Separate tools may be stronger in each area but need more integration work." },
     ],
     relatedSlugs: ["project-management", "video-conferencing", "document-management", "workflow-automation"],
-    seoTitle: "Collaboration Software: Chat, Wiki and Workspace Tools",
+    seoTitle: "Team Chat, Wiki and Workspace Software",
     seoDescription: "Compare collaboration software for team chat, wikis and shared workspaces, with advice on information structure, search limits and guest access.",
   },
   {
@@ -530,7 +530,7 @@ export const categories: Category[] = [
       { q: "Do small teams need these tools?", a: "Often the provider's built-in tools are enough at first. Dedicated products become useful as complexity and spend grow." },
     ],
     relatedSlugs: ["database-software", "cybersecurity", "workflow-automation", "business-intelligence"],
-    seoTitle: "Cloud Management Software: Monitoring and Infrastructure",
+    seoTitle: "Cloud Monitoring and Infrastructure Software",
     seoDescription: "Compare cloud management tools for monitoring, cost visibility and infrastructure automation, with advice on coverage, alert noise and pricing drivers.",
   },
   {
@@ -552,7 +552,7 @@ export const categories: Category[] = [
       { q: "Is self-hosted automation worthwhile?", a: "It can offer cost control and data control for high volumes or sensitive data, but you take responsibility for hosting and upgrades." },
     ],
     relatedSlugs: ["collaboration-software", "project-management", "crm-software", "document-management"],
-    seoTitle: "Workflow Automation Software: Compare Platforms",
+    seoTitle: "Workflow Automation Software Compared",
     seoDescription: "Compare workflow automation platforms that connect apps and run multi-step processes, with advice on connectors, pricing units and error handling.",
   },
 ];

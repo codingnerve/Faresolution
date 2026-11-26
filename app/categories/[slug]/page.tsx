@@ -16,6 +16,7 @@ import { TOP_PRODUCT_LIMIT, getCategoryPageData } from "@/lib/categories/page-da
 import { getCategories, getVendors } from "@/lib/data";
 import { getDirectoryData } from "@/lib/directory/data";
 import { faqJsonLd, safeJsonLd } from "@/lib/jsonld";
+import { buildMetadata } from "@/lib/seo";
 
 // Every category is generated at build time. With `cacheComponents` the
 // `dynamicParams` option is not available: any other slug is rendered on
@@ -30,12 +31,7 @@ export async function generateMetadata({ params }: PageProps<"/categories/[slug]
   if (!data) return {};
   const { seoTitle: title, seoDescription: description } = data.category;
   const path = categoryHref(slug);
-  return {
-    title,
-    description,
-    alternates: { canonical: path },
-    openGraph: { type: "website", url: path, title, description },
-  };
+  return buildMetadata({ title, description, path });
 }
 
 export default async function CategoryPage({ params }: PageProps<"/categories/[slug]">) {

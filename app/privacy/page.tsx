@@ -1,18 +1,13 @@
 import type { Metadata } from "next";
 import { CompanyHeader, LegalDraftNotice, Placeholder } from "@/components/company/CompanyHeader";
 import { PolicyPage, type PolicySection } from "@/components/reviews/PolicyPage";
-import { SITE_NAME } from "@/lib/utils";
+import { buildMetadata } from "@/lib/seo";
 
 const title = "Privacy notice";
 const description =
   "Draft privacy notice for the Faresolution demonstration site: no accounts, no tracking, and what your browser stores (saved products, your compare list and form entries).";
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/privacy" },
-  openGraph: { type: "website", siteName: SITE_NAME, url: "/privacy", title, description },
-};
+export const metadata: Metadata = buildMetadata({ title, description, path: "/privacy" });
 
 const SECTIONS: PolicySection[] = [
   {

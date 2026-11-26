@@ -6,6 +6,7 @@ export const blogArticles: Article[] = [
     kind: "blog",
     slug: "five-questions-before-adding-another-saas-tool",
     title: "Five questions to ask before you add another software tool",
+    seoTitle: "Five questions before adding another tool",
     excerpt:
       "Every new subscription adds logins, data copies and renewal dates. Five plain questions that help you decide whether a new tool earns its place or whether an existing one can do the job.",
     authorSlug: "priya-raman",
@@ -80,6 +81,7 @@ export const blogArticles: Article[] = [
     kind: "blog",
     slug: "what-a-free-plan-is-really-for",
     title: "What a free plan is really for, and when it stops being free",
+    seoTitle: "What a free software plan is really for",
     excerpt:
       "Free plans are a legitimate way to try software, but they are designed around limits. Learn how to read those limits so the first invoice is not a surprise.",
     authorSlug: "daniel-whitfield",

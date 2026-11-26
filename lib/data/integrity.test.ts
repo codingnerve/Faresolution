@@ -151,7 +151,8 @@ describe("taxonomy", () => {
   it("keeps SEO strings within search-result length limits", () => {
     for (const item of [...categories, ...industries]) {
       expect(item.seoTitle.length, `${item.slug} seoTitle`).toBeGreaterThan(10);
-      expect(item.seoTitle.length, `${item.slug} seoTitle`).toBeLessThanOrEqual(60);
+      // R13: the root template adds " | Faresolution" (15), so 45 keeps the rendered title within 60.
+      expect(item.seoTitle.length, `${item.slug} seoTitle`).toBeLessThanOrEqual(45);
       expect(item.seoDescription.length, `${item.slug} seoDescription`).toBeGreaterThan(40);
       expect(item.seoDescription.length, `${item.slug} seoDescription`).toBeLessThanOrEqual(160);
     }
@@ -325,6 +326,24 @@ describe("articles", () => {
         expect(prior, `"${b.text.slice(0, 50)}" in ${a.slug} repeats ${prior}`).toBeUndefined();
         seen.set(b.text, a.slug);
       }
+    }
+  });
+
+  it("gives an article a short seoTitle exactly when its title is too long for the template (R13)", () => {
+    // " | Faresolution" is 15 characters; rendered titles stay within 60.
+    for (const a of articles) {
+      const fits = a.title.length <= 45;
+      if (fits) {
+        expect(a.seoTitle, `${a.slug} needs no seoTitle`).toBeUndefined();
+        continue;
+      }
+      expect(a.seoTitle, `${a.slug} needs a seoTitle`).toBeTypeOf("string");
+      const seoTitle = a.seoTitle!;
+      expect(seoTitle.trim(), a.slug).toBe(seoTitle);
+      expect(seoTitle.length, `${a.slug} seoTitle "${seoTitle}"`).toBeGreaterThan(10);
+      expect(seoTitle.length, `${a.slug} seoTitle "${seoTitle}"`).toBeLessThanOrEqual(45);
+      // A real short title, not a truncation of the long one.
+      expect(seoTitle, a.slug).not.toMatch(/(\.\.\.|…)$/);
     }
   });
 

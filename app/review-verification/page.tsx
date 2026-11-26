@@ -2,17 +2,13 @@ import type { Metadata } from "next";
 import { PolicyPage, type PolicySection } from "@/components/reviews/PolicyPage";
 import { ReviewsHeader, ReviewsStatus } from "@/components/reviews/ReviewsHeader";
 import { Container } from "@/components/ui/Container";
+import { buildMetadata } from "@/lib/seo";
 
 const title = "How reviewers will be verified";
 const description =
   "The verification plan for reviews on Faresolution: how reviewers will show they use a product, what happens to the evidence, and how verification will affect ratings. Not in operation yet.";
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/review-verification" },
-  openGraph: { type: "website", url: "/review-verification", title, description },
-};
+export const metadata: Metadata = buildMetadata({ title, description, path: "/review-verification" });
 
 const SECTIONS: PolicySection[] = [
   {

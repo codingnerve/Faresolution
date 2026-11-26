@@ -11,6 +11,7 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Container } from "@/components/ui/Container";
 import { DemoDataNotice } from "@/components/ui/DemoDataNotice";
 import { getComparePage, getPopularCompareSlugs } from "@/lib/compare/page-data";
+import { buildMetadata } from "@/lib/seo";
 
 // Editor-picked comparisons are generated at build time; any other valid set
 // of 2 to 4 products renders on its first request and is then cached.
@@ -26,15 +27,10 @@ export async function generateMetadata({ params }: PageProps<"/compare/[slug]">)
   const result = await getComparePage(slug);
   if (result.kind !== "ok") return {};
   const { title, description, path, isPopular } = result.data;
-  return {
-    title,
-    description,
-    alternates: { canonical: path },
-    openGraph: { type: "website", url: path, title, description },
-    // Only editor picks are offered to search engines; the other combinations
-    // (hundreds of thousands) stay shareable but out of the index.
-    ...(isPopular ? {} : { robots: { index: false, follow: true } }),
-  };
+  // Only editor picks are offered to search engines (and listed in the
+  // sitemap); the other combinations (hundreds of thousands) stay shareable
+  // but out of the index.
+  return buildMetadata({ title, description, path, noindex: !isPopular });
 }
 
 export default async function ComparisonPage({ params }: PageProps<"/compare/[slug]">) {

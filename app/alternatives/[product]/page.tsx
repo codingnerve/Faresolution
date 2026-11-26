@@ -13,6 +13,7 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { LogoMark } from "@/components/ui/LogoMark";
 import { getAlternativesPage, getAlternativesParams } from "@/lib/alternatives/page-data";
 import { itemListJsonLd, safeJsonLd } from "@/lib/jsonld";
+import { buildMetadata } from "@/lib/seo";
 
 // Every product gets an alternatives page at build time. Unknown slugs get a
 // real 404 from proxy.ts (lib/route-guards.ts, R12); `notFound()` below is
@@ -27,12 +28,7 @@ export async function generateMetadata({ params }: PageProps<"/alternatives/[pro
   if (!data) return {};
   const path = `/alternatives/${slug}`;
   const { title, description } = data;
-  return {
-    title,
-    description,
-    alternates: { canonical: path },
-    openGraph: { type: "website", url: path, title, description },
-  };
+  return buildMetadata({ title, description, path });
 }
 
 export default async function AlternativesPage({ params }: PageProps<"/alternatives/[product]">) {

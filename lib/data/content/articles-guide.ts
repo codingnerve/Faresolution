@@ -6,6 +6,7 @@ export const guideArticles: Article[] = [
     kind: "guide",
     slug: "how-to-run-a-software-trial",
     title: "How to run a software trial that actually tells you something",
+    seoTitle: "How to run a useful software trial",
     excerpt:
       "Most trials fail because nobody defined what success looks like. A step-by-step method for turning a free trial into evidence you can use to make the decision.",
     authorSlug: "daniel-whitfield",
@@ -92,6 +93,7 @@ export const guideArticles: Article[] = [
     kind: "guide",
     slug: "software-data-migration-checklist",
     title: "A data migration checklist for switching business software",
+    seoTitle: "Software data migration checklist",
     excerpt:
       "Moving from one system to another is where most of the risk in a software change sits. A practical checklist covering scoping, cleaning, mapping, test runs and the cutover itself.",
     authorSlug: "priya-raman",
@@ -175,6 +177,7 @@ export const guideArticles: Article[] = [
     kind: "guide",
     slug: "security-questionnaire-basics-for-small-teams",
     title: "Security questionnaire basics for small teams buying software",
+    seoTitle: "Security questionnaire basics for small teams",
     excerpt:
       "You do not need a security department to ask sensible questions of a software vendor. A short list covering access control, data handling, incident response and what documents to request.",
     authorSlug: "elena-marchetti",
@@ -259,6 +262,7 @@ export const guideArticles: Article[] = [
     kind: "guide",
     slug: "automate-a-business-process-without-breaking-it",
     title: "How to automate a business process without breaking it",
+    seoTitle: "Automating a business process safely",
     excerpt:
       "Automation platforms make it easy to connect apps, and just as easy to automate a mess. A guide to mapping the process first, starting small and building in error handling.",
     authorSlug: "priya-raman",

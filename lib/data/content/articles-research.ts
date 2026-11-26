@@ -6,6 +6,7 @@ export const researchArticles: Article[] = [
     kind: "research",
     slug: "a-framework-for-scoring-software-vendors",
     title: "A framework for scoring software vendors without fooling yourself",
+    seoTitle: "A framework for scoring software vendors",
     excerpt:
       "A weighted scorecard is only as honest as the way it is built. A method for choosing criteria, setting weights before you see products, scoring against evidence and testing the result.",
     authorSlug: "elena-marchetti",
@@ -88,6 +89,7 @@ export const researchArticles: Article[] = [
     kind: "research",
     slug: "how-faresolution-handles-product-facts-and-reviews",
     title: "How Faresolution approaches product facts, verification and reviews",
+    seoTitle: "How we handle product facts and reviews",
     excerpt:
       "What this demonstration site records about each product, what it deliberately leaves blank, and the principles it intends to follow as verified vendor data and reviews are introduced.",
     authorSlug: "elena-marchetti",

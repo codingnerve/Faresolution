@@ -6,17 +6,13 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Container } from "@/components/ui/Container";
 import { DemoDataNotice } from "@/components/ui/DemoDataNotice";
 import { getCategoryIndexData } from "@/lib/categories/page-data";
+import { buildMetadata } from "@/lib/seo";
 
 const title = "Software categories";
 const description =
   "Browse business software by category and subcategory. Each category has a buying guide, a shortlist and every product we list in it.";
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/categories" },
-  openGraph: { type: "website", url: "/categories", title, description },
-};
+export const metadata: Metadata = buildMetadata({ title, description, path: "/categories" });
 
 const productCount = (n: number) => `${n} ${n === 1 ? "product" : "products"}`;
 

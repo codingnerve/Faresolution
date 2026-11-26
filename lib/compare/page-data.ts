@@ -14,6 +14,7 @@ import {
   getVendors,
   type Product,
 } from "@/lib/data";
+import { MAX_PAGE_TITLE_LENGTH } from "@/lib/seo";
 import { absoluteUrl } from "@/lib/utils";
 import { buildFeatureRows, buildRows, COMPARE_SECTION_LABEL, type CompareRow, type CompareSection } from "./diff";
 import { buildCompareSlug, compareHref, compareHrefWith, compareHrefWithout, resolveCompareSlug } from "./slug";
@@ -75,6 +76,15 @@ const SECTION_ORDER: CompareSection[] = ["overview", "pricing", "product", "rati
 export function joinNames(names: readonly string[]): string {
   if (names.length <= 1) return names.join("");
   return `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
+}
+
+/**
+ * Page title for a comparison: "A vs B Comparison", or just the names when
+ * the word would push it past the 45-character page-title budget (R13).
+ */
+export function compareTitle(versusLabel: string): string {
+  const full = `${versusLabel} Comparison`;
+  return full.length <= MAX_PAGE_TITLE_LENGTH ? full : versusLabel;
 }
 
 async function loadComparePage(slug: string): Promise<ComparePageResult> {
@@ -168,7 +178,7 @@ async function loadComparePage(slug: string): Promise<ComparePageResult> {
       related,
       otherComparisons,
       versusLabel,
-      title: `${versusLabel}: Compare Features and Pricing`,
+      title: compareTitle(versusLabel),
       description: `${joinNames(names)} side by side${sharedCategory ? ` (${sharedCategory})` : ""}: pricing model, free plan and trial, features, deployment, platforms and integrations.`,
     },
   };

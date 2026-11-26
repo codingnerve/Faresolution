@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DirectoryHeader, DirectoryPage } from "@/components/directory/DirectoryPage";
 import { getDirectoryData } from "@/lib/directory/data";
+import { buildMetadata } from "@/lib/seo";
 
 const title = "Business software directory";
 const description =
@@ -9,12 +10,7 @@ const description =
 // Metadata is static: filters and pages live in client-side query params, so
 // every variant shares the unparametrised canonical (see DirectoryView for
 // the noindex on pages beyond the first).
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: "/software" },
-  openGraph: { url: "/software", title, description },
-};
+export const metadata: Metadata = buildMetadata({ title, description, path: "/software" });
 
 export default async function SoftwarePage() {
   const data = await getDirectoryData();

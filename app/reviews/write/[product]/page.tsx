@@ -7,6 +7,7 @@ import { ReviewsHeader, ReviewsStatus } from "@/components/reviews/ReviewsHeader
 import { Container } from "@/components/ui/Container";
 import { LogoMark } from "@/components/ui/LogoMark";
 import { getIndustries, getProduct, getProducts } from "@/lib/data";
+import { buildMetadata } from "@/lib/seo";
 
 // Every product has a draft page at build time. Unknown slugs get a real 404
 // from proxy.ts (lib/route-guards.ts, R12); `notFound()` below is defence in depth.
@@ -21,14 +22,8 @@ export async function generateMetadata({ params }: PageProps<"/reviews/write/[pr
   const path = `/reviews/write/${product.slug}`;
   const title = `Write a review of ${product.name}`;
   const description = `Draft a review of ${product.name}. Review collection hasn't opened yet, so your draft is saved only in your browser.`;
-  return {
-    title,
-    description,
-    alternates: { canonical: path },
-    // A form page with nothing to read: kept out of search results.
-    robots: { index: false, follow: true },
-    openGraph: { type: "website", url: path, title, description },
-  };
+  // A form page with nothing to read: kept out of search results (and the sitemap).
+  return buildMetadata({ title, description, path, noindex: true });
 }
 
 export default async function WriteReviewPage({ params }: PageProps<"/reviews/write/[product]">) {

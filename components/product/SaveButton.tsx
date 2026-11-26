@@ -3,7 +3,8 @@
 import { Bookmark, BookmarkCheck } from "lucide-react";
 import { useState } from "react";
 import { buttonClasses, type ButtonSize } from "@/components/ui/Button";
-import { useStoredList } from "@/lib/storage";
+import { saveAnnouncement } from "@/lib/products/save-announcement";
+import { isListPersisted, useStoredList } from "@/lib/storage";
 import { cn } from "@/lib/utils";
 
 /** localStorage key for the products a visitor has saved in this browser. */
@@ -37,9 +38,16 @@ export function SaveButton({ slug, name, size = "md", className }: SaveButtonPro
         aria-pressed={isSaved}
         onClick={() => {
           const nowSaved = saved.toggle(slug);
-          setAnnouncement(nowSaved ? `${name} saved in this browser` : `${name} removed from saved products`);
+          // Read back whether the write reached storage: never claim "saved in this browser" for a memory-only list.
+          setAnnouncement(saveAnnouncement({ name, saved: nowSaved, persisted: isListPersisted(SAVED_PRODUCTS_KEY) }));
         }}
-        title={isSaved ? "Saved in this browser" : "Save to this browser"}
+        title={
+          isSaved
+            ? isListPersisted(SAVED_PRODUCTS_KEY)
+              ? "Saved in this browser"
+              : "Saved for this visit only"
+            : "Save to this browser"
+        }
         className={cn(
           buttonClasses({ variant: "secondary", size }),
           isSaved && "border-navy/40 bg-blue-tint text-navy hover:bg-blue-tint",

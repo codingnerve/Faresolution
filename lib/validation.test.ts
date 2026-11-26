@@ -60,6 +60,14 @@ describe("newsletterSchema", () => {
     expect(result.success).toBe(true);
     expect(result.data).toEqual({ email: "person@example.com" });
   });
+
+  it("has the shared honeypot: empty passes, any value fails on that field alone with the neutral error", () => {
+    expect(newsletterSchema.safeParse({ email: "person@example.com", [HONEYPOT_FIELD]: "" }).success).toBe(true);
+    const tripped = newsletterSchema.safeParse({ email: "person@example.com", [HONEYPOT_FIELD]: "autofilled" });
+    expect(tripped.success).toBe(false);
+    expect(tripped.error?.issues.map((issue) => issue.path.join("."))).toEqual([HONEYPOT_FIELD]);
+    expect(tripped.error?.issues[0]?.message).toBe(HONEYPOT_ERROR);
+  });
 });
 
 const validReview = {

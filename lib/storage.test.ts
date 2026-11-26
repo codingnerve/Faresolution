@@ -176,6 +176,30 @@ describe("writeList", () => {
     expect(readList("one")).toEqual(["a"]);
     expect(readList("two")).toEqual(["b"]);
   });
+
+  it("returns whether the list reached storage, and isListPersisted reports the last write", async () => {
+    const storage = createStorage();
+    let failing = true;
+    storage.setItem.mockImplementation((key: string, value: string) => {
+      if (failing) throw new DOMException("Quota exceeded", "QuotaExceededError");
+      storage.raw.set(key, value);
+    });
+    vi.stubGlobal("localStorage", storage);
+    const { isListPersisted, writeList } = await load();
+    expect(writeList(KEY, ["a"])).toBe(false);
+    expect(isListPersisted(KEY)).toBe(false);
+    expect(isListPersisted("other")).toBe(true);
+    failing = false;
+    expect(writeList(KEY, ["a", "b"])).toBe(true);
+    expect(isListPersisted(KEY)).toBe(true);
+  });
+
+  it("reports in-memory only when localStorage is missing", async () => {
+    vi.stubGlobal("localStorage", undefined);
+    const { isListPersisted, toggleInList } = await load();
+    toggleInList(KEY, "a");
+    expect(isListPersisted(KEY)).toBe(false);
+  });
 });
 
 describe("readJson / writeJson", () => {

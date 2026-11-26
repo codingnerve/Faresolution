@@ -19,13 +19,6 @@ export const emailField = z
   .max(MAX_EMAIL_LENGTH, { error: "That email address is too long." })
   .pipe(z.email({ error: "Enter a valid email address." }));
 
-export const newsletterSchema = z.object({
-  email: emailField,
-});
-
-export type NewsletterInput = z.input<typeof newsletterSchema>;
-export type NewsletterValues = z.output<typeof newsletterSchema>;
-
 // --- Shared building blocks -----------------------------------------------------
 
 /**
@@ -76,6 +69,16 @@ export function isHoneypotOnly(errors: Record<string, unknown>): boolean {
   const keys = Object.keys(errors);
   return keys.length === 1 && keys[0] === HONEYPOT_FIELD;
 }
+
+// --- Newsletter -------------------------------------------------------------------
+
+export const newsletterSchema = z.object({
+  email: emailField,
+  [HONEYPOT_FIELD]: honeypotField,
+});
+
+export type NewsletterInput = z.input<typeof newsletterSchema>;
+export type NewsletterValues = z.output<typeof newsletterSchema>;
 
 // --- Review draft -----------------------------------------------------------------
 

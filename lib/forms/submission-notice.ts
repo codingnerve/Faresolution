@@ -1,12 +1,12 @@
 /**
- * Wording for the confirmation shown after the contact, listing claim and
- * vendor interest forms are submitted. Pure, so the honest cases are unit
+ * Wording for the confirmation shown after the contact, listing claim,
+ * vendor interest and newsletter forms are submitted. Pure, so the honest cases are unit
  * tested: nothing is ever sent (the demo is not connected to email), and when
  * browser storage is blocked the entry lives only in memory and is lost on
  * reload, which the page must say. Same pattern as `lib/reviews/draft-notice.ts`.
  */
 
-export type NoticeKind = "contact" | "claim" | "vendor-interest";
+export type NoticeKind = "contact" | "claim" | "vendor-interest" | "newsletter";
 
 export interface SubmissionNotice {
   title: string;
@@ -19,6 +19,7 @@ const NOUN: Record<NoticeKind, { title: string; lower: string }> = {
   contact: { title: "Message", lower: "message" },
   claim: { title: "Claim request", lower: "claim request" },
   "vendor-interest": { title: "Interest", lower: "entry" },
+  newsletter: { title: "Email", lower: "email address" },
 };
 
 export function submissionNotice({
@@ -54,6 +55,13 @@ export function submissionNotice({
     return {
       title,
       body: `Your claim request${product} has not been sent, reviewed or verified, and no listing has been changed. Listing claims open at launch, when ownership will be checked before any change is made.`,
+      showStorageNotice: true,
+    };
+  }
+  if (kind === "newsletter") {
+    return {
+      title,
+      body: "Your address has not been sent to anyone and you have not been subscribed to a mailing list. Nothing will be emailed until the newsletter launches.",
       showStorageNotice: true,
     };
   }

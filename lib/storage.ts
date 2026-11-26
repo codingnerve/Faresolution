@@ -76,12 +76,23 @@ export function readList(key: string): string[] {
 /**
  * Stores `list` under `key` and notifies subscribers. Never throws: when
  * storage fails the list is kept in memory and `readList` returns it.
+ * Returns true when the list reached storage, false when it is in memory only.
  */
-export function writeList(key: string, list: readonly string[]): void {
+export function writeList(key: string, list: readonly string[]): boolean {
   const copy = Object.freeze([...list]);
-  if (writeJson(key, copy)) memory.delete(key);
+  const persisted = writeJson(key, copy);
+  if (persisted) memory.delete(key);
   else memory.set(key, copy);
   notify(key);
+  return persisted;
+}
+
+/**
+ * False when the last write to `key` could not reach storage, so the list is
+ * kept in memory for this page session only (lost on reload).
+ */
+export function isListPersisted(key: string): boolean {
+  return !memory.has(key);
 }
 
 export function addToList(key: string, item: string): void {

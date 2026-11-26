@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { submissionNotice, type NoticeKind } from "./submission-notice";
 
-const KINDS: NoticeKind[] = ["contact", "claim", "vendor-interest"];
+const KINDS: NoticeKind[] = ["contact", "claim", "vendor-interest", "newsletter"];
 
 /** Phrases that would claim the entry reached someone. */
 const DELIVERY_CLAIM =
@@ -52,5 +52,24 @@ describe("submissionNotice", () => {
 
   it("says no account is created for vendor interest", () => {
     expect(submissionNotice({ kind: "vendor-interest", persisted: true }).body).toMatch(/no account/i);
+  });
+
+  describe("newsletter", () => {
+    it("says the address is saved in this browser only, with no subscription or email yet", () => {
+      const notice = submissionNotice({ kind: "newsletter", persisted: true });
+      expect(notice.title).toBe("Email saved in this browser");
+      expect(notice.body).toMatch(/not been subscribed/i);
+      expect(notice.body).toMatch(/until the newsletter launches/i);
+      expect(notice.showStorageNotice).toBe(true);
+    });
+
+    it("says the address was not saved when storage failed, never that it was", () => {
+      const notice = submissionNotice({ kind: "newsletter", persisted: false });
+      expect(notice.title).toBe("Email not saved");
+      expect(notice.title).not.toMatch(/saved in this browser/i);
+      expect(`${notice.title} ${notice.body}`).not.toMatch(/we saved|is stored only in this browser/i);
+      expect(notice.body).toMatch(/could not be saved/);
+      expect(notice.body).toMatch(/lost when you leave or reload/);
+    });
   });
 });

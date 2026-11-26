@@ -42,7 +42,7 @@ export default async function ProductLayout({ children, params }: LayoutProps<"/
         </Container>
       </div>
 
-      <div className="sticky top-16 z-30 border-b border-line bg-surface">
+      <div className="sticky top-(--header-h) z-30 border-b border-line bg-surface">
         <Container>
           <ProductTabs slug={slug} name={product.name} className="border-b-0" />
         </Container>

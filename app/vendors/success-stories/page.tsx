@@ -45,6 +45,7 @@ export default function SuccessStoriesPage() {
       <Container className="py-12 sm:py-16">
         <EmptyState
           icon={BookOpenCheck}
+          headingLevel={2}
           title="No published stories yet"
           description="Stories can only come from vendors who have used the programme, which opens at launch. Below is what each story will contain and the standard it will have to meet."
           action={

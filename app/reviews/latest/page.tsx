@@ -27,6 +27,7 @@ export default function LatestReviewsPage() {
         <ReviewsStatus className="mb-8" />
         <EmptyState
           icon={Clock}
+          headingLevel={2}
           title="No reviews to show yet"
           description="When collection opens and reviews have been checked against the guidelines, each published review will appear here with its product, the five ratings, and the reviewer's role, company size and length of use. Nothing is shown until then, and this page will not be filled with placeholder reviews."
           action={

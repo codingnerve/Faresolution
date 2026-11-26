@@ -90,7 +90,7 @@ async function buildGroups(): Promise<FooterGroup[]> {
   return [
     { title: "Explore Software", links: exploreLinks },
     {
-      title: "Popular Categories",
+      title: "Main Categories",
       links: tree.slice(0, 6).map((c) => ({ label: c.name, href: categoryHref(c.slug) })),
     },
     {

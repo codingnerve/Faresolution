@@ -65,11 +65,12 @@ export default async function TopRatedSoftwarePage() {
       <Container className="py-10 sm:py-12">
         <EmptyState
           icon={Star}
+          headingLevel={2}
           title="No ratings yet"
           description="Ratings will appear here once reviews open. Each one will come from a review checked against our guidelines, so the ranking reflects real use rather than marketing."
           action={
             <div className="flex flex-wrap justify-center gap-3">
-              <Button href="/reviews">Write a review</Button>
+              <Button href="/reviews#draft-title">Start a review draft</Button>
               <Button href="/software" variant="secondary">
                 Browse all software
               </Button>

@@ -146,8 +146,8 @@ export default async function CategoryPage({ params }: PageProps<"/categories/[s
                       Editor&rsquo;s picks in {category.name}
                     </h2>
                     <p className="type-body mt-3 text-subtle">
-                      Ordered by editorial pick, then by our trending order. Reviews are not open yet, so this is not a
-                      ranking by user ratings.
+                      Ordered by editorial pick, then by our editors&rsquo; ranking. Reviews are not open yet, so this is
+                      not a ranking by user ratings, traffic or sales.
                     </p>
                   </div>
                   <TopProducts products={topProducts} vendorNames={vendorNames} labelledBy="top-products-title" />

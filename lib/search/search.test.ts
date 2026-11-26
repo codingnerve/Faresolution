@@ -7,7 +7,7 @@ import {
   getVendors,
 } from "@/lib/data";
 import type { Product } from "@/lib/data";
-import { buildSearchIndex, popularSearches, search } from "./index";
+import { buildSearchIndex, suggestedSearches, search } from "./index";
 import type { SearchIndex } from "./index";
 import { levenshtein } from "./distance";
 
@@ -348,12 +348,12 @@ describe("serialisation", () => {
   });
 });
 
-describe("popularSearches", () => {
+describe("suggestedSearches", () => {
   it("is a static list of 8 distinct terms that each return products", () => {
-    expect(popularSearches).toHaveLength(8);
-    expect(new Set(popularSearches).size).toBe(8);
-    for (const term of popularSearches) {
-      expect(search(idx, term).products.length, `popular search "${term}"`).toBeGreaterThan(0);
+    expect(suggestedSearches).toHaveLength(8);
+    expect(new Set(suggestedSearches).size).toBe(8);
+    for (const term of suggestedSearches) {
+      expect(search(idx, term).products.length, `suggested search "${term}"`).toBeGreaterThan(0);
     }
   });
 });

@@ -130,7 +130,7 @@ export const categories: Category[] = [
     faq: [
       { q: "Do I need inventory software if I only sell online?", a: "Your storefront may track stock, but dedicated software helps once you hold stock in several places or sell on multiple channels." },
       { q: "What is a stock count discrepancy and how do I reduce it?", a: "A mismatch between system and physical stock. Barcode scanning, regular cycle counts and clear adjustment reasons reduce it." },
-      { q: "Can inventory software connect to accounting?", a: "Most connect to the popular accounting packages. Verify how stock value and cost of goods sold are posted." },
+      { q: "Can inventory software connect to accounting?", a: "Most connect to the main accounting packages. Verify how stock value and cost of goods sold are posted." },
       { q: "What about bundles and kits?", a: "Check that bundles deduct component stock correctly and that you can sell kits and components independently if needed." },
     ],
     relatedSlugs: ["erp-software", "ecommerce", "accounting-software", "workflow-automation"],

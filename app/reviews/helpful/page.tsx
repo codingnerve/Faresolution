@@ -32,6 +32,7 @@ export default function HelpfulReviewsPage() {
         <ReviewsStatus className="mb-8" />
         <EmptyState
           icon={ThumbsUp}
+          headingLevel={2}
           title="Nothing is marked helpful yet"
           description="This page will list reviews in order of how many readers found them useful. It will stay empty until review collection opens, reviews are published and readers have had a chance to respond. It will not show placeholder reviews or invented helpfulness counts."
           action={

@@ -15,7 +15,7 @@ const DEFAULT_LIMIT = 8;
 const MAX_LIMIT = 200;
 
 /** Static suggestions; each resolves to results in the sample catalogue. */
-export const popularSearches: string[] = [
+export const suggestedSearches: string[] = [
   "CRM",
   "Project management",
   "Accounting",

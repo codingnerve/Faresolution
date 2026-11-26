@@ -31,7 +31,7 @@ export async function PopularComparisons() {
     <section aria-labelledby="home-compare-title" className="py-16 sm:py-20 lg:py-24">
       <Container className="grid gap-10 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-16">
         <div className="lg:sticky lg:top-24 lg:self-start">
-          <p className="type-label mb-3">Popular comparisons</p>
+          <p className="type-label mb-3">Editor-picked comparisons</p>
           <h2 id="home-compare-title" className="type-h2 text-navy">
             See the differences before the demos
           </h2>
@@ -39,7 +39,7 @@ export async function PopularComparisons() {
             Put up to four products side by side: plans, deployment, platforms,
             features and integrations, with the gaps clearly marked.
           </p>
-          <p className="type-meta mt-3">Picked by our editors.</p>
+          <p className="type-meta mt-3">Starting points chosen by our editors, not ranked by traffic or reviews.</p>
           <Link
             href="/compare"
             className="mt-6 inline-flex h-10 items-center gap-2 rounded-md border border-line-strong bg-surface px-4 text-sm font-medium text-ink shadow-card transition-colors hover:border-muted/60 hover:bg-surface-alt"

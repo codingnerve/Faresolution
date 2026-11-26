@@ -396,7 +396,7 @@ export const products: Product[] = [
     vendorSlug: "asana",
     tagline: "Plan, track and coordinate team work across projects.",
     description:
-      "Asana is a work-management platform for organising tasks, projects and portfolios. Teams can view the same work as lists, boards, timelines or calendars, connect projects to goals, and automate routine handoffs with rules, which makes it popular with marketing, operations and cross-functional teams.",
+      "Asana is a work-management platform for organising tasks, projects and portfolios. Teams can view the same work as lists, boards, timelines or calendars, connect projects to goals, and automate routine handoffs with rules. It is aimed at marketing, operations and cross-functional teams.",
     website: "https://asana.com",
     categorySlugs: ["project-management"],
     primaryCategory: "project-management",
@@ -1847,7 +1847,7 @@ export const products: Product[] = [
     pros: [
       "Very easy payroll setup and runs.",
       "Combines payroll, benefits and HR basics.",
-      "Integrates with popular accounting tools.",
+      "Integrates with common accounting tools.",
     ],
     cons: [
       "Available for US businesses only.",
@@ -1982,7 +1982,7 @@ export const products: Product[] = [
     vendorSlug: "workable",
     tagline: "Recruiting software to post jobs, source and hire faster.",
     description:
-      "Workable is recruiting software that helps companies post jobs to many boards, source candidates, collaborate on evaluations and schedule interviews. It is popular with small and mid-sized companies for its quick setup, and offers additional HR features alongside its applicant tracking.",
+      "Workable is recruiting software that helps companies post jobs to many boards, source candidates, collaborate on evaluations and schedule interviews. It is built for small and mid-sized companies that want a quick setup, and offers additional HR features alongside its applicant tracking.",
     website: "https://www.workable.com",
     categorySlugs: ["recruiting-software", "hr-software"],
     primaryCategory: "recruiting-software",
@@ -2102,7 +2102,7 @@ export const products: Product[] = [
     vendorSlug: "activecampaign",
     tagline: "Email marketing and automation with a built-in CRM.",
     description:
-      "ActiveCampaign combines email marketing, marketing automation and a sales CRM. Its automation builder lets businesses design detailed customer journeys based on behaviour, tags and data, and it is popular with small and mid-sized businesses that want sophisticated automation without an enterprise suite.",
+      "ActiveCampaign combines email marketing, marketing automation and a sales CRM. Its automation builder lets businesses design detailed customer journeys based on behaviour, tags and data, and it is aimed at small and mid-sized businesses that want sophisticated automation without an enterprise suite.",
     website: "https://www.activecampaign.com",
     categorySlugs: ["marketing-automation", "email-marketing"],
     primaryCategory: "marketing-automation",
@@ -2493,7 +2493,7 @@ export const products: Product[] = [
     vendorSlug: "intercom",
     tagline: "AI-first customer service with the Fin AI agent.",
     description:
-      "Intercom is a customer-service platform combining a messenger, shared inbox, ticketing and help center with Fin, its AI agent that answers customer questions using your support content. It is popular with software and online businesses that support customers inside their product.",
+      "Intercom is a customer-service platform combining a messenger, shared inbox, ticketing and help center with Fin, its AI agent that answers customer questions using your support content. It is built for software and online businesses that support customers inside their product.",
     website: "https://www.intercom.com",
     categorySlugs: ["customer-support", "ai-chatbots", "help-desk"],
     primaryCategory: "customer-support",
@@ -2585,7 +2585,7 @@ export const products: Product[] = [
       "Ecommerce integrations for order lookups and cart recovery.",
     ],
     pros: [
-      "Quick to install on popular site builders and stores.",
+      "Quick to install on common site builders and stores.",
       "Free plan to get started.",
       "Easy chatbot builder for non-technical users.",
     ],
@@ -3114,7 +3114,7 @@ export const products: Product[] = [
     vendorSlug: "squarespace",
     tagline: "Design-led websites, online stores and domains.",
     description:
-      "Squarespace is a hosted website builder known for polished, design-focused templates. It includes tools for online stores, appointment scheduling, email campaigns and domains, and is popular with creatives, restaurants and small businesses that value presentation.",
+      "Squarespace is a hosted website builder built around polished, design-focused templates. It includes tools for online stores, appointment scheduling, email campaigns and domains, and is aimed at creatives, restaurants and small businesses that value presentation.",
     website: "https://www.squarespace.com",
     categorySlugs: ["website-builders", "ecommerce"],
     primaryCategory: "website-builders",
@@ -3151,7 +3151,7 @@ export const products: Product[] = [
     faq: [
       { q: "Does Squarespace offer a free trial?", a: "Yes. Squarespace offers a free trial before you subscribe." },
       { q: "Can I sell online with Squarespace?", a: "Yes. Commerce features are included in supported plans." },
-      { q: "Is Squarespace good for photographers and creatives?", a: "It is a popular choice for portfolios because of its design-focused templates." },
+      { q: "Is Squarespace good for photographers and creatives?", a: "It is a good fit for portfolios because of its design-focused templates." },
     ],
     ...unrated,
     addedAt: "2025-08-18",

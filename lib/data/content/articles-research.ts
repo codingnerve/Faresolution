@@ -157,7 +157,7 @@ export const researchArticles: Article[] = [
         "Shortlists on this site are editor's selections made against stated criteria. They do not use numeric rankings, because without review data or hands-on testing a ranking would imply an evidence base that does not exist. Where a list is based on publicly documented positioning rather than testing, it says so.",
       ),
       p(
-        "The \"trending\" order shown on some pages is likewise an editorial ordering. It is not derived from traffic, searches or reviews, and is labelled \"Editor-curated\" wherever it appears.",
+        "The Editor's picks order shown on some pages is likewise an editorial ordering. It is not derived from traffic, searches or reviews, and is labelled as editorial wherever it appears.",
       ),
       h2("How to read the site today"),
       ul(

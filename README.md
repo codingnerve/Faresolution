@@ -111,8 +111,9 @@ references.
 
 The content itself lives in `lib/data/content/` (products, categories,
 industries, features, integrations, vendors, comparisons, vendor plans
-(`plans.ts`), authors and articles, the last split across `articles-*.ts`
-files and assembled in `articles.ts`), typed by `lib/data/types.ts`. `lib/data/content/slugs.ts` holds
+(`plans.ts`), authors and articles, the last split across the
+`articles-<section>.ts` files (written with the block constructors in
+`article-blocks.ts`) and assembled in `articles.ts`), typed by `lib/data/types.ts`. `lib/data/content/slugs.ts` holds
 slug-only lists so the proxy bundle stays small.
 
 To move to a real API, reimplement the functions in `lib/data/index.ts` against
@@ -166,7 +167,8 @@ component, JSON-LD and sitemap tests:
 - Forms (newsletter, contact, review draft, vendor interest, listing claim)
   validate with zod and store entries only in this browser's localStorage,
   saying so ("This demo isn't connected to email yet ..."). They never claim
-  an entry was sent.
+  an entry was sent, and say "saved" only when it really reached browser
+  storage (otherwise "not saved"). All five share the same honeypot field.
 - No emoji icons (lucide-react only), no copied brand logos (generated
   monograms from the product name and brand colour), no buttons for features
   that do not exist. Sign-in, accounts and dashboards are not built and not
@@ -261,6 +263,10 @@ them read by this build:
 - The title of the three-product editor pick "HubSpot CRM vs Pipedrive vs
   Salesforce Sales Cloud" is 65 characters with the site suffix (the smoke
   test warns); product names are not shortened.
+- The editor-picked comparisons are still named "popular" in code
+  (`popularComparisons`, `getPopularComparisons`, `PopularComparisons`,
+  `isPopular`); the visible labels say "Editor-picked". Rename them when the
+  data layer moves to an API.
 - `/design` is an internal component reference with rating and button
   specimens on sample input. It renders only under `next dev` and answers 404
   in production builds; if it is needed in a deployed preview, gate it on an

@@ -460,7 +460,7 @@ export const industries: Industry[] = [
       { q: "Do I need a marketing automation platform or just email software?", a: "If you send newsletters and occasional campaigns, email software is enough. Choose automation when you need behaviour-based journeys and lead handoff to sales." },
       { q: "Why do analytics numbers differ between tools?", a: "Tools define and collect events differently, filter bots differently and may sample or model data. Choose one for each metric and document the definition." },
       { q: "How can small teams avoid tool sprawl?", a: "Audit what each tool uniquely does, retire overlaps and prefer products that integrate natively with your CRM." },
-      { q: "Does Faresolution run advertising for vendors?", a: "No. Products are not ranked by payment, and the only ordering labelled trending is editor-curated." },
+      { q: "Does Faresolution run advertising for vendors?", a: "No. Products are not ranked by payment, and every curated ordering on the site is chosen by our editors, not by traffic or reviews." },
     ],
     seoTitle: "Software for Marketing Teams and Agencies",
     seoDescription: "Choose marketing automation, email, analytics, CRM and project tools for in-house teams and agencies, with advice on consent, metrics and tool sprawl.",

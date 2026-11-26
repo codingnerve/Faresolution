@@ -48,11 +48,11 @@ export default async function ComparePage() {
         </p>
 
         {popular.length > 0 && (
-          <section aria-labelledby="popular-comparisons" className="mt-14 sm:mt-16">
-            <h2 id="popular-comparisons" className="type-h2 text-navy">
-              Popular comparisons
+          <section aria-labelledby="editor-picked-comparisons" className="mt-14 sm:mt-16">
+            <h2 id="editor-picked-comparisons" className="type-h2 text-navy">
+              Editor-picked comparisons
             </h2>
-            <p className="type-meta mt-2">Picked by our editors.</p>
+            <p className="type-meta mt-2">Starting points chosen by our editors, not ranked by traffic or reviews.</p>
             <ul className="mt-6 grid border-t border-line md:grid-cols-2 md:gap-x-10">
               {popular.map(({ href, items }) => {
                 const category = categoryName.get(items[0].primaryCategory);

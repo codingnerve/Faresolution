@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Building2, LayoutGrid, Search, SearchX, TrendingUp, X } from "lucide-react";
+import { ArrowRight, Building2, LayoutGrid, Lightbulb, Search, SearchX, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -17,7 +17,7 @@ import {
 import { LogoMark } from "@/components/ui/LogoMark";
 import {
   MAX_QUERY_LENGTH,
-  popularSearches,
+  suggestedSearches,
   search,
   type CategoryHit,
   type ProductHit,
@@ -35,7 +35,7 @@ type Option =
   | { kind: "category"; key: string; href: string; hit: CategoryHit }
   | { kind: "vendor"; key: string; href: string; hit: VendorHit }
   | { kind: "all"; key: string; href: string; query: string }
-  | { kind: "popular"; key: string; term: string };
+  | { kind: "suggested"; key: string; term: string };
 
 interface Group {
   key: string;
@@ -48,9 +48,9 @@ function buildGroups(index: SearchIndex, rawQuery: string): Group[] {
   if (query === "") {
     return [
       {
-        key: "popular",
-        label: "Popular searches",
-        options: popularSearches.map((term) => ({ kind: "popular", key: `popular-${term}`, term })),
+        key: "suggested",
+        label: "Suggested searches",
+        options: suggestedSearches.map((term) => ({ kind: "suggested", key: `suggested-${term}`, term })),
       },
     ];
   }
@@ -194,7 +194,7 @@ export function SearchBox({
   }
 
   function choose(option: Option) {
-    if (option.kind === "popular") {
+    if (option.kind === "suggested") {
       updateQuery(option.term);
       inputRef.current?.focus();
       return;
@@ -427,10 +427,10 @@ function OptionRow({
     },
   };
 
-  if (option.kind === "popular") {
+  if (option.kind === "suggested") {
     return (
       <button type="button" {...common} onClick={onChoose} className={rowClass}>
-        <TrendingUp aria-hidden="true" className="size-4 shrink-0 text-muted" strokeWidth={2} />
+        <Lightbulb aria-hidden="true" className="size-4 shrink-0 text-muted" strokeWidth={2} />
         <span>{option.term}</span>
       </button>
     );

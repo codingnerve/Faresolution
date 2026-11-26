@@ -46,6 +46,7 @@ const exploreLinks: NavLink[] = [
   { label: "Top rated", href: "/software/top-rated" },
   { label: "Reviews", href: "/reviews" },
   { label: "All categories", href: allCategoriesLink.href },
+  { label: "Saved items", href: "/saved" },
 ];
 
 const vendorLinks: NavLink[] = [

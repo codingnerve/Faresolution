@@ -1,3 +1,4 @@
+import { Bookmark } from "lucide-react";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Logo } from "@/components/ui/Logo";
@@ -31,6 +32,14 @@ export async function Header() {
         <DesktopNav nav={nav} className="hidden lg:block" />
         <div className="ml-auto flex items-center gap-1">
           <HeaderSearch />
+          <Link
+            href="/saved"
+            aria-label="Saved items"
+            title="Saved items"
+            className="inline-flex size-10 items-center justify-center rounded-md text-ink transition-colors hover:bg-surface-alt"
+          >
+            <Bookmark aria-hidden="true" className="size-5" strokeWidth={1.75} />
+          </Link>
           <Link
             href={vendorsLink.href}
             className="ml-2 hidden h-9 items-center rounded-md border border-line-strong px-3.5 text-sm font-medium text-ink shadow-card transition-colors hover:border-muted/60 hover:bg-surface-alt lg:inline-flex"

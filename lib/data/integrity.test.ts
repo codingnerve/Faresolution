@@ -376,9 +376,9 @@ describe("media and logo integrity", () => {
     return fs.existsSync(path.join(publicRoot, rel));
   };
 
-  it("leaves every vendor and product logo empty in the showcase and validates any set logo", () => {
-    for (const item of [...products, ...vendors]) {
-      expect(item.logo, `${item.slug} logo should be unset in showcase`).toBeUndefined();
+  it("gives every product, vendor, and integration a valid local logo file", () => {
+    for (const item of [...products, ...vendors, ...integrations]) {
+      expect(item.logo, `${item.slug} missing logo`).toBeDefined();
       if (item.logo) {
         expect(["press-kit", "licensed-provider"]).toContain(item.logo.source);
         expect(item.logo.width).toBeGreaterThan(0);

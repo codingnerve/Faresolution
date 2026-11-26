@@ -39,6 +39,7 @@ export function ProductLogo({ name, color, logo, size = 40, className }: Product
         width={logo.width}
         height={logo.height}
         sizes={`${size}px`}
+        unoptimized={logo.src.endsWith(".svg")}
         className="size-full object-contain"
       />
     </span>

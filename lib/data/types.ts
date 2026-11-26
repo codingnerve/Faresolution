@@ -147,6 +147,7 @@ export interface Integration {
   slug: string;
   name: string;
   website: string;
+  logo?: VendorLogo;
 }
 
 export type ArticleKind = "blog" | "guide" | "best-software" | "research" | "buying-guide";

@@ -25,7 +25,12 @@ export function IntegrationGrid({ integrations, products, className }: Integrati
         const external = !profile && isWebUrl(integration.website);
         const body = (
           <>
-            <ProductLogo name={integration.name} color={profile?.brandColor ?? "#22324D"} logo={profile?.logo} size={36} />
+            <ProductLogo
+              name={integration.name}
+              color={profile?.brandColor ?? "#22324D"}
+              logo={profile?.logo ?? integration.logo}
+              size={36}
+            />
             <span className="min-w-0 flex-1">
               <span className="block truncate text-[0.9375rem] font-semibold text-navy">{integration.name}</span>
               <span className="type-meta block">{profile ? "Profile on Faresolution" : external ? "Vendor website" : "Integration"}</span>

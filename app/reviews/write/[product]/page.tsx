@@ -5,8 +5,8 @@ import { ReviewDraftForm } from "@/components/forms/ReviewDraftForm";
 import { productHref } from "@/components/layout/navigation";
 import { ReviewsHeader, ReviewsStatus } from "@/components/reviews/ReviewsHeader";
 import { Container } from "@/components/ui/Container";
-import { LogoMark } from "@/components/ui/LogoMark";
-import { getIndustries, getProduct, getProducts } from "@/lib/data";
+import { ProductLogo } from "@/components/ui/ProductLogo";
+import { getIndustries, getProduct, getProducts, getVendor, resolveLogo } from "@/lib/data";
 import { buildMetadata } from "@/lib/seo";
 
 // Every product has a draft page at build time. Unknown slugs get a real 404
@@ -30,6 +30,8 @@ export default async function WriteReviewPage({ params }: PageProps<"/reviews/wr
   const { product: slug } = await params;
   const [product, industries] = await Promise.all([getProduct(slug), getIndustries()]);
   if (!product) notFound();
+  const vendor = await getVendor(product.vendorSlug);
+  const logo = resolveLogo(product, vendor);
 
   return (
     <>
@@ -50,7 +52,7 @@ export default async function WriteReviewPage({ params }: PageProps<"/reviews/wr
       />
       <Container width="narrow" className="py-10 sm:py-14">
         <div className="mb-8 flex items-center gap-3 rounded-lg border border-line bg-surface p-4 shadow-card">
-          <LogoMark name={product.name} color={product.brandColor} size={44} className="shrink-0" />
+          <ProductLogo name={product.name} color={product.brandColor} logo={logo} size={44} className="shrink-0" />
           <div className="min-w-0">
             <p className="type-label">Reviewing</p>
             <Link

@@ -2,6 +2,7 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { softwareSearchHref } from "@/components/layout/navigation";
 import { Container } from "@/components/ui/Container";
+import { ProductLogo } from "@/components/ui/ProductLogo";
 import { getProducts, getVendors } from "@/lib/data";
 
 const MAX_VENDORS = 12;
@@ -34,17 +35,18 @@ export async function VendorStrip() {
           </p>
         </div>
 
-        <ul className="flex flex-wrap items-baseline gap-x-8 gap-y-4">
+        <ul className="flex flex-wrap items-center gap-x-7 gap-y-4">
           {strip.map((vendor) => {
             const n = productCount.get(vendor.slug) ?? 0;
             return (
               <li key={vendor.slug}>
                 <Link
                   href={softwareSearchHref(vendor.name)}
-                  className="group inline-flex items-baseline gap-1.5 rounded-xs"
+                  className="group inline-flex items-center gap-2.5 rounded-xs"
                   aria-label={`${vendor.name}, ${n} ${n === 1 ? "product" : "products"}`}
                 >
-                  <span className="text-[1.0625rem] font-semibold tracking-[-0.02em] text-ink/80 transition-colors group-hover:text-navy">
+                  <ProductLogo name={vendor.name} color="#17243A" logo={vendor.logo} size={28} />
+                  <span className="text-[1rem] font-semibold tracking-[-0.02em] text-ink/85 transition-colors group-hover:text-navy">
                     {vendor.name}
                   </span>
                   <span aria-hidden="true" className="text-xs text-subtle tabular-nums">

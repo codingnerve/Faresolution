@@ -51,6 +51,7 @@ export interface IndexedVendor {
   slug: string;
   name: string;
   productCount: number;
+  logo?: VendorLogo | null;
 }
 
 export interface SearchIndex {
@@ -89,6 +90,7 @@ export interface VendorHit {
   slug: string;
   name: string;
   productCount: number;
+  logo?: VendorLogo | null;
 }
 
 export interface SearchResults {
@@ -180,6 +182,7 @@ export function buildSearchIndex(input: BuildInput): SearchIndex {
       slug: v.slug,
       name: v.name,
       productCount: vendorCount.get(v.slug) ?? 0,
+      ...(v.logo ? { logo: v.logo } : {}),
     })),
   };
 }
@@ -381,7 +384,12 @@ export function search(
       }),
     ),
     limit,
-  ).map((v): VendorHit => ({ slug: v.slug, name: v.name, productCount: v.productCount }));
+  ).map((v): VendorHit => ({
+    slug: v.slug,
+    name: v.name,
+    productCount: v.productCount,
+    ...(v.logo ? { logo: v.logo } : {}),
+  }));
 
   return { products, categories, vendors };
 }

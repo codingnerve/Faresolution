@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Building2, LayoutGrid, Lightbulb, Search, SearchX, X } from "lucide-react";
+import { ArrowRight, LayoutGrid, Lightbulb, Search, SearchX, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -467,9 +467,7 @@ function OptionRow({
     case "vendor":
       body = (
         <>
-          <IconTile>
-            <Building2 className="size-4" strokeWidth={1.75} />
-          </IconTile>
+          <ProductLogo name={option.hit.name} color="#17243A" logo={option.hit.logo} size={32} />
           <span className="min-w-0 flex-1">
             <span className="block truncate font-medium">{option.hit.name}</span>
             <span className="block text-[0.8125rem] text-subtle">{countLabel(option.hit.productCount)}</span>

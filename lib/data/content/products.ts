@@ -85,6 +85,7 @@ export const products: Product[] = [
     featured: true,
     trendingRank: 1,
     brandColor: "#FF7A59",
+    logo: { src: "/logos/hubspot.svg", width: 24, height: 24, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "zoho-crm",
@@ -153,6 +154,7 @@ export const products: Product[] = [
     featured: true,
     trendingRank: 4,
     brandColor: "#E42527",
+    logo: { src: "/logos/zoho.svg", width: 24, height: 24, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "salesforce-sales-cloud",
@@ -220,6 +222,7 @@ export const products: Product[] = [
     featured: true,
     trendingRank: null,
     brandColor: "#00A1E0",
+    logo: { src: "/logos/salesforce.svg", width: 256, height: 180, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "pipedrive",
@@ -283,6 +286,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: 10,
     brandColor: "#017737",
+    logo: { src: "/logos/pipedrive.png", width: 128, height: 128, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "outreach",
@@ -334,6 +338,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#5951FF",
+    logo: { src: "/logos/outreach.png", width: 128, height: 128, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "apollo-io",
@@ -388,6 +393,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#2E3A4F",
+    logo: { src: "/logos/apollo.png", width: 128, height: 128, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   // ---------------------------------------------------- Project management
   {
@@ -456,6 +462,7 @@ export const products: Product[] = [
     featured: true,
     trendingRank: null,
     brandColor: "#F06A6A",
+    logo: { src: "/logos/asana.svg", width: 256, height: 237, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "trello",
@@ -512,6 +519,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#0079BF",
+    logo: { src: "/logos/trello.svg", width: 256, height: 256, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "monday-com",
@@ -580,6 +588,7 @@ export const products: Product[] = [
     featured: true,
     trendingRank: 7,
     brandColor: "#FF3D57",
+    logo: { src: "/logos/monday-com.svg", width: 256, height: 156, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "clickup",
@@ -649,6 +658,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: 3,
     brandColor: "#7B68EE",
+    logo: { src: "/logos/clickup.svg", width: 24, height: 24, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "jira",
@@ -717,6 +727,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#0052CC",
+    logo: { src: "/logos/jira.svg", width: 256, height: 256, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   // ------------------------------------------------------- Collaboration
   {
@@ -783,6 +794,7 @@ export const products: Product[] = [
     featured: true,
     trendingRank: null,
     brandColor: "#4A154B",
+    logo: { src: "/logos/slack.svg", width: 256, height: 256, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "microsoft-teams",
@@ -848,6 +860,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#5059C9",
+    logo: { src: "/logos/microsoft-teams.svg", width: 256, height: 239, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "zoom",
@@ -904,6 +917,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#0B5CFF",
+    logo: { src: "/logos/zoom.svg", width: 256, height: 256, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "notion",
@@ -970,6 +984,7 @@ export const products: Product[] = [
     featured: true,
     trendingRank: 2,
     brandColor: "#191919",
+    logo: { src: "/logos/notion.svg", width: 256, height: 268, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "confluence",
@@ -1033,6 +1048,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#1868DB",
+    logo: { src: "/logos/confluence.svg", width: 256, height: 246, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "dropbox",
@@ -1088,6 +1104,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#0061FF",
+    logo: { src: "/logos/dropbox.svg", width: 256, height: 218, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "box",
@@ -1153,6 +1170,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#0061D5",
+    logo: { src: "/logos/box.svg", width: 24, height: 24, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   // ---------------------------------------------------- Workflow automation
   {
@@ -1210,6 +1228,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: 12,
     brandColor: "#FF4F00",
+    logo: { src: "/logos/zapier.svg", width: 256, height: 256, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "make",
@@ -1265,6 +1284,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#6D00CC",
+    logo: { src: "/logos/make.svg", width: 24, height: 24, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "n8n",
@@ -1320,6 +1340,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: 5,
     brandColor: "#EA4B71",
+    logo: { src: "/logos/n8n.svg", width: 256, height: 135, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   // ---------------------------------------------------------- Accounting
   {
@@ -1387,6 +1408,7 @@ export const products: Product[] = [
     featured: true,
     trendingRank: null,
     brandColor: "#2CA01C",
+    logo: { src: "/logos/quickbooks.svg", width: 24, height: 24, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "xero",
@@ -1450,6 +1472,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#13B5EA",
+    logo: { src: "/logos/xero.svg", width: 256, height: 256, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "freshbooks",
@@ -1506,6 +1529,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#0075DD",
+    logo: { src: "/logos/freshbooks.png", width: 96, height: 96, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   // ---------------------------------------------------------------- ERP
   {
@@ -1570,6 +1594,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#1F3A5F",
+    logo: { src: "/logos/netsuite.png", width: 48, height: 48, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "odoo",
@@ -1638,6 +1663,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#714B67",
+    logo: { src: "/logos/odoo.svg", width: 24, height: 24, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   // ------------------------------------------------- Inventory management
   {
@@ -1690,6 +1716,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#089949",
+    logo: { src: "/logos/zoho.svg", width: 24, height: 24, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "cin7",
@@ -1744,6 +1771,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#0E4D92",
+    logo: { src: "/logos/cin7.png", width: 32, height: 32, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   // ------------------------------------------------- HR, payroll, recruiting
   {
@@ -1808,6 +1836,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#73C41D",
+    logo: { src: "/logos/bamboohr.png", width: 48, height: 48, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "gusto",
@@ -1864,6 +1893,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#F45D48",
+    logo: { src: "/logos/gusto.png", width: 32, height: 32, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "adp-workforce-now",
@@ -1924,6 +1954,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#D0271D",
+    logo: { src: "/logos/adp.png", width: 128, height: 128, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "greenhouse",
@@ -1975,6 +2006,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#24A47F",
+    logo: { src: "/logos/greenhouse.png", width: 128, height: 128, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "workable",
@@ -2026,6 +2058,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#00756A",
+    logo: { src: "/logos/workable.png", width: 128, height: 128, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   // ------------------------------------------------ Marketing and email
   {
@@ -2095,6 +2128,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#FF5C35",
+    logo: { src: "/logos/hubspot.svg", width: 24, height: 24, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "activecampaign",
@@ -2162,6 +2196,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#356AE6",
+    logo: { src: "/logos/activecampaign.png", width: 128, height: 128, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "mailchimp",
@@ -2228,6 +2263,7 @@ export const products: Product[] = [
     featured: true,
     trendingRank: null,
     brandColor: "#FFE01B",
+    logo: { src: "/logos/mailchimp.svg", width: 256, height: 291, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "brevo",
@@ -2292,6 +2328,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#0B996E",
+    logo: { src: "/logos/brevo.svg", width: 24, height: 24, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "klaviyo",
@@ -2356,6 +2393,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: 11,
     brandColor: "#232426",
+    logo: { src: "/logos/klaviyo.png", width: 128, height: 128, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   // --------------------------------------------------- Customer support
   {
@@ -2424,6 +2462,7 @@ export const products: Product[] = [
     featured: true,
     trendingRank: null,
     brandColor: "#03363D",
+    logo: { src: "/logos/zendesk.svg", width: 256, height: 195, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "freshdesk",
@@ -2486,6 +2525,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#25C16F",
+    logo: { src: "/logos/freshworks.png", width: 128, height: 128, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "intercom",
@@ -2550,6 +2590,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: 8,
     brandColor: "#1F8DED",
+    logo: { src: "/logos/intercom.svg", width: 256, height: 263, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "tidio",
@@ -2604,6 +2645,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#0566FF",
+    logo: { src: "/logos/tidio.png", width: 128, height: 128, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   // ------------------------------------------------ Analytics and BI
   {
@@ -2660,6 +2702,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#E97627",
+    logo: { src: "/logos/tableau.svg", width: 256, height: 251, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "microsoft-power-bi",
@@ -2716,6 +2759,7 @@ export const products: Product[] = [
     featured: true,
     trendingRank: null,
     brandColor: "#F2C811",
+    logo: { src: "/logos/power-bi.svg", width: 256, height: 342, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "looker-studio",
@@ -2770,6 +2814,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#4285F4",
+    logo: { src: "/logos/looker-studio.svg", width: 256, height: 413, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "google-analytics",
@@ -2824,6 +2869,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#E37400",
+    logo: { src: "/logos/google-analytics.svg", width: 256, height: 284, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "mixpanel",
@@ -2879,6 +2925,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#7856FF",
+    logo: { src: "/logos/mixpanel.svg", width: 24, height: 24, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "amplitude",
@@ -2934,6 +2981,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#1E61F0",
+    logo: { src: "/logos/amplitude.svg", width: 256, height: 256, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   // ------------------------------------------- Ecommerce and website builders
   {
@@ -2999,6 +3047,7 @@ export const products: Product[] = [
     featured: true,
     trendingRank: 9,
     brandColor: "#95BF47",
+    logo: { src: "/logos/shopify.svg", width: 256, height: 292, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "woocommerce",
@@ -3053,6 +3102,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#7F54B3",
+    logo: { src: "/logos/woocommerce.svg", width: 256, height: 153, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "wix",
@@ -3107,6 +3157,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#116DFF",
+    logo: { src: "/logos/wix.svg", width: 24, height: 24, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "squarespace",
@@ -3158,6 +3209,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#121212",
+    logo: { src: "/logos/squarespace.svg", width: 24, height: 24, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "webflow",
@@ -3213,6 +3265,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#4353FF",
+    logo: { src: "/logos/webflow.svg", width: 24, height: 24, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   // ------------------------------------------------------- Cybersecurity
   {
@@ -3268,6 +3321,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#E3001B",
+    logo: { src: "/logos/crowdstrike.png", width: 117, height: 121, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "okta",
@@ -3322,6 +3376,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#007DC1",
+    logo: { src: "/logos/okta.svg", width: 256, height: 256, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "1password",
@@ -3378,6 +3433,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#0572EC",
+    logo: { src: "/logos/1password.svg", width: 24, height: 24, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   // ------------------------------------------------------------ Database
   {
@@ -3434,6 +3490,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#00684A",
+    logo: { src: "/logos/mongodb.svg", width: 256, height: 549, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "supabase",
@@ -3490,6 +3547,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: 6,
     brandColor: "#3ECF8E",
+    logo: { src: "/logos/supabase.svg", width: 256, height: 263, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   // ---------------------------------------------------- Cloud management
   {
@@ -3545,6 +3603,7 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#632CA6",
+    logo: { src: "/logos/datadog.svg", width: 256, height: 256, source: "press-kit", retrievedAt: "2026-11-26" },
   },
   {
     slug: "terraform",
@@ -3600,5 +3659,6 @@ export const products: Product[] = [
     featured: false,
     trendingRank: null,
     brandColor: "#7B42BC",
+    logo: { src: "/logos/terraform.svg", width: 256, height: 291, source: "press-kit", retrievedAt: "2026-11-26" },
   },
 ];

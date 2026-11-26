@@ -14,7 +14,11 @@ import {
 } from "@/lib/data";
 import { suggestedSearches } from "@/lib/search";
 import { SITE_TAGLINE } from "@/lib/site";
+import { cn } from "@/lib/utils";
+import { accentAt } from "./accents";
 import { HeroComparePanel, type PanelComparison } from "./HeroComparePanel";
+
+const STAT_TONES = ["text-blue-ink", "text-violet-ink", "text-teal-ink"] as const;
 import { HeroStage } from "./HeroStage";
 
 /** Head-to-heads shown in the hero panel, in tab order (must be popular comparisons). */
@@ -98,7 +102,7 @@ async function buildPanel(): Promise<PanelComparison[]> {
 }
 
 const chipClass =
-  "inline-flex h-8 items-center rounded-md border border-line bg-surface px-3 text-[0.8125rem] font-medium text-ink transition-colors hover:border-line-strong hover:bg-surface-alt hover:text-navy";
+  "inline-flex h-8 items-center rounded-md border border-transparent px-3 text-[0.8125rem] font-medium transition-[transform,box-shadow,border-color] duration-200 ease-[cubic-bezier(0.25,1,0.5,1)] hover:-translate-y-0.5 hover:border-current/20 hover:shadow-raised";
 
 export async function Hero() {
   const [products, categories, vendors, panel] = await Promise.all([
@@ -117,20 +121,26 @@ export async function Hero() {
   ];
 
   return (
-    <section aria-labelledby="home-hero-title" className="relative isolate overflow-x-clip border-b border-line">
-      {/* Only the grid is clipped, so the search suggestions can overflow the hero. */}
+    <section aria-labelledby="home-hero-title" className="relative isolate overflow-x-clip">
+      {/* Only the background is clipped, so the search suggestions can overflow the hero. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="color-mesh" />
         <div className="depth-grid" />
       </div>
+      <div aria-hidden="true" className="brand-rule absolute inset-x-0 bottom-0" />
       <Container className="relative grid items-center gap-12 py-12 sm:py-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-14 lg:py-20 xl:grid-cols-[minmax(0,1fr)_28rem] xl:gap-20">
         <div className="min-w-0">
-          <p className="rise-on-load flex items-center gap-3 text-[0.8125rem] font-semibold tracking-[0.01em] text-blue-ink">
-            <span aria-hidden="true" className="h-px w-8 bg-blue" />
+          <p className="rise-on-load inline-flex items-center gap-2.5 rounded-md border border-blue/15 bg-surface/75 px-3 py-1.5 text-[0.8125rem] font-semibold tracking-[0.01em] text-blue-ink shadow-card backdrop-blur-sm">
+            <span aria-hidden="true" className="flex gap-1">
+              <span className="size-1.5 rounded-full bg-blue" />
+              <span className="size-1.5 rounded-full bg-violet" />
+              <span className="size-1.5 rounded-full bg-coral" />
+            </span>
             {SITE_TAGLINE}
           </p>
           <h1 id="home-hero-title" className="rise-on-load type-display mt-5 max-w-[15ch] text-navy [--rise-delay:80ms]">
             Find the software that moves your business{" "}
-            <em className="text-violet-ink italic">forward.</em>
+            <em className="text-gradient-brand pr-1 italic">forward.</em>
           </h1>
           <p className="rise-on-load type-body mt-6 max-w-[36rem] [--rise-delay:160ms] text-[1.0625rem] leading-7 text-subtle">
             Browse business software by category, compare products side by
@@ -148,18 +158,23 @@ export async function Hero() {
 
           <div className="rise-on-load mt-5 flex max-w-[38rem] flex-wrap items-center gap-2 [--rise-delay:320ms]">
             <span className="mr-1 text-[0.8125rem] text-subtle">Try:</span>
-            {suggestedSearches.slice(0, 5).map((term) => (
-              <Link key={term} href={softwareSearchHref(term)} className={chipClass}>
-                {term}
-              </Link>
-            ))}
+            {suggestedSearches.slice(0, 5).map((term, i) => {
+              const a = accentAt(i);
+              return (
+                <Link key={term} href={softwareSearchHref(term)} className={cn(chipClass, a.tint, a.ink)}>
+                  {term}
+                </Link>
+              );
+            })}
           </div>
 
           <dl className="rise-on-load mt-10 grid [--rise-delay:400ms] grid-cols-3 gap-4 border-t border-line pt-6 sm:flex sm:flex-wrap sm:gap-x-10 sm:gap-y-4">
-            {stats.map((stat) => (
+            {stats.map((stat, i) => (
               <div key={stat.label} className="flex flex-col gap-1.5 sm:flex-row sm:items-baseline sm:gap-2">
                 <dt className="sr-only">{stat.label}</dt>
-                <dd className="font-serif text-[1.75rem] leading-none text-navy tabular-nums">{stat.value}</dd>
+                <dd className={cn("font-serif text-[1.75rem] leading-none tabular-nums", STAT_TONES[i % STAT_TONES.length])}>
+                  {stat.value}
+                </dd>
                 <dd aria-hidden="true" className="text-[0.8125rem] text-subtle">
                   {stat.label}
                 </dd>

@@ -7,6 +7,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { getArticles, getAuthor, type Article, type ArticleKind } from "@/lib/data";
 import { ARTICLE_KIND_LABEL, formatArticleDate } from "@/lib/editorial";
 import { cn } from "@/lib/utils";
+import { Eyebrow } from "./accents";
 
 const KINDS = ["buying-guide", "research"] as const satisfies readonly ArticleKind[];
 const MAX_ARTICLES = 5;
@@ -14,6 +15,11 @@ const MAX_ARTICLES = 5;
 const KIND_RULE: Record<(typeof KINDS)[number], string> = {
   "buying-guide": "bg-blue",
   research: "bg-violet",
+};
+
+const KIND_INK: Record<(typeof KINDS)[number], string> = {
+  "buying-guide": "text-blue-ink",
+  research: "text-violet-ink",
 };
 
 type EditorialKind = (typeof KINDS)[number];
@@ -35,7 +41,7 @@ function Meta({ item, className }: { item: Item; className?: string }) {
 
 function KindLabel({ kind }: { kind: EditorialKind }) {
   return (
-    <span className="flex items-center gap-2 text-xs font-semibold tracking-[0.06em] text-subtle uppercase">
+    <span className={cn("flex items-center gap-2 text-xs font-semibold tracking-[0.06em] uppercase", KIND_INK[kind])}>
       <span aria-hidden="true" className={cn("h-2 w-2 rounded-xs", KIND_RULE[kind])} />
       {ARTICLE_KIND_LABEL[kind]}
     </span>
@@ -62,7 +68,7 @@ export async function EditorialGrid() {
       <Container>
         <SectionHeader
           id="home-editorial-title"
-          eyebrow="Guides and research"
+          eyebrow={<Eyebrow tone="blue">Guides and research</Eyebrow>}
           title="Read before you sign"
           description="Practical buying guides and research on choosing, evaluating and switching business software."
           action={
@@ -82,7 +88,7 @@ export async function EditorialGrid() {
         />
 
         <div className="mt-10 grid gap-10 lg:mt-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-14">
-          <article className="reveal group relative flex flex-col overflow-hidden rounded-lg border border-line bg-surface-alt transition-shadow duration-300 hover:shadow-raised lg:self-start">
+          <article className="reveal group relative flex flex-col overflow-hidden rounded-lg border border-line bg-linear-to-br from-blue-tint/70 via-surface to-violet-tint/80 transition-shadow duration-300 hover:shadow-overlay lg:self-start">
             {lead.cover && (
               <div className="overflow-hidden border-b border-line bg-surface">
                 <Image

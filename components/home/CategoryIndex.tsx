@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { getCategories, getCategoryTree, getProductsInCategoryTree } from "@/lib/data";
 import { cn } from "@/lib/utils";
+import { accentAt, Eyebrow } from "./accents";
 
 // Static class names so Tailwind can see them. The closing cell fills the last row.
 const SM_SPAN = { 1: "sm:col-span-1", 2: "sm:col-span-2" } as const;
@@ -29,7 +30,7 @@ export async function CategoryIndex() {
       <Container>
         <SectionHeader
           id="home-categories-title"
-          eyebrow="Category index"
+          eyebrow={<Eyebrow tone="blue">Category index</Eyebrow>}
           title="Start from the job you need done"
           description={`${tree.length} categories and ${subcategoryCount} subcategories, each with a buying guide and the products we list in it.`}
           action={
@@ -44,13 +45,17 @@ export async function CategoryIndex() {
         />
 
         <ul className="reveal mt-10 grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-2 lg:mt-12 lg:grid-cols-3">
-          {tree.map((root) => {
+          {tree.map((root, index) => {
             const total = count(root.slug);
+            const a = accentAt(index);
             return (
-              <li key={root.slug} className="group/cell relative flex flex-col bg-surface p-5 transition-colors duration-300 hover:bg-[#fbfbfd] sm:p-6">
+              <li key={root.slug} className={cn("group/cell relative flex flex-col bg-surface p-5 transition-colors duration-300 sm:p-6", a.hoverTint)}>
                 <span
                   aria-hidden="true"
-                  className="absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-blue transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/cell:scale-x-100"
+                  className={cn(
+                    "absolute inset-x-0 top-0 h-1 origin-left scale-x-[0.14] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/cell:scale-x-100",
+                    a.solid,
+                  )}
                 />
                 <div className="flex items-start justify-between gap-4">
                   <Link
@@ -60,14 +65,14 @@ export async function CategoryIndex() {
                     {root.name}
                   </Link>
                   <span className="flex shrink-0 flex-col items-end">
-                    <span className="font-serif text-[1.75rem] leading-none text-navy tabular-nums transition-[color,transform] duration-300 group-hover/cell:-translate-y-0.5 group-hover/cell:text-blue-ink">{total}</span>
+                    <span className={cn("font-serif text-[1.75rem] leading-none tabular-nums transition-transform duration-300 group-hover/cell:-translate-y-0.5", a.ink)}>{total}</span>
                     <span className="mt-1 text-[0.6875rem] font-medium tracking-[0.06em] text-subtle uppercase">
                       {total === 1 ? "product" : "products"}
                     </span>
                   </span>
                 </div>
                 {root.children.length > 0 && (
-                  <ul className="mt-4 space-y-1.5 border-l border-line pl-3">
+                  <ul className={cn("mt-4 space-y-1.5 border-l-2 pl-3", a.rule)}>
                     {root.children.map((child) => (
                       <li key={child.slug} className="flex items-baseline justify-between gap-3 text-[0.8125rem] leading-5">
                         <Link href={categoryHref(child.slug)} className="rounded-xs text-ink hover:text-blue-ink hover:underline hover:decoration-line-strong hover:underline-offset-4">
@@ -86,7 +91,7 @@ export async function CategoryIndex() {
           })}
           <li
             className={cn(
-              "flex flex-col justify-between gap-6 bg-surface-alt p-5 sm:p-6",
+              "flex flex-col justify-between gap-6 bg-linear-to-br from-blue-tint via-violet-tint to-coral-tint p-5 sm:p-6",
               SM_SPAN[fillSpan(tree.length, 2) as 1 | 2],
               LG_SPAN[fillSpan(tree.length, 3) as 1 | 2 | 3],
             )}

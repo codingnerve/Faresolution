@@ -23,7 +23,7 @@ export async function VendorStrip() {
   if (strip.length === 0) return null;
 
   return (
-    <section aria-labelledby="home-vendors-title" className="border-y border-line bg-surface">
+    <section aria-labelledby="home-vendors-title" className="border-y border-line bg-linear-to-r from-amber-tint/70 via-surface to-teal-tint/70">
       <Container className="grid gap-8 py-10 lg:grid-cols-[minmax(0,14rem)_minmax(0,1fr)_minmax(0,15rem)] lg:items-center lg:gap-12">
         <div>
           <h2 id="home-vendors-title" className="type-label">

@@ -63,7 +63,7 @@ export function HeroStage({ children }: { children: ReactNode }) {
         style={{ x: backX, translateY: backY }}
         className="absolute inset-0 hidden sm:block"
       >
-        <div className="h-full w-full translate-x-7 -translate-y-7 rounded-lg border border-violet/25 bg-violet-tint" />
+        <div className="h-full w-full translate-x-7 -translate-y-7 rounded-lg border border-violet/25 bg-linear-to-br from-violet-tint via-coral-tint to-amber-tint" />
       </motion.div>
       <motion.div
         aria-hidden="true"
@@ -73,7 +73,7 @@ export function HeroStage({ children }: { children: ReactNode }) {
         style={{ x: midX, translateY: midY }}
         className="absolute inset-0 hidden sm:block"
       >
-        <div className="h-full w-full translate-x-3.5 -translate-y-3.5 rounded-lg border border-blue/25 bg-blue-tint" />
+        <div className="h-full w-full translate-x-3.5 -translate-y-3.5 rounded-lg border border-blue/25 bg-linear-to-br from-blue-tint to-teal-tint" />
       </motion.div>
 
       <motion.div
@@ -92,8 +92,8 @@ export function HeroStage({ children }: { children: ReactNode }) {
             <span className="flex gap-0.5">
               <span className="h-3 w-1 rounded-xs bg-blue" />
               <span className="h-3 w-1 rounded-xs bg-violet" />
-              <span className="h-3 w-1 rounded-xs bg-navy" />
-              <span className="h-3 w-1 rounded-xs bg-line-strong" />
+              <span className="h-3 w-1 rounded-xs bg-coral" />
+              <span className="h-3 w-1 rounded-xs bg-teal" />
             </span>
             Compare up to 4 products
           </div>

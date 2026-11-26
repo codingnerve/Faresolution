@@ -63,7 +63,8 @@ export function HeroComparePanel({ comparisons }: { comparisons: PanelComparison
   const [a, b] = active.products;
 
   return (
-    <div className="rounded-lg border border-line bg-surface shadow-raised">
+    <div className="overflow-hidden rounded-lg border border-line bg-surface shadow-overlay">
+      <div aria-hidden="true" className="brand-rule" />
       <div className="flex items-center justify-between gap-4 border-b border-line px-4 pt-4 sm:px-5">
         <p className="type-label hidden pb-3 sm:block">Side by side</p>
         <div
@@ -97,7 +98,7 @@ export function HeroComparePanel({ comparisons }: { comparisons: PanelComparison
                   <motion.span
                     layoutId={`${baseId}-indicator`}
                     aria-hidden="true"
-                    className="absolute inset-x-0 bottom-0 h-0.5 bg-navy"
+                    className="absolute inset-x-0 bottom-0 h-0.5 bg-linear-to-r from-blue to-violet"
                     transition={{ duration: reduceMotion ? 0 : 0.22, ease: [0.2, 0, 0, 1] }}
                   />
                 )}

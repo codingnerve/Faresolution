@@ -5,6 +5,10 @@ import { Container } from "@/components/ui/Container";
 import { ProductLogo } from "@/components/ui/ProductLogo";
 import { Rating } from "@/components/ui/Rating";
 import { getArticle, getProduct } from "@/lib/data";
+import { cn } from "@/lib/utils";
+import { accent, Eyebrow } from "./accents";
+
+const STEP_TONES = [accent("violet"), accent("teal"), accent("amber")];
 
 // Review collection is not open yet: every step is described as planned (R11).
 const STEPS = [
@@ -38,7 +42,9 @@ export async function HowReviewsWork() {
     <section aria-labelledby="home-reviews-title" className="py-16 sm:py-20 lg:py-24">
       <Container className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-20">
         <div>
-          <p className="type-label mb-3">How reviews work</p>
+          <p className="type-label mb-3">
+            <Eyebrow tone="amber">How reviews work</Eyebrow>
+          </p>
           <h2 id="home-reviews-title" className="type-h2 max-w-[20ch] text-navy">
             Ratings appear when real reviews do
           </h2>
@@ -49,7 +55,8 @@ export async function HowReviewsWork() {
           </p>
 
           {example && (
-            <figure className="reveal mt-8 max-w-sm rounded-lg border border-line bg-surface p-4 shadow-card">
+            <figure className="reveal relative mt-8 max-w-sm overflow-hidden rounded-lg border border-line bg-surface p-4 pt-5 shadow-raised">
+              <div aria-hidden="true" className="brand-rule absolute inset-x-0 top-0" />
               <div className="flex items-center gap-3">
                 <ProductLogo name={example.name} color={example.brandColor} logo={example.logo} size={36} />
                 <div className="min-w-0">
@@ -66,9 +73,14 @@ export async function HowReviewsWork() {
 
         <div>
           <ol className="reveal-stagger border-t border-line">
-            {STEPS.map((step, index) => (
+            {STEPS.map((step, index) => {
+              const a = STEP_TONES[index % STEP_TONES.length];
+              return (
               <li key={step.title} className="grid grid-cols-[2.5rem_minmax(0,1fr)] gap-x-4 border-b border-line py-6">
-                <span aria-hidden="true" className="font-serif text-[1.75rem] leading-none text-violet-ink tabular-nums">
+                <span
+                  aria-hidden="true"
+                  className={cn("flex size-10 items-center justify-center rounded-md font-serif text-[1.375rem] leading-none tabular-nums", a.tint, a.ink)}
+                >
                   {index + 1}
                 </span>
                 <div>
@@ -76,7 +88,8 @@ export async function HowReviewsWork() {
                   <p className="mt-1.5 text-sm leading-6 text-subtle">{step.body}</p>
                 </div>
               </li>
-            ))}
+              );
+            })}
           </ol>
 
           <div className="mt-6 flex flex-wrap gap-x-6 gap-y-3">

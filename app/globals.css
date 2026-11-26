@@ -35,6 +35,22 @@
   /* Error text on navy. */
   --color-danger-light: #f3a6b1;
 
+  /* Accent families: decorative colour beside blue and violet. `-ink` is
+     AA text on white and on its tint; `-light` is for marks on navy. */
+  --color-teal: #14a38f;
+  --color-teal-ink: #0b7468;
+  --color-teal-tint: #e6f6f3;
+  --color-teal-light: #7fd9cc;
+  --color-amber: #f0a92a;
+  --color-amber-ink: #8a5a00;
+  --color-amber-tint: #fdf4e1;
+  --color-amber-light: #f5c96a;
+  --color-coral: #ec5b6b;
+  --color-coral-ink: #b3263b;
+  --color-coral-tint: #fdeef0;
+  --color-coral-light: #f7a1ab;
+  --color-violet-light: #c3b9f5;
+
   /* Corner radius never exceeds 8px: the larger steps are capped. */
   --radius-xs: 2px;
   --radius-sm: 4px;
@@ -149,6 +165,59 @@
     background-size: 56px 56px;
     background-position: center top;
     animation: depth-grid-drift 6s linear infinite;
+  }
+}
+
+/* Brand gradient as text (large type only: the coral end is 3.4:1). */
+@utility text-gradient-brand {
+  background-image: linear-gradient(100deg, var(--color-blue) 0%, var(--color-violet) 45%, var(--color-coral) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* A thin multicolour rule that separates bands and caps cards. */
+@utility brand-rule {
+  height: 3px;
+  pointer-events: none;
+  background-image: linear-gradient(
+    90deg,
+    var(--color-blue),
+    var(--color-violet),
+    var(--color-coral),
+    var(--color-amber),
+    var(--color-teal)
+  );
+}
+
+/*
+ * Soft colour fields behind a band. The parent needs `relative isolate
+ * overflow-hidden` (or a clipping wrapper). Cheap: one layer, radial
+ * gradients, and a slow transform-only drift. --mesh-k scales the colour
+ * strength (below 1 softens; navy bands need about 2).
+ */
+@utility color-mesh {
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+  --k: var(--mesh-k, 1);
+  background-image:
+    radial-gradient(38% 42% at 12% 18%, rgb(65 105 225 / calc(0.18 * var(--k))), transparent 70%),
+    radial-gradient(32% 38% at 88% 12%, rgb(119 103 216 / calc(0.2 * var(--k))), transparent 70%),
+    radial-gradient(30% 36% at 78% 82%, rgb(236 91 107 / calc(0.13 * var(--k))), transparent 70%),
+    radial-gradient(28% 32% at 22% 88%, rgb(20 163 143 / calc(0.13 * var(--k))), transparent 70%),
+    radial-gradient(22% 26% at 52% 50%, rgb(240 169 42 / calc(0.1 * var(--k))), transparent 70%);
+  animation: mesh-drift 22s ease-in-out infinite alternate;
+}
+
+@keyframes mesh-drift {
+  from {
+    transform: translate3d(-2%, -1%, 0) scale(1);
+  }
+  to {
+    transform: translate3d(2%, 2%, 0) scale(1.06);
   }
 }
 

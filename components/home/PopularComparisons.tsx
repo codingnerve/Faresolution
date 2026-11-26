@@ -5,6 +5,7 @@ import { compareHref } from "@/components/layout/navigation";
 import { Container } from "@/components/ui/Container";
 import { ProductLogo } from "@/components/ui/ProductLogo";
 import { getCategories, getPopularComparisons, getProducts, type Product } from "@/lib/data";
+import { Eyebrow } from "./accents";
 
 const ROWS = 8;
 
@@ -32,7 +33,9 @@ export async function PopularComparisons() {
     <section aria-labelledby="home-compare-title" className="py-16 sm:py-20 lg:py-24">
       <Container className="grid gap-10 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-16">
         <div className="lg:sticky lg:top-24 lg:self-start">
-          <p className="type-label mb-3">Editor-picked comparisons</p>
+          <p className="type-label mb-3">
+            <Eyebrow tone="coral">Editor-picked comparisons</Eyebrow>
+          </p>
           <h2 id="home-compare-title" className="type-h2 text-navy">
             See the differences before the demos
           </h2>
@@ -43,7 +46,7 @@ export async function PopularComparisons() {
           <p className="type-meta mt-3">Starting points chosen by our editors, not ranked by traffic or reviews.</p>
           <Link
             href="/compare"
-            className="mt-6 inline-flex h-10 items-center gap-2 rounded-md border border-line-strong bg-surface px-4 text-sm font-medium text-ink shadow-card transition-colors hover:border-muted/60 hover:bg-surface-alt"
+            className="mt-6 inline-flex h-10 items-center gap-2 rounded-md bg-linear-to-r from-blue-ink to-violet-ink px-4 text-sm font-medium text-white shadow-raised transition-[transform,box-shadow] duration-200 ease-[cubic-bezier(0.25,1,0.5,1)] hover:-translate-y-0.5 hover:shadow-overlay"
           >
             <Columns3 aria-hidden="true" className="size-4" strokeWidth={1.75} />
             Build your own comparison
@@ -58,7 +61,7 @@ export async function PopularComparisons() {
               <li key={row.href} className="border-b border-line">
                 <Link
                   href={row.href}
-                  className="group flex items-center gap-4 rounded-xs py-4 sm:py-5"
+                  className="group -mx-2 flex items-center gap-4 rounded-md px-2 py-4 transition-colors duration-200 hover:bg-blue-tint/50 sm:py-5"
                 >
                   {/* Fixed width (room for three marks) keeps the names aligned. */}
                   <span aria-hidden="true" className="flex w-[5.75rem] shrink-0 items-center [perspective:400px]">
@@ -76,7 +79,7 @@ export async function PopularComparisons() {
                     <span className="block text-[0.9375rem] leading-6 font-medium text-ink group-hover:text-blue-ink">
                       {names.map((name, i) => (
                         <span key={name}>
-                          {i > 0 && <span className="font-serif text-subtle italic"> vs </span>}
+                          {i > 0 && <span className="font-serif text-coral-ink italic"> vs </span>}
                           {name}
                         </span>
                       ))}

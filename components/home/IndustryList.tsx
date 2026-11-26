@@ -3,6 +3,8 @@ import Link from "next/link";
 import { allIndustriesLink, industryHref } from "@/components/layout/navigation";
 import { Container } from "@/components/ui/Container";
 import { getIndustries, getProducts } from "@/lib/data";
+import { cn } from "@/lib/utils";
+import { accentAt, Eyebrow } from "./accents";
 
 /** Industries as a numbered typographic list on navy. */
 export async function IndustryList() {
@@ -12,11 +14,16 @@ export async function IndustryList() {
 
   return (
     <section aria-labelledby="home-industries-title" className="on-dark relative isolate overflow-hidden bg-navy py-16 text-white sm:py-20 lg:py-24">
+      <div aria-hidden="true" className="color-mesh -z-10 [--mesh-k:2.2]" />
       <div aria-hidden="true" className="depth-grid -z-10 [--grid-line:rgb(255_255_255/0.07)]" />
       <Container className="relative">
         <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between md:gap-10">
           <div className="max-w-2xl">
-            <p className="mb-3 text-xs font-semibold tracking-[0.08em] text-blue-light uppercase">Industries</p>
+            <p className="mb-3 text-xs font-semibold tracking-[0.08em] uppercase">
+              <Eyebrow tone="teal" onDark>
+                Industries
+              </Eyebrow>
+            </p>
             <h2 id="home-industries-title" className="type-h2 text-white">
               Software choices shaped by the work you do
             </h2>
@@ -38,15 +45,20 @@ export async function IndustryList() {
         <ol className="reveal-stagger mt-12 grid border-t border-white/12 sm:grid-cols-2 sm:gap-x-10 lg:grid-cols-3">
           {industries.map((industry, index) => {
             const n = count(industry.slug);
+            const a = accentAt(index);
             return (
-              <li key={industry.slug} className="border-b border-white/12">
+              <li key={industry.slug} className="group/ind relative border-b border-white/12">
+                <span
+                  aria-hidden="true"
+                  className={cn("absolute inset-x-0 -bottom-px h-0.5 origin-left scale-x-0 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/ind:scale-x-100", a.solid)}
+                />
                 <Link href={industryHref(industry.slug)} className="group flex gap-4 rounded-xs py-5">
-                  <span aria-hidden="true" className="w-6 shrink-0 pt-1.5 font-mono text-xs text-blue-light tabular-nums transition-transform duration-300 group-hover:translate-x-1">
+                  <span aria-hidden="true" className={cn("w-6 shrink-0 pt-1.5 font-mono text-xs tabular-nums transition-transform duration-300 group-hover:translate-x-1", a.light)}>
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="flex items-baseline justify-between gap-3">
-                      <span className="font-serif text-[1.5rem] leading-tight text-white transition-[color,transform] duration-300 group-hover:translate-x-1 group-hover:text-blue-light">
+                      <span className="font-serif text-[1.5rem] leading-tight text-white transition-transform duration-300 group-hover:translate-x-1">
                         {industry.name}
                       </span>
                       <span className="shrink-0 text-xs text-white/60 tabular-nums">

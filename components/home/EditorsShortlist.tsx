@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/Container";
 import { DemoDataNotice } from "@/components/ui/DemoDataNotice";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { getProducts, getVendors, resolveLogo } from "@/lib/data";
+import { Eyebrow } from "./accents";
 
 const SHORTLIST_SIZE = 6;
 
@@ -24,11 +25,12 @@ export async function EditorsShortlist() {
   if (shortlist.length === 0) return null;
 
   return (
-    <section aria-labelledby="home-shortlist-title" className="border-y border-line bg-surface-alt py-16 sm:py-20 lg:py-24">
+    <section aria-labelledby="home-shortlist-title" className="relative isolate overflow-hidden border-y border-line bg-surface-alt py-16 sm:py-20 lg:py-24">
+      <div aria-hidden="true" className="color-mesh -z-10 [--mesh-k:0.8]" />
       <Container>
         <SectionHeader
           id="home-shortlist-title"
-          eyebrow="Editor's shortlist"
+          eyebrow={<Eyebrow tone="violet">Editor&rsquo;s shortlist</Eyebrow>}
           title="Established tools worth a first look"
           description="A small editorial selection of well-established products, chosen as sensible starting points in their categories. The order is not a ranking."
           action={

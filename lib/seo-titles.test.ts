@@ -36,6 +36,14 @@ describe("rendered titles stay within 60 characters", () => {
     for (const a of articles) expectFits(articleTitle(a), `article ${a.kind}/${a.slug}`);
   });
 
+  it("names plans, not pricing, on the overview (no product has a verified price)", async () => {
+    const profile = await getProductProfile("salesforce-sales-cloud");
+    const title = productTabMetadata(profile, null).title as string;
+    expect(title).toBe("Salesforce Sales Cloud: Features and Plans");
+    expect(brandedTitle(title)).toHaveLength(57);
+    expect(productTabMetadata(profile, "pricing").title).toBe("Salesforce Sales Cloud Pricing and Plans");
+  });
+
   it("every product overview and tab", async () => {
     for (const p of products) {
       const profile = await getProductProfile(p.slug);

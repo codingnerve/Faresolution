@@ -20,7 +20,7 @@ export const metadata: Metadata = buildMetadata({
   title: "Design system",
   description: "Internal reference for Faresolution tokens and UI components.",
   path: "/design",
-  // Internal page: not indexed, links not followed, and disallowed in robots.txt.
+  // Internal page: not indexed, links not followed, left out of the sitemap.
   noindex: true,
   nofollow: true,
 });

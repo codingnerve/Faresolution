@@ -16,6 +16,7 @@ import { SITE_URL } from "@/lib/utils";
 import {
   CATALOGUE_UPDATED_AT,
   INDEXABLE_PRODUCT_TABS,
+  NOINDEX_UNTIL_REVIEWS_OPEN,
   STATIC_SITEMAP_PATHS,
   buildRobots,
   buildSitemapEntries,
@@ -88,10 +89,25 @@ describe("buildSitemapEntries", () => {
   });
 
   it("excludes noindex and private routes", () => {
-    for (const path of ["/design", "/saved", "/reviews/write"]) expect(has(path), path).toBe(false);
+    for (const path of ["/design", "/saved", "/reviews/write", ...NOINDEX_UNTIL_REVIEWS_OPEN]) {
+      expect(has(path), path).toBe(false);
+    }
     expect(paths.some((p) => p.startsWith("/reviews/write/"))).toBe(false);
     expect(paths.some((p) => /\/products\/[^/]+\/(reviews|screenshots)$/.test(p))).toBe(false);
   });
+
+  it("marks the pages held back until reviews open as noindex, follow (R14)", async () => {
+    const pages = {
+      "/software/top-rated": await import("@/app/software/top-rated/page"),
+      "/reviews/latest": await import("@/app/reviews/latest/page"),
+      "/reviews/helpful": await import("@/app/reviews/helpful/page"),
+    };
+    expect(Object.keys(pages)).toEqual([...NOINDEX_UNTIL_REVIEWS_OPEN]);
+    for (const [path, page] of Object.entries(pages)) {
+      expect(page.metadata.robots, path).toEqual({ index: false, follow: true });
+    }
+    // Importing the pages transforms their component trees: slow on a cold run.
+  }, 60_000);
 
   it("leaves out exactly the product tabs whose metadata is noindex", async () => {
     const profile = await getProductProfile(products[0].slug);
@@ -127,12 +143,13 @@ describe("buildRobots", () => {
   const robots = buildRobots();
   const rules = Array.isArray(robots.rules) ? robots.rules : [robots.rules];
 
-  it("allows everything for every crawler except private, noindex and search-result URLs", () => {
+  it("allows everything for every crawler except search-result URLs", () => {
     expect(rules).toHaveLength(1);
     const [rule] = rules;
     expect(rule.userAgent).toBe("*");
     expect(rule.allow).toBe("/");
-    expect(rule.disallow).toEqual(["/design", "/saved", "/reviews/write/", "/*?q=", "/*&q="]);
+    // Only search results; noindex pages stay crawlable so their noindex is seen.
+    expect(rule.disallow).toEqual(["/*?q=", "/*&q="]);
   });
 
   it("points to the absolute sitemap URL", () => {

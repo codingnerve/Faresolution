@@ -9,7 +9,7 @@ const title = "Saved items";
 const description =
   "Products you saved and the products you picked to compare, kept in this browser only. Nothing here is sent to Faresolution.";
 
-// Personal to each browser: out of search results, the sitemap and (robots.txt) crawling.
+// Personal to each browser: noindex and out of the sitemap (crawlable, so the noindex is seen).
 export const metadata: Metadata = buildMetadata({ title, description, path: "/saved", noindex: true });
 
 export default async function SavedPage() {

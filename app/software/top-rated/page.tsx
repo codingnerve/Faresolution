@@ -13,7 +13,9 @@ const title = "Top rated software";
 const description =
   "This page will rank business software by ratings from verified reviews once review collection opens. No products are rated yet.";
 
-export const metadata: Metadata = buildMetadata({ title, description, path: "/software/top-rated" });
+// R14: nothing to list until review collection opens, so noindex (links still
+// followed) and not in the sitemap (NOINDEX_UNTIL_REVIEWS_OPEN in lib/sitemap.ts).
+export const metadata: Metadata = buildMetadata({ title, description, path: "/software/top-rated", noindex: true });
 
 const crumbs = [
   { label: "Home", href: "/" },

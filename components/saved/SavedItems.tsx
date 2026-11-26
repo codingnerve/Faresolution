@@ -91,7 +91,9 @@ function SavedList({ mounted, bySlug }: SectionProps) {
                   <ArrowRight aria-hidden="true" />
                 </Button>
               ) : (
-                <Button size="sm" disabled aria-describedby={hintId}>
+                // aria-disabled (not disabled) keeps it focusable so the reason is
+                // read; with no onClick, activating it does nothing.
+                <Button size="sm" aria-disabled="true" aria-describedby={hintId}>
                   Compare these
                 </Button>
               )}
@@ -135,6 +137,7 @@ function CompareSelection({ mounted, bySlug }: SectionProps) {
   const { slugs, remove, clear } = useCompare();
   const items = slugs.flatMap((slug) => bySlug.get(slug) ?? []);
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const [announcement, setAnnouncement] = useState("");
   const count = items.length;
 
   return (
@@ -149,6 +152,9 @@ function CompareSelection({ mounted, bySlug }: SectionProps) {
           </p>
         )}
       </div>
+      <span role="status" className="sr-only">
+        {announcement}
+      </span>
 
       <div className="mt-6">
         {!mounted ? (
@@ -186,6 +192,7 @@ function CompareSelection({ mounted, bySlug }: SectionProps) {
                     type="button"
                     onClick={() => {
                       remove(product.slug);
+                      setAnnouncement(`${product.name} removed from compare`);
                       headingRef.current?.focus();
                     }}
                     aria-label={`Remove ${product.name} from compare`}
@@ -213,6 +220,7 @@ function CompareSelection({ mounted, bySlug }: SectionProps) {
                 variant="ghost"
                 onClick={() => {
                   clear();
+                  setAnnouncement("Comparison cleared");
                   headingRef.current?.focus();
                 }}
               >

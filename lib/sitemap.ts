@@ -34,7 +34,8 @@ export const STATIC_SITEMAP_PATHS: readonly string[] = [
   "/software/trending",
   "/software/new",
   "/software/free",
-  "/software/top-rated",
+  // Not /software/top-rated, /reviews/latest or /reviews/helpful: noindex
+  // until review collection opens (R14; see NOINDEX_UNTIL_REVIEWS_OPEN).
   // Section indexes
   "/categories",
   "/industries",
@@ -42,8 +43,6 @@ export const STATIC_SITEMAP_PATHS: readonly string[] = [
   "/alternatives",
   // Reviews
   "/reviews",
-  "/reviews/latest",
-  "/reviews/helpful",
   "/review-guidelines",
   "/review-verification",
   // Editorial
@@ -62,6 +61,12 @@ export const STATIC_SITEMAP_PATHS: readonly string[] = [
   "/privacy",
   "/terms",
 ];
+
+/**
+ * Pages that only say "no reviews yet" (or rank nothing) until review
+ * collection opens: noindex, follow and left out of the sitemap (R14).
+ */
+export const NOINDEX_UNTIL_REVIEWS_OPEN: readonly string[] = ["/software/top-rated", "/reviews/latest", "/reviews/helpful"];
 
 /** Product tabs offered to search engines (the rest are noindex while they have no content). */
 export const INDEXABLE_PRODUCT_TABS: readonly ProductTabSegment[] = PRODUCT_TAB_SEGMENTS.filter(
@@ -102,16 +107,18 @@ export function buildSitemapEntries(input: SitemapInput): MetadataRoute.Sitemap 
 }
 
 /**
- * Crawl rules: everything is allowed except the internal design page, the
- * visitor's saved items, the review draft forms (noindex) and on-site search
- * results (`?q=` anywhere in the query string; Google and Bing support `*`).
+ * Crawl rules: everything may be crawled except on-site search results
+ * (`?q=` anywhere in the query string; Google and Bing support `*`). Noindex
+ * pages (/design, /saved, review drafts, empty tabs, R14 pages) are NOT
+ * disallowed: a crawler has to fetch them to see their noindex tag, otherwise
+ * a linked URL could still be indexed without content.
  */
 export function buildRobots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/design", "/saved", "/reviews/write/", "/*?q=", "/*&q="],
+      disallow: ["/*?q=", "/*&q="],
     },
     sitemap: siteUrl("/sitemap.xml"),
   };

@@ -7,6 +7,7 @@
 // not followed). Pages expected to return 200 must also contain an <h1.
 // With --sitemap, every <loc> in <base>/sitemap.xml is checked too: its path
 // (and query) is requested from the base, whatever origin the sitemap names.
+// A sitemap URL also fails if the page carries a noindex robots meta tag.
 // Pages whose <title> is longer than 60 characters are reported as WARN
 // (they do not fail the run).
 // Prints one line per path and exits non-zero if any path fails.
@@ -79,7 +80,11 @@ function titleOf(body) {
   return match ? decodeXml(match[1]).trim() : null;
 }
 
-async function check(base, path, expected) {
+function isNoindex(body) {
+  return [...body.matchAll(/<meta\s[^>]*name="robots"[^>]*>/gi)].some((m) => /content="[^"]*noindex/i.test(m[0]));
+}
+
+async function check(base, path, expected, mustBeIndexable = false) {
   const url = `${base}${path}`;
   try {
     const res = await fetch(url, {
@@ -94,6 +99,9 @@ async function check(base, path, expected) {
     }
     if (expected === 200 && !body.includes("<h1")) {
       return { ok: false, line: `FAIL ${res.status} ${path} (no <h1 in body)` };
+    }
+    if (mustBeIndexable && isNoindex(body)) {
+      return { ok: false, line: `FAIL ${res.status} ${path} (noindex page listed in the sitemap)` };
     }
     const title = expected === 200 ? titleOf(body) : null;
     const warning =
@@ -114,10 +122,12 @@ try {
   process.exit(2);
 }
 
+let sitemapSet = new Set();
 if (options.sitemap) {
   try {
     const fromSitemap = await sitemapPaths(options.base);
     console.log(`sitemap.xml lists ${fromSitemap.length} URLs`);
+    sitemapSet = new Set(fromSitemap);
     options.paths = [...new Set([...options.paths, ...fromSitemap])];
   } catch (error) {
     console.error(`FAIL sitemap: ${error instanceof Error ? error.message : String(error)}`);
@@ -128,7 +138,7 @@ if (options.sitemap) {
 let failures = 0;
 const warnings = [];
 for (const path of options.paths) {
-  const result = await check(options.base, path, options.expect);
+  const result = await check(options.base, path, options.expect, sitemapSet.has(path));
   console.log(result.line);
   if (!result.ok) failures++;
   if (result.warning) warnings.push(result.warning);

@@ -10,7 +10,9 @@ const title = "Latest software reviews";
 const description =
   "The newest published reviews will be listed here once review collection opens. None have been collected or published yet.";
 
-export const metadata: Metadata = buildMetadata({ title, description, path: "/reviews/latest" });
+// R14: nothing to list until review collection opens, so noindex (links still
+// followed) and not in the sitemap (NOINDEX_UNTIL_REVIEWS_OPEN in lib/sitemap.ts).
+export const metadata: Metadata = buildMetadata({ title, description, path: "/reviews/latest", noindex: true });
 
 export default function LatestReviewsPage() {
   return (

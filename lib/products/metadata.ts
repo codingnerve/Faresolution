@@ -17,8 +17,9 @@ function copy(profile: ProductProfile, segment: ProductTabSegment | null): { tit
   switch (segment) {
     case null:
       return {
-        // Short enough for the longest product name within 45 characters (R13).
-        title: `${name}: Features and Pricing`,
+        // Fits the longest product name within 45 characters (R13). "Plans", not
+        // "Pricing": no product has a verified price yet.
+        title: `${name}: Features and Plans`,
         description: `${name}${by}: ${product.tagline} See its features, plans, integrations and similar products.`,
       };
     case "reviews":

@@ -25,7 +25,7 @@ export const OG_LOCALE = "en_US";
 /**
  * Absolute URL on the canonical origin. The path gets one leading slash,
  * repeated slashes collapse and trailing slashes are dropped (the root stays
- * "https://faresolution.com/"). A query string or fragment is kept as given.
+ * "https://faresolution.org/"). A query string or fragment is kept as given.
  */
 export function siteUrl(path = "/"): string {
   const trimmed = path.trim();

@@ -232,7 +232,7 @@ and request-time comparison pages need a server.
 
 ### Environment variables
 
-None are required yet. The canonical site origin (`https://faresolution.com`)
+None are required yet. The canonical site origin (`https://faresolution.org`)
 is a constant, `SITE_URL` in `lib/utils.ts`. Planned for later phases, none of
 them read by this build:
 

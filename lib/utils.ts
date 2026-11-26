@@ -3,7 +3,7 @@ import { twMerge } from "tailwind-merge";
 import type { Pricing } from "@/lib/data/types";
 import { pricingModelLabel } from "@/lib/directory/labels";
 
-export const SITE_URL = "https://faresolution.com";
+export const SITE_URL = "https://faresolution.org";
 export const SITE_NAME = "Faresolution";
 
 /** Merge class names; later Tailwind utilities override earlier conflicting ones. */

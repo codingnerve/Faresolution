@@ -46,8 +46,8 @@ describe("isLightColor", () => {
 
 describe("absoluteUrl", () => {
   it("joins paths onto the site origin", () => {
-    expect(absoluteUrl("/software")).toBe("https://faresolution.com/software");
-    expect(absoluteUrl("software")).toBe("https://faresolution.com/software");
+    expect(absoluteUrl("/software")).toBe("https://faresolution.org/software");
+    expect(absoluteUrl("software")).toBe("https://faresolution.org/software");
   });
 });
 

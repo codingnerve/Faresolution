@@ -26,17 +26,17 @@ describe("organizationJsonLd", () => {
   it("describes Faresolution as an Organization", () => {
     expect(graph["@context"]).toBe("https://schema.org");
     const org = byType("Organization");
-    expect(org).toMatchObject({ name: "Faresolution", url: "https://faresolution.com" });
+    expect(org).toMatchObject({ name: "Faresolution", url: "https://faresolution.org" });
   });
 
   it("adds a WebSite with a SearchAction pointing at the software directory", () => {
     const site = byType("WebSite");
-    expect(site).toMatchObject({ name: "Faresolution", url: "https://faresolution.com" });
+    expect(site).toMatchObject({ name: "Faresolution", url: "https://faresolution.org" });
     expect(site?.potentialAction).toMatchObject({
       "@type": "SearchAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: "https://faresolution.com/software?q={search_term_string}",
+        urlTemplate: "https://faresolution.org/software?q={search_term_string}",
       },
       "query-input": "required name=search_term_string",
     });
@@ -96,7 +96,7 @@ describe("productJsonLd", () => {
       "@type": "SoftwareApplication",
       name: "HubSpot CRM",
       description: product.description,
-      url: "https://faresolution.com/products/hubspot-crm",
+      url: "https://faresolution.org/products/hubspot-crm",
       applicationCategory: "CRM Software",
       sameAs: product.website,
       publisher: { "@type": "Organization", name: "HubSpot", url: "https://www.hubspot.com" },
@@ -163,8 +163,8 @@ describe("itemListJsonLd", () => {
     ]);
     expect(ld).toMatchObject({ "@type": "ItemList" });
     expect(ld?.itemListElement).toEqual([
-      { "@type": "ListItem", position: 1, name: "Zoho CRM", url: "https://faresolution.com/products/zoho-crm" },
-      { "@type": "ListItem", position: 2, name: "Pipedrive", url: "https://faresolution.com/products/pipedrive" },
+      { "@type": "ListItem", position: 1, name: "Zoho CRM", url: "https://faresolution.org/products/zoho-crm" },
+      { "@type": "ListItem", position: 2, name: "Pipedrive", url: "https://faresolution.org/products/pipedrive" },
     ]);
   });
 });
@@ -180,7 +180,7 @@ describe("articleJsonLd", () => {
     const article = await sample();
     const author = await getAuthor(article.authorSlug);
     const ld = articleJsonLd(article, author);
-    const url = "https://faresolution.com/best-software/crm-tools-to-shortlist-for-small-sales-teams";
+    const url = "https://faresolution.org/best-software/crm-tools-to-shortlist-for-small-sales-teams";
     expect(ld).toMatchObject({
       "@context": "https://schema.org",
       "@type": "Article",
@@ -191,14 +191,14 @@ describe("articleJsonLd", () => {
       url,
       mainEntityOfPage: { "@type": "WebPage", "@id": url },
       author: { "@type": "Person", name: "Priya Raman", jobTitle: "Software research editor" },
-      publisher: { "@type": "Organization", "@id": "https://faresolution.com/#organization", name: "Faresolution" },
+      publisher: { "@type": "Organization", "@id": "https://faresolution.org/#organization", name: "Faresolution" },
     });
   });
 
   it("uses the kind's route for the page URL", async () => {
     const article = await getArticle("buying-guide", "how-to-choose-accounting-software");
     const ld = articleJsonLd(article as Article, null);
-    expect(ld.url).toBe("https://faresolution.com/software-buying-guides/how-to-choose-accounting-software");
+    expect(ld.url).toBe("https://faresolution.org/software-buying-guides/how-to-choose-accounting-software");
   });
 
   it("omits the author when unknown, and carries no ratings or reviews", async () => {

@@ -343,7 +343,7 @@ describe("routes", () => {
 
 describe("shareLinks", () => {
   it("builds X and LinkedIn share URLs from the encoded canonical URL", () => {
-    const url = "https://faresolution.com/blog/a-b?x=1&y=2";
+    const url = "https://faresolution.org/blog/a-b?x=1&y=2";
     const links = shareLinks(url, "Free plans & you: 50% off?");
     expect(links.x).toBe(
       `https://x.com/intent/tweet?text=${encodeURIComponent("Free plans & you: 50% off?")}&url=${encodeURIComponent(url)}`,

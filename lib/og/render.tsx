@@ -110,7 +110,7 @@ export function renderDefaultOgImage(): ImageResponse {
         </div>
 
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 22, color: "#9FB4F2" }}>
-          <span>faresolution.com</span>
+          <span>faresolution.org</span>
         </div>
       </div>
     ),
@@ -226,7 +226,7 @@ export function renderPageOgImage({ kindLabel, title, subtitle, monograms }: Pag
             <div style={{ width: 48, height: 4, borderRadius: 2, backgroundColor: "#4169E1", display: "flex" }} />
             <span style={{ fontSize: 20, color: "#5F6978" }}>{SITE_TAGLINE}</span>
           </div>
-          <span style={{ fontSize: 20, color: "#5F6978" }}>faresolution.com</span>
+          <span style={{ fontSize: 20, color: "#5F6978" }}>faresolution.org</span>
         </div>
       </div>
     ),

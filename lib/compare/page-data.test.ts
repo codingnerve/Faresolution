@@ -16,7 +16,7 @@ describe("getComparePage", () => {
     expect(data.versusLabel).toBe("HubSpot CRM vs Zoho CRM");
     expect(data.title).toBe("HubSpot CRM vs Zoho CRM Comparison");
     expect(data.path).toBe("/compare/hubspot-crm-vs-zoho-crm");
-    expect(data.shareUrl).toBe("https://faresolution.com/compare/hubspot-crm-vs-zoho-crm");
+    expect(data.shareUrl).toBe("https://faresolution.org/compare/hubspot-crm-vs-zoho-crm");
     expect(data.isPopular).toBe(true);
     for (const group of data.groups) for (const row of group.rows) expect(row.cells).toHaveLength(2);
   });

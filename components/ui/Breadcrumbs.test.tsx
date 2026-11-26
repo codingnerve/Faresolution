@@ -11,7 +11,7 @@ describe("Breadcrumbs", () => {
     expect(json).not.toContain("<");
     const data = JSON.parse(json);
     expect(data["@type"]).toBe("BreadcrumbList");
-    expect(data.itemListElement[0]).toMatchObject({ name: "Home", item: "https://faresolution.com/" });
+    expect(data.itemListElement[0]).toMatchObject({ name: "Home", item: "https://faresolution.org/" });
     expect(data.itemListElement[1].name).toBe("</script><b>x");
   });
 });

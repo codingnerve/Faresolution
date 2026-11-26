@@ -268,7 +268,7 @@ export default function DesignSystemPage() {
               </p>
             </Specimen>
             <Specimen label="Mono">
-              <p className="font-mono text-sm text-ink">faresolution.com/compare</p>
+              <p className="font-mono text-sm text-ink">faresolution.org/compare</p>
             </Specimen>
           </div>
         </Section>

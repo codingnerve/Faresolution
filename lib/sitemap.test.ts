@@ -28,7 +28,7 @@ const paths = urls.map((url) => url.slice(SITE_URL.length) || "/");
 const has = (path: string) => paths.includes(path);
 
 describe("buildSitemapEntries", () => {
-  it("lists unique, absolute https://faresolution.com URLs without queries or fragments", () => {
+  it("lists unique, absolute https://faresolution.org URLs without queries or fragments", () => {
     expect(new Set(urls).size).toBe(urls.length);
     for (const url of urls) {
       expect(url.startsWith(`${SITE_URL}/`), url).toBe(true);
@@ -153,6 +153,6 @@ describe("buildRobots", () => {
   });
 
   it("points to the absolute sitemap URL", () => {
-    expect(robots.sitemap).toBe("https://faresolution.com/sitemap.xml");
+    expect(robots.sitemap).toBe("https://faresolution.org/sitemap.xml");
   });
 });

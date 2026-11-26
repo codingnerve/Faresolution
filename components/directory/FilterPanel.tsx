@@ -26,6 +26,8 @@ export interface FilterPanelProps {
   locked?: LockedQuery;
   /** Set on a category page: only the category's subcategories are offered. */
   scope?: DirectoryPreset["scope"];
+  /** Set on an industry page: the listing is one industry, so the industry filter is not offered. */
+  hideIndustry?: boolean;
   onChange: (patch: QueryPatch) => void;
   className?: string;
 }
@@ -46,6 +48,7 @@ export function FilterPanel({
   ratingsAvailable,
   locked,
   scope,
+  hideIndustry = false,
   onChange,
   className,
 }: FilterPanelProps) {
@@ -206,7 +209,7 @@ export function FilterPanel({
         </Section>
       )}
 
-      {(facets.industry.length > 0 || query.industry) && (
+      {!hideIndustry && (facets.industry.length > 0 || query.industry) && (
         <Section title="Industry">
           <Select
             id={`${ids}-industry`}

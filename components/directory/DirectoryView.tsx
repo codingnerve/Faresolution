@@ -60,9 +60,10 @@ export function DirectoryView({ data, preset, params, headingLevel = 2 }: Direct
     () => (scope ? [...(categoryChildren[scope.category] ?? [])] : undefined),
     [scope, categoryChildren],
   );
+  const industryScoped = preset.industryScope !== undefined;
   const query = useMemo(
-    () => effectiveQuery(parseQuery(params), locked, { ratingsAvailable, allowedCategories }),
-    [params, locked, ratingsAvailable, allowedCategories],
+    () => effectiveQuery(parseQuery(params), locked, { ratingsAvailable, allowedCategories, industryScoped }),
+    [params, locked, ratingsAvailable, allowedCategories, industryScoped],
   );
   const ctx = useMemo<DirectoryContext>(() => ({ searchIndex, categoryChildren }), [searchIndex, categoryChildren]);
   const results = useMemo(() => applyQuery(products, query, ctx), [products, query, ctx]);
@@ -145,6 +146,7 @@ export function DirectoryView({ data, preset, params, headingLevel = 2 }: Direct
       ratingsAvailable={ratingsAvailable}
       locked={locked}
       scope={scope}
+      hideIndustry={industryScoped}
       onChange={(patch) => update(patch)}
     />
   );

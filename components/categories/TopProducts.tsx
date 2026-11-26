@@ -3,34 +3,45 @@ import { productHref } from "@/components/layout/navigation";
 import { PricingFacts, ViewDetailsLink } from "@/components/product/card-parts";
 import { LogoMark } from "@/components/ui/LogoMark";
 import type { Product } from "@/lib/data";
+import { cn } from "@/lib/utils";
 
 /**
  * Editor-ordered shortlist as a numbered ledger. Deliberately a list, not
  * cards: the full listing below carries the cards. The order is editorial
- * (featured, then trending rank), never review-based.
+ * (featured, then trending rank), never review-based. `numbered={false}`
+ * drops the position numerals where an order would read as a ranking.
  */
 export function TopProducts({
   products,
   vendorNames,
   labelledBy,
+  numbered = true,
 }: {
   products: readonly Product[];
   vendorNames: ReadonlyMap<string, string>;
   labelledBy: string;
+  numbered?: boolean;
 }) {
+  const List = numbered ? "ol" : "ul";
   return (
-    <ol aria-labelledby={labelledBy} className="divide-y divide-line border-y border-line">
+    <List aria-labelledby={labelledBy} className="divide-y divide-line border-y border-line">
       {products.map((p, index) => {
         const href = productHref(p.slug);
         const vendor = vendorNames.get(p.vendorSlug);
         return (
           <li
             key={p.slug}
-            className="group grid grid-cols-[1.75rem_minmax(0,1fr)] gap-x-3 gap-y-3 py-4 sm:grid-cols-[2.25rem_minmax(0,1fr)_auto] sm:items-center sm:gap-x-5"
+            className={
+              numbered
+                ? "group grid grid-cols-[1.75rem_minmax(0,1fr)] gap-x-3 gap-y-3 py-4 sm:grid-cols-[2.25rem_minmax(0,1fr)_auto] sm:items-center sm:gap-x-5"
+                : "group grid grid-cols-[minmax(0,1fr)] gap-x-3 gap-y-3 py-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:gap-x-5"
+            }
           >
-            <span aria-hidden="true" className="pt-0.5 font-serif text-2xl leading-8 text-muted tabular-nums sm:pt-0">
-              {index + 1}
-            </span>
+            {numbered && (
+              <span aria-hidden="true" className="pt-0.5 font-serif text-2xl leading-8 text-muted tabular-nums sm:pt-0">
+                {index + 1}
+              </span>
+            )}
             <div className="flex min-w-0 items-start gap-3.5">
               <LogoMark name={p.name} color={p.brandColor} size={40} className="shrink-0" />
               <div className="min-w-0">
@@ -48,13 +59,18 @@ export function TopProducts({
                 <p className="mt-0.5 text-sm leading-5 text-ink">{p.tagline}</p>
               </div>
             </div>
-            <div className="col-start-2 flex flex-wrap items-center justify-between gap-x-5 gap-y-2 sm:col-start-3 sm:justify-end">
+            <div
+              className={cn(
+                "flex flex-wrap items-center justify-between gap-x-5 gap-y-2 sm:justify-end",
+                numbered ? "col-start-2 sm:col-start-3" : "sm:col-start-2",
+              )}
+            >
               <PricingFacts pricing={p.pricing} />
               <ViewDetailsLink href={href} name={p.name} className="text-[0.8125rem]" />
             </div>
           </li>
         );
       })}
-    </ol>
+    </List>
   );
 }

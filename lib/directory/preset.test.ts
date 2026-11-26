@@ -58,6 +58,27 @@ describe("effectiveQuery with allowedCategories (category pages)", () => {
   });
 });
 
+describe("effectiveQuery with industryScoped (industry pages)", () => {
+  it("ignores an industry value from the URL: the listing is already one industry", () => {
+    const query = effectiveQuery(parseQuery({ industry: "legal", q: "x" }), undefined, {
+      ratingsAvailable: true,
+      industryScoped: true,
+    });
+    expect(query.industry).toBeUndefined();
+    expect(query.q).toBe("x");
+  });
+
+  it("leaves the industry alone without an industry scope (/software)", () => {
+    expect(effectiveQuery(parseQuery({ industry: "legal" }), undefined, { ratingsAvailable: true }).industry).toBe(
+      "legal",
+    );
+    expect(
+      effectiveQuery(parseQuery({ industry: "legal" }), undefined, { ratingsAvailable: true, industryScoped: false })
+        .industry,
+    ).toBe("legal");
+  });
+});
+
 describe("isPageOnlyChange", () => {
   it("is true when only the page changes", () => {
     expect(isPageOnlyChange(q({ page: 1, freePlan: true }), q({ page: 2, freePlan: true }))).toBe(true);

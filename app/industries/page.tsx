@@ -59,14 +59,21 @@ export default async function IndustriesPage() {
             {entries.map(({ industry, count, categories }, index) => (
               <li key={industry.slug} className="border-b border-line">
                 <article className="group relative grid gap-x-8 gap-y-3 py-6 sm:py-8 md:grid-cols-[4.5rem_minmax(0,5fr)_minmax(0,4fr)] lg:grid-cols-[6rem_minmax(0,5fr)_minmax(0,4fr)] lg:gap-x-12">
+                  {/* From md the numeral has its own column; below md it sits inline before the name. */}
                   <span
                     aria-hidden="true"
-                    className="font-serif text-5xl leading-none text-line-strong tabular-nums transition-colors group-hover:text-blue-ink lg:text-6xl"
+                    className="hidden font-serif text-5xl leading-none text-line-strong tabular-nums transition-colors group-hover:text-blue-ink md:block lg:text-6xl"
                   >
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <div className="min-w-0">
-                    <h3 className="font-serif text-[1.75rem] leading-tight font-[440] tracking-[-0.015em] text-navy sm:text-[2rem]">
+                    <h3 className="flex items-baseline gap-3 font-serif text-[1.75rem] leading-tight font-[440] tracking-[-0.015em] text-navy sm:text-[2rem]">
+                      <span
+                        aria-hidden="true"
+                        className="text-[1.75rem] text-line-strong tabular-nums transition-colors group-hover:text-blue-ink sm:text-[2rem] md:hidden"
+                      >
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
                       <Link
                         href={industryHref(industry.slug)}
                         className="rounded-xs after:absolute after:inset-0 group-hover:text-blue-ink"

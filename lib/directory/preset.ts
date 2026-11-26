@@ -18,6 +18,12 @@ export interface DirectoryPreset {
    * category itself, which is already the whole listing) is ignored.
    */
   scope?: { category: string; name: string };
+  /**
+   * Set on an industry page, whose listing data is already narrowed to the
+   * industry's products: the industry filter is not offered and an `industry`
+   * URL value is ignored.
+   */
+  industryScope?: { industry: string; name: string };
 }
 
 /**
@@ -28,9 +34,14 @@ export interface DirectoryPreset {
 export function effectiveQuery(
   parsed: DirectoryQuery,
   locked: LockedQuery | undefined,
-  { ratingsAvailable, allowedCategories }: { ratingsAvailable: boolean; allowedCategories?: readonly string[] },
+  {
+    ratingsAvailable,
+    allowedCategories,
+    industryScoped = false,
+  }: { ratingsAvailable: boolean; allowedCategories?: readonly string[]; industryScoped?: boolean },
 ): DirectoryQuery {
   const query: DirectoryQuery = { ...parsed, ...locked };
+  if (industryScoped) delete query.industry;
   if (allowedCategories && query.category !== undefined && !allowedCategories.includes(query.category)) {
     delete query.category;
   }

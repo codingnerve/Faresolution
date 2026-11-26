@@ -47,7 +47,7 @@ export default async function IndustryPage({ params }: PageProps<"/industries/[s
   const data = await getIndustryPageData(slug);
   if (!data) notFound();
 
-  const { industry, products, count, picks, categories, articles } = data;
+  const { industry, products, count, picks, picksInRecommended, categories, articles } = data;
   const served = new Set(products.map((p) => p.slug));
   const [vendors, directory] = await Promise.all([getVendors(), getDirectoryData((p) => served.has(p.slug))]);
   const vendorNames = new Map(vendors.map((v) => [v.slug, v.name]));
@@ -117,7 +117,8 @@ export default async function IndustryPage({ params }: PageProps<"/industries/[s
                   <p className="type-label mb-3">Where to start</p>
                   <h2 className="type-h2 text-navy">Categories to look at first</h2>
                   <p className="type-body mt-3 mb-6 text-subtle">
-                    Counts include subcategories. Open one to see its buying guide and every product listed in it.
+                    Counts cover the whole directory, including subcategories. Open one to see its buying guide and
+                    every product listed in it.
                   </p>
                   <RelatedCategories items={categories} />
                 </div>
@@ -150,14 +151,19 @@ export default async function IndustryPage({ params }: PageProps<"/industries/[s
                   <div>
                     <p className="type-label mb-3">Our shortlist</p>
                     <h2 id="picks-title" className="type-h2 text-navy">
-                      Editor&apos;s picks for {industry.name}
+                      {picksInRecommended
+                        ? `Editor's picks for ${industry.name}`
+                        : `Featured products serving ${industry.name}`}
                     </h2>
                     <p className="type-body mt-3 text-subtle">
-                      Ordered by editorial pick, then by our trending order. Reviews are not open yet, so this is not a
-                      ranking by user ratings and does not say a product fits your organisation.
+                      {picksInRecommended
+                        ? "Chosen from the categories above that serve this industry, featured products first. "
+                        : "Products from the categories above first, then other products serving this industry. "}
+                      Reviews are not open yet, so this is not a ranking by user ratings and does not say a product fits
+                      your organisation.
                     </p>
                   </div>
-                  <TopProducts products={picks} vendorNames={vendorNames} labelledBy="picks-title" />
+                  <TopProducts products={picks} vendorNames={vendorNames} labelledBy="picks-title" numbered={false} />
                 </div>
               </Container>
             </section>
@@ -173,7 +179,11 @@ export default async function IndustryPage({ params }: PageProps<"/industries/[s
                 features and integrations. The listing always stays within {industry.name}.
               </p>
               <DemoDataNotice className="mb-8" />
-              <DirectoryListing headingLevel={3} data={directory} preset={{ basePath: industryHref(slug) }} />
+              <DirectoryListing
+                headingLevel={3}
+                data={directory}
+                preset={{ basePath: industryHref(slug), industryScope: { industry: slug, name: industry.name } }}
+              />
             </Container>
           </section>
         </>
@@ -209,7 +219,8 @@ export default async function IndustryPage({ params }: PageProps<"/industries/[s
                   Guides and articles
                 </h2>
                 <p className="type-body mt-3 text-subtle">
-                  Articles about the categories above, plus our buying guides. Newest first.
+                  Articles about the categories above, those covering the most of them first. Where there are
+                  fewer than four, one general buying guide is added.
                 </p>
               </div>
               <RelatedArticles articles={articles} labelledBy="articles-title" />

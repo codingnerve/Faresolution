@@ -1,19 +1,28 @@
 import { describe, expect, it } from "vitest";
 import {
   getArticles,
+  getCategories,
   getCategory,
   getIndustries,
   getProductsByIndustry,
   getProductsInCategoryTree,
   type Article,
+  type Product,
 } from "@/lib/data";
 import {
+  INDEX_CATEGORY_LIMIT,
   INDUSTRY_ARTICLE_LIMIT,
   INDUSTRY_PICK_LIMIT,
   getIndustryIndexData,
   getIndustryPageData,
   selectRelatedArticles,
 } from "./page-data";
+
+/** Recommended categories plus their direct children. */
+async function recommendedTree(slugs: readonly string[]): Promise<Set<string>> {
+  const all = await getCategories();
+  return new Set([...slugs, ...all.filter((c) => c.parentSlug !== null && slugs.includes(c.parentSlug)).map((c) => c.slug)]);
+}
 
 describe("getIndustryPageData", () => {
   it("returns null for unknown or malformed slugs", async () => {
@@ -48,16 +57,34 @@ describe("getIndustryPageData", () => {
     }
   });
 
-  it("picks featured products first, then by trending rank", async () => {
+  it("picks from the recommended categories first, each group featured first, then by trending rank", async () => {
     for (const i of await getIndustries()) {
-      const { picks } = (await getIndustryPageData(i.slug))!;
-      const flags = picks.map((p) => p.featured);
+      const { picks, products, picksInRecommended } = (await getIndustryPageData(i.slug))!;
+      const tree = await recommendedTree(i.recommendedCategorySlugs);
+      const inRec = (p: Product) => p.categorySlugs.some((s) => tree.has(s));
+      const available = products.filter(inRec).length;
+      const flags = picks.map(inRec);
+      // Recommended-category products come first and fill the list when enough exist.
       expect(flags, i.slug).toEqual([...flags].sort((a, b) => Number(b) - Number(a)));
-      for (let n = 1; n < picks.length; n++) {
-        if (picks[n - 1].featured !== picks[n].featured) continue;
-        expect(picks[n - 1].trendingRank ?? Infinity, i.slug).toBeLessThanOrEqual(picks[n].trendingRank ?? Infinity);
+      expect(flags.filter(Boolean).length, i.slug).toBe(Math.min(available, INDUSTRY_PICK_LIMIT));
+      expect(picksInRecommended, i.slug).toBe(flags.every(Boolean));
+      for (const group of [picks.filter(inRec), picks.filter((p) => !inRec(p))]) {
+        const featured = group.map((p) => p.featured);
+        expect(featured, i.slug).toEqual([...featured].sort((a, b) => Number(b) - Number(a)));
+        for (let n = 1; n < group.length; n++) {
+          if (group[n - 1].featured !== group[n].featured) continue;
+          expect(group[n - 1].trendingRank ?? Infinity, i.slug).toBeLessThanOrEqual(group[n].trendingRank ?? Infinity);
+        }
       }
     }
+  });
+
+  it("gives healthcare picks that all sit in its recommended categories", async () => {
+    const data = (await getIndustryPageData("healthcare"))!;
+    const tree = await recommendedTree(data.industry.recommendedCategorySlugs);
+    expect(data.picks).toHaveLength(INDUSTRY_PICK_LIMIT);
+    expect(data.picksInRecommended).toBe(true);
+    for (const p of data.picks) expect(p.categorySlugs.some((s) => tree.has(s)), p.slug).toBe(true);
   });
 
   it("resolves recommended categories, in the data's order, with tree-union counts (R10)", async () => {
@@ -96,16 +123,40 @@ describe("selectRelatedArticles", () => {
     featured: false,
   });
 
-  it("keeps articles that share a category or are buying guides, newest first, ties by title", () => {
+  it("ranks matching articles by category overlap, then date, then title; one other buying guide fills a gap", () => {
     const articles = [
       make("unrelated-blog", "blog", "2025-05-01", ["analytics"]),
       make("old-match", "guide", "2025-01-01", ["hr-software"]),
-      make("any-buying-guide", "buying-guide", "2025-03-01", []),
-      make("b-new-match", "blog", "2025-06-01", ["hr-software", "cybersecurity"]),
+      make("older-buying-guide", "buying-guide", "2025-02-01", []),
+      make("newer-buying-guide", "buying-guide", "2025-03-01", ["analytics"]),
+      make("two-overlaps", "blog", "2024-06-01", ["hr-software", "cybersecurity"]),
+      make("b-new-match", "blog", "2025-06-01", ["cybersecurity"]),
       make("a-new-match", "blog", "2025-06-01", ["cybersecurity"]),
     ];
-    const picked = selectRelatedArticles(articles, ["hr-software", "cybersecurity"]);
-    expect(picked.map((a) => a.slug)).toEqual(["a-new-match", "b-new-match", "any-buying-guide", "old-match"]);
+    const picked = selectRelatedArticles(articles, ["hr-software", "cybersecurity"], 5);
+    expect(picked.map((a) => a.slug)).toEqual([
+      "two-overlaps",
+      "a-new-match",
+      "b-new-match",
+      "old-match",
+      "newer-buying-guide",
+    ]);
+    // No slot left: no non-matching buying guide.
+    expect(selectRelatedArticles(articles, ["hr-software", "cybersecurity"], 4).map((a) => a.slug)).toEqual([
+      "two-overlaps",
+      "a-new-match",
+      "b-new-match",
+      "old-match",
+    ]);
+  });
+
+  it("adds at most one non-matching buying guide", () => {
+    const articles = [
+      make("g1", "buying-guide", "2025-01-01", []),
+      make("g2", "buying-guide", "2025-02-01", []),
+      make("g3", "buying-guide", "2025-03-01", []),
+    ];
+    expect(selectRelatedArticles(articles, ["hr-software"]).map((a) => a.slug)).toEqual(["g3"]);
   });
 
   it("is empty when nothing matches, and does not mutate the input", () => {
@@ -118,23 +169,36 @@ describe("selectRelatedArticles", () => {
 
   it("caps the list", () => {
     const many = Array.from({ length: INDUSTRY_ARTICLE_LIMIT + 4 }, (_, n) =>
-      make(`g${n}`, "buying-guide", `2025-01-${String(n + 1).padStart(2, "0")}`, []),
+      make(`a${n}`, "blog", `2025-01-${String(n + 1).padStart(2, "0")}`, ["hr-software"]),
     );
-    expect(selectRelatedArticles(many, [])).toHaveLength(INDUSTRY_ARTICLE_LIMIT);
+    expect(selectRelatedArticles(many, ["hr-software"])).toHaveLength(INDUSTRY_ARTICLE_LIMIT);
   });
 
-  it("holds on the real content: every article matches the rule, newest first", async () => {
+  it("holds on the real content: matches first by overlap, at most one other buying guide", async () => {
     const all = await getArticles();
     for (const i of await getIndustries()) {
       const data = (await getIndustryPageData(i.slug))!;
       const rec = new Set(i.recommendedCategorySlugs);
-      for (const a of data.articles) {
-        expect(a.kind === "buying-guide" || a.relatedCategorySlugs.some((s) => rec.has(s)), `${i.slug}: ${a.slug}`).toBe(true);
-        expect(all.some((x) => x.kind === a.kind && x.slug === a.slug)).toBe(true);
+      const overlap = (a: Article) => a.relatedCategorySlugs.filter((s) => rec.has(s)).length;
+      const others = data.articles.filter((a) => overlap(a) === 0);
+      expect(others.length, i.slug).toBeLessThanOrEqual(1);
+      for (const a of others) expect(a.kind, `${i.slug}: ${a.slug}`).toBe("buying-guide");
+      // Non-matching guide, if any, comes last; matches are ordered by overlap, then date.
+      const matches = data.articles.filter((a) => overlap(a) > 0);
+      expect(data.articles.slice(0, matches.length)).toEqual(matches);
+      for (let n = 1; n < matches.length; n++) {
+        const [a, b] = [matches[n - 1], matches[n]];
+        expect(overlap(a) > overlap(b) || (overlap(a) === overlap(b) && a.publishedAt >= b.publishedAt), i.slug).toBe(
+          true,
+        );
       }
-      const dates = data.articles.map((a) => a.publishedAt);
-      expect(dates, i.slug).toEqual([...dates].sort().reverse());
+      for (const a of data.articles) expect(all.some((x) => x.kind === a.kind && x.slug === a.slug)).toBe(true);
     }
+  });
+
+  it("surfaces the accounting buying guide for finance", async () => {
+    const data = (await getIndustryPageData("finance"))!;
+    expect(data.articles.map((a) => a.slug)).toContain("how-to-choose-accounting-software");
   });
 });
 
@@ -146,7 +210,7 @@ describe("getIndustryIndexData", () => {
     for (const e of entries) {
       expect(e.count).toBe((await getProductsByIndustry(e.industry.slug)).length);
       expect(e.categories.length).toBeGreaterThan(0);
-      expect(e.categories.length).toBeLessThanOrEqual(3);
+      expect(e.categories.length).toBeLessThanOrEqual(INDEX_CATEGORY_LIMIT);
       expect(e.categories.map((c) => c.slug)).toEqual(e.industry.recommendedCategorySlugs.slice(0, e.categories.length));
     }
   });

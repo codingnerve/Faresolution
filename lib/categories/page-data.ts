@@ -51,7 +51,8 @@ export function curateTopProducts(products: readonly Product[], limit = TOP_PROD
     .slice(0, limit);
 }
 
-async function withCounts(categories: readonly Category[]): Promise<CategoryCount[]> {
+/** Each category with its tree-union product count (R10), in the given order. */
+export async function withCounts(categories: readonly Category[]): Promise<CategoryCount[]> {
   return Promise.all(
     categories.map(async (category) => ({
       category,

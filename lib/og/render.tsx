@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
-import { getInitials, isLightColor, SITE_NAME } from "@/lib/utils";
+import { getInitials, isLightColor } from "@/lib/utils";
 import { SITE_TAGLINE } from "@/lib/site";
 
 export const OG_SIZE = { width: 1200, height: 630 } as const;
@@ -24,14 +24,17 @@ function safeHex(color: string): string {
   return HEX.test(color.trim()) ? `#${color.trim().replace(/^#/, "")}` : "#17243A";
 }
 
-function BrandMark({ size = 48 }: { size?: number }) {
+const TOP_WING_PATH =
+  "M 34.4 2.4 L 13.0 2.4 C 8.4 2.4 5.5 5.2 3.2 10.6 L 1.4 15.2 L 1.7 15.4 C 4.5 12.6 7.8 9.2 13.2 9.0 L 26.8 9.0 C 29.0 9.0 30.2 8.2 31.6 6.2 Z";
+const BOTTOM_WING_PATH =
+  "M 29.3 11.4 L 13.4 11.4 C 9.4 11.4 6.8 14.1 4.4 19.6 L 0.9 28.2 L 1.3 28.4 C 5.1 26.6 7.8 25.0 9.6 22.4 L 11.4 19.7 C 12.3 18.4 13.2 17.8 15.0 17.8 L 22.0 17.8 C 24.4 17.8 25.7 17.0 27.1 14.8 Z";
+
+function BrandMark({ size = 48, dark = false }: { size?: number; dark?: boolean }) {
+  const height = Math.round((size * 30) / 36);
   return (
-    <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
-      <rect width="32" height="32" rx="6" fill="#17243A" />
-      <rect x="0.75" y="0.75" width="30.5" height="30.5" rx="5.25" stroke="rgba(255,255,255,0.14)" strokeWidth="1.5" />
-      <rect x="8" y="8.5" width="16" height="4" rx="1" fill="#4169E1" />
-      <rect x="8" y="14" width="11" height="4" rx="1" fill="#FFFFFF" />
-      <rect x="8" y="19.5" width="4.5" height="4" rx="1" fill="#7767D8" />
+    <svg width={size} height={height} viewBox="0 0 36 30" fill="none">
+      <path d={TOP_WING_PATH} fill={dark ? "#FFFFFF" : "#001740"} />
+      <path d={BOTTOM_WING_PATH} fill={dark ? "#3B82F6" : "#0246AA"} />
     </svg>
   );
 }
@@ -78,9 +81,13 @@ export function renderDefaultOgImage(): ImageResponse {
           color: "#FFFFFF",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-          <BrandMark size={56} />
-          <span style={{ fontSize: 34, letterSpacing: "-0.03em", color: "#FFFFFF" }}>{SITE_NAME}</span>
+        <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+          <BrandMark size={64} dark />
+          <div style={{ width: 2, height: 42, backgroundColor: "rgba(255,255,255,0.28)", display: "flex" }} />
+          <div style={{ display: "flex", fontSize: 36, letterSpacing: "-0.03em" }}>
+            <span style={{ color: "#FFFFFF" }}>Fare</span>
+            <span style={{ color: "#60A5FA" }}>solution</span>
+          </div>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
@@ -143,8 +150,12 @@ export function renderPageOgImage({ kindLabel, title, subtitle, monograms }: Pag
         {/* Top bar */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-            <BrandMark size={40} />
-            <span style={{ fontSize: 24, letterSpacing: "-0.03em", color: "#17243A" }}>{SITE_NAME}</span>
+            <BrandMark size={44} />
+            <div style={{ width: 1.5, height: 28, backgroundColor: "#CBD5E1", display: "flex" }} />
+            <div style={{ display: "flex", fontSize: 26, letterSpacing: "-0.03em" }}>
+              <span style={{ color: "#001740" }}>Fare</span>
+              <span style={{ color: "#0047AB" }}>solution</span>
+            </div>
           </div>
           <div
             style={{

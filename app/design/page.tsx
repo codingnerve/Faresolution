@@ -320,11 +320,11 @@ export default function DesignSystemPage() {
         <Section
           id="brand"
           title="Logo"
-          note="A ranked shortlist in a navy tile, reading as an abstract F. Works in a single colour by knocking the bars out."
+          note="Two-ribbon F wing paired with the split Fare/solution wordmark. Works in monochrome via currentColor contrast."
         >
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="flex h-36 items-center justify-center rounded-lg border border-line bg-surface">
-              <Logo size="lg" />
+              <Logo size="lg" showTagline />
             </div>
             <div className="flex h-36 items-center justify-center rounded-lg bg-navy text-white">
               <Logo size="lg" tone="mono" />

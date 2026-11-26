@@ -28,7 +28,7 @@ export async function Header() {
       </a>
       <Container className="flex h-full items-center gap-4 lg:gap-6">
         <Link href="/" aria-label="Faresolution home" className="shrink-0 rounded-sm">
-          <Logo />
+          <Logo showTagline />
         </Link>
         <DesktopNav nav={nav} className="hidden lg:block" />
         <div className="ml-auto flex items-center gap-1">

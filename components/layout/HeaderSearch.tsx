@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Search, X } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 import { Container } from "@/components/ui/Container";
+import { RouteChangeListener } from "./RouteChangeListener";
 import { SearchBox } from "./SearchBox";
 
 /**
@@ -37,12 +38,15 @@ export function HeaderSearch() {
 
   return (
     <>
+      {/* Results close the panel themselves; this also covers back/forward. */}
+      <RouteChangeListener onChange={() => setOpen(false)} />
       <button
         ref={triggerRef}
         type="button"
         aria-label={open ? "Close search" : "Search"}
         aria-expanded={open}
-        aria-controls={panelId}
+        // The panel only exists while open.
+        aria-controls={open ? panelId : undefined}
         onClick={() => setOpen((v) => !v)}
         onKeyDown={(event) => {
           if (event.key === "Escape" && open) {
@@ -69,7 +73,16 @@ export function HeaderSearch() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: reduceMotion ? 0 : -6 }}
             transition={{ duration: reduceMotion ? 0 : 0.16, ease: [0.2, 0, 0, 1] }}
-            className="absolute inset-x-0 top-full z-40 border-b border-line bg-surface shadow-overlay"
+            // Focusable so a click on blank panel space keeps focus here, where Escape still works.
+            tabIndex={-1}
+            className="absolute inset-x-0 top-full z-40 border-b border-line bg-surface shadow-overlay focus:outline-none"
+            onKeyDown={(event) => {
+              // The input handles its own Escape (and prevents the default).
+              if (event.key === "Escape" && !event.defaultPrevented) {
+                event.preventDefault();
+                close(true);
+              }
+            }}
             onBlur={(event) => {
               const next = event.relatedTarget as Node | null;
               // Tabbing out of the panel closes it; clicks are handled above.

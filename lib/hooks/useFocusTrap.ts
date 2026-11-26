@@ -40,7 +40,8 @@ export function useFocusTrap<T extends HTMLElement>(
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
       const activeEl = document.activeElement;
-      if (event.shiftKey && (activeEl === first || !container.contains(activeEl))) {
+      // The container itself may hold focus (tabIndex -1, after a click on blank space).
+      if (event.shiftKey && (activeEl === first || activeEl === container || !container.contains(activeEl))) {
         event.preventDefault();
         last.focus();
       } else if (!event.shiftKey && (activeEl === last || !container.contains(activeEl))) {

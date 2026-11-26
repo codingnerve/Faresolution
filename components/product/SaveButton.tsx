@@ -18,7 +18,10 @@ type SaveButtonProps = {
 
 /**
  * Toggles a product in the visitor's saved list (this browser only; memory
- * when storage is blocked). Shows "Save" until hydrated, then the stored state.
+ * when storage is blocked). Like CompareButton, the name stays "Save <product>"
+ * and `aria-pressed` alone carries the state (the icon and tint show it
+ * visually), so the state is not announced twice. Not pressed until hydrated,
+ * then the stored state.
  */
 export function SaveButton({ slug, name, size = "md", className }: SaveButtonProps) {
   const [, saved] = useStoredList(SAVED_PRODUCTS_KEY);
@@ -44,7 +47,7 @@ export function SaveButton({ slug, name, size = "md", className }: SaveButtonPro
         )}
       >
         <Icon aria-hidden="true" strokeWidth={2} />
-        {isSaved ? "Saved" : "Save"}
+        Save
         <span className="sr-only"> {name}</span>
       </button>
       <span role="status" className="sr-only">

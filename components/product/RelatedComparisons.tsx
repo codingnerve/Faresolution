@@ -23,7 +23,7 @@ export function RelatedComparisons({
               href={compareHref(comparison.slugs)}
               className="group flex items-center gap-4 rounded-xs py-4"
             >
-              <span aria-hidden="true" className="flex shrink-0 -space-x-2">
+              <span aria-hidden="true" className="flex shrink-0 -space-x-1">
                 {comparison.products.map((p) => (
                   <LogoMark key={p.slug} name={p.name} color={p.brandColor} size={32} className="ring-2 ring-surface rounded-md" />
                 ))}

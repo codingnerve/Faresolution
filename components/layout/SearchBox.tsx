@@ -273,7 +273,7 @@ export function SearchBox({
           enterKeyHint="search"
           role="combobox"
           aria-expanded={listVisible}
-          aria-controls={listboxId}
+          aria-controls={open ? listboxId : undefined}
           aria-autocomplete="list"
           aria-activedescendant={listVisible && active >= 0 ? optionId(active) : undefined}
           autoComplete="off"
@@ -286,11 +286,12 @@ export function SearchBox({
           onFocus={() => setInlineOpen(true)}
           onKeyDown={onKeyDown}
           className={cn(
-            "w-full bg-transparent text-ink placeholder:text-subtle focus-visible:outline-none",
+            "w-full bg-transparent text-ink placeholder:text-subtle",
             overlay
-              ? "h-14 pr-10 pl-8 text-lg"
+              ? // A bottom rule that turns blue (2px) while focused, in place of the outline ring.
+                "h-14 border-b-2 border-transparent pr-10 pl-8 text-lg focus-visible:border-blue focus-visible:outline-none"
               : cn(
-                  "rounded-md border border-line-strong bg-surface shadow-card transition-colors hover:border-muted/60 focus-visible:border-blue focus-visible:ring-2 focus-visible:ring-blue/25",
+                  "rounded-md border border-line-strong bg-surface shadow-card transition-colors hover:border-muted/60 focus-visible:border-blue focus-visible:ring-2 focus-visible:ring-blue/25 focus-visible:outline-none",
                   large ? "h-14 pr-12 pl-13 text-base shadow-raised" : "h-12 pr-11 pl-11 text-[0.9375rem]",
                 ),
           )}

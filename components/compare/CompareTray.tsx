@@ -36,6 +36,15 @@ function Tray() {
   const barRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const [height, setHeight] = useState(0);
+  // Announced from a region that stays mounted after the tray itself unmounts.
+  // Shown only while the selection is empty, so it is never out of date.
+  const [emptied, setEmptied] = useState(false);
+
+  /** The tray is about to unmount: keep focus off <body> and say what happened. */
+  function onEmptied() {
+    setEmptied(true);
+    document.getElementById("main-content")?.focus({ preventScroll: true });
+  }
 
   // Hidden on /compare (the picker shows the selection) and on the comparison
   // of exactly the selected products.
@@ -55,6 +64,9 @@ function Tray() {
 
   return (
     <>
+      <p role="status" className="sr-only">
+        {emptied && count === 0 ? "Compare selection cleared." : ""}
+      </p>
       {visible && <div aria-hidden="true" style={{ height }} />}
       <AnimatePresence>
         {visible && (
@@ -98,7 +110,8 @@ function Tray() {
                         type="button"
                         onClick={() => {
                           remove(slug);
-                          headingRef.current?.focus();
+                          if (count === 1) onEmptied();
+                          else headingRef.current?.focus();
                         }}
                         aria-label={`Remove ${name} from compare`}
                         title={`Remove ${name}`}
@@ -112,7 +125,14 @@ function Tray() {
               </ul>
 
               <div className="order-2 ml-auto flex items-center gap-2 sm:order-3">
-                <Button variant="ghost" size="sm" onClick={clear}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    clear();
+                    onEmptied();
+                  }}
+                >
                   Clear
                 </Button>
                 {count >= MIN_COMPARE ? (

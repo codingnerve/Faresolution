@@ -81,7 +81,10 @@ export function FilterDrawer({
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
-            className="absolute inset-y-0 left-0 flex w-[calc(100%-2.5rem)] max-w-sm flex-col bg-surface shadow-overlay"
+            // Focusable so a click on blank panel space keeps focus in the
+            // dialog (not on <body>), where Escape and the Tab trap still work.
+            tabIndex={-1}
+            className="absolute inset-y-0 left-0 flex w-[calc(100%-2.5rem)] max-w-sm flex-col bg-surface shadow-overlay focus:outline-none"
             initial={reduceMotion ? { opacity: 0 } : { x: "-100%" }}
             animate={reduceMotion ? { opacity: 1 } : { x: 0 }}
             exit={reduceMotion ? { opacity: 0 } : { x: "-100%" }}

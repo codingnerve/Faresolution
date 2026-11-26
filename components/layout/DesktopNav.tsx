@@ -15,6 +15,7 @@ import {
 import { cn } from "@/lib/utils";
 import { MegaMenu, MenuList } from "./MegaMenu";
 import { allIndustriesLink, allResourcesLink, type NavModel } from "./navigation";
+import { RouteChangeListener } from "./RouteChangeListener";
 
 type MenuKey = "categories" | "industries" | "resources";
 
@@ -183,6 +184,8 @@ export function DesktopNav({ nav, className }: { nav: NavModel; className?: stri
 
   return (
     <nav ref={navRef} aria-label="Main" className={cn("self-stretch", className)}>
+      {/* Link clicks close the menu above; this also covers back/forward. */}
+      <RouteChangeListener onChange={() => setOpenKey(null)} />
       <ul className="flex h-full items-stretch gap-0.5">
         {BAR.map((item, index) => {
           if (item.kind === "link") {
@@ -219,7 +222,8 @@ export function DesktopNav({ nav, className }: { nav: NavModel; className?: stri
                 }}
                 type="button"
                 aria-expanded={open}
-                aria-controls={panelId(key)}
+                // The panel only exists while open.
+                aria-controls={open ? panelId(key) : undefined}
                 onClick={() => setOpenKey(open ? null : key)}
                 onKeyDown={(e) => onBarKeyDown(e, index)}
                 className={cn(barItemClass, open && "bg-surface-alt text-navy")}
@@ -244,10 +248,14 @@ export function DesktopNav({ nav, className }: { nav: NavModel; className?: stri
                       panelRefs.current[key] = el;
                     }}
                     {...motionProps}
+                    // Focusable so a click on blank panel space keeps focus in
+                    // the menu (not on <body>), where Escape and arrows still work.
+                    tabIndex={-1}
                     onKeyDown={(e) => onPanelKeyDown(e, key)}
                     onClick={onPanelClick}
                     className={cn(
-                      "absolute top-full z-40 bg-surface",
+                      // Scrolls inside itself on short viewports (header is 4rem).
+                      "absolute top-full z-40 max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain bg-surface focus:outline-none",
                       mega
                         ? "inset-x-0 border-y border-line shadow-overlay"
                         : cn(

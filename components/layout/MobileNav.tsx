@@ -3,11 +3,8 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, ChevronDown, Menu, X } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import {
-  Suspense,
   useEffect,
-  useEffectEvent,
   useId,
   useRef,
   useState,
@@ -29,24 +26,7 @@ import {
   type NavLink,
   type NavModel,
 } from "./navigation";
-
-/**
- * Calls `onChange` whenever the pathname changes (not on first render). Kept
- * in its own Suspense boundary because `usePathname` can suspend on routes
- * whose params are only known at request time.
- */
-function RouteChangeListener({ onChange }: { onChange: () => void }) {
-  const pathname = usePathname();
-  const previous = useRef(pathname);
-  const notify = useEffectEvent(onChange);
-  useEffect(() => {
-    if (previous.current !== pathname) {
-      previous.current = pathname;
-      notify();
-    }
-  }, [pathname]);
-  return null;
-}
+import { RouteChangeListener } from "./RouteChangeListener";
 
 type SectionKey = "categories" | "industries" | "resources";
 
@@ -125,7 +105,10 @@ export function MobileNav({ nav, className }: { nav: NavModel; className?: strin
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
-            className="absolute inset-y-0 right-0 flex w-[calc(100%-2.5rem)] max-w-sm flex-col bg-surface shadow-overlay"
+            // Focusable so a click on blank panel space keeps focus in the
+            // dialog (not on <body>), where Escape and the Tab trap still work.
+            tabIndex={-1}
+            className="absolute inset-y-0 right-0 flex w-[calc(100%-2.5rem)] max-w-sm flex-col bg-surface shadow-overlay focus:outline-none"
             initial={reduceMotion ? { opacity: 0 } : { x: "100%" }}
             animate={reduceMotion ? { opacity: 1 } : { x: 0 }}
             exit={reduceMotion ? { opacity: 0 } : { x: "100%" }}
@@ -232,7 +215,8 @@ export function MobileNav({ nav, className }: { nav: NavModel; className?: strin
         type="button"
         aria-label="Open menu"
         aria-expanded={open}
-        aria-controls={dialogId}
+        // The dialog only exists while open.
+        aria-controls={open ? dialogId : undefined}
         aria-haspopup="dialog"
         onClick={() => setOpen(true)}
         className={cn(
@@ -242,9 +226,7 @@ export function MobileNav({ nav, className }: { nav: NavModel; className?: strin
       >
         <Menu aria-hidden="true" className="size-5" strokeWidth={1.75} />
       </button>
-      <Suspense fallback={null}>
-        <RouteChangeListener onChange={() => close(false)} />
-      </Suspense>
+      <RouteChangeListener onChange={() => close(false)} />
       {mounted && createPortal(drawer, document.body)}
     </>
   );
@@ -282,7 +264,7 @@ function DrawerSection({
       <button
         type="button"
         aria-expanded={open}
-        aria-controls={contentId}
+        aria-controls={open ? contentId : undefined}
         onClick={onToggle}
         className="flex h-11 w-full items-center justify-between rounded-md px-3 text-left text-[0.9375rem] font-medium text-ink hover:bg-surface-alt"
       >

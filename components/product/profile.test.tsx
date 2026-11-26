@@ -33,6 +33,17 @@ describe("ProductHeader", () => {
     expect(html).toContain("No reviews yet");
   });
 
+  it("gives the save toggle a constant name, with aria-pressed carrying the state", async () => {
+    const { product, vendor, primaryCategory } = await profile();
+    const html = renderToStaticMarkup(
+      <ProductHeader product={product} vendor={vendor} primaryCategory={primaryCategory} />,
+    );
+    const save = html.match(/<button[^>]*title="Save to this browser"[^>]*>.*?<\/button>/)?.[0] ?? "";
+    expect(save).toContain('aria-pressed="false"');
+    expect(text(save).replace(/\s+/g, " ").trim()).toBe("Save HubSpot CRM");
+    expect(save).not.toContain("aria-label");
+  });
+
   it("links the vendor website in a new tab without sponsored or nofollow", async () => {
     const { product, vendor, primaryCategory } = await profile();
     const html = renderToStaticMarkup(
@@ -65,7 +76,13 @@ describe("PricingTable", () => {
       <PricingTable plans={product.pricing.plans} website={product.website} productName={product.name} />,
     );
     expect(text(html)).not.toMatch(/null|NaN|undefined|\$/);
-    expect(html.match(/See vendor site/g)).toHaveLength(product.pricing.plans.length);
+    // Once in the phone card list and once in the table (only one is displayed).
+    expect(html.match(/See vendor site/g)).toHaveLength(product.pricing.plans.length * 2);
+    // Real table semantics from sm: no rows restyled as grids.
+    expect(html).toMatch(/<table class="hidden [^"]*sm:table"/);
+    expect(html).not.toMatch(/<tr[^>]*class="[^"]*grid/);
+    expect(html.match(/<th scope="row"/g)).toHaveLength(product.pricing.plans.length);
+    expect(html).toMatch(/<ul aria-label="HubSpot CRM plans" class="[^"]*sm:hidden"/);
 
     const priced = renderToStaticMarkup(
       <PricingTable plans={[{ name: "Pro", price: "15 EUR per seat", summary: "All features." }]} website={null} productName="X" />,

@@ -7,6 +7,7 @@ import {
   getPopularComparisons,
   getProducts,
   getVendors,
+  resolveLogo,
   type Deployment,
   type Platform,
   type Product,
@@ -58,6 +59,7 @@ async function buildPanel(): Promise<PanelComparison[]> {
   ]);
   const productBySlug = new Map(products.map((p) => [p.slug, p]));
   const categoryName = new Map(categories.map((c) => [c.slug, c.name]));
+  const vendorBySlug = new Map(vendors.map((v) => [v.slug, v]));
   const vendorName = new Map(vendors.map((v) => [v.slug, v.name]));
   const popularKeys = new Set(popular.map((c) => c.slugs.join("|")));
 
@@ -71,12 +73,16 @@ async function buildPanel(): Promise<PanelComparison[]> {
       key: pair.join("-vs-"),
       label: shortCategory(categoryName.get(a.primaryCategory) ?? a.primaryCategory),
       href: compareHref([...pair]),
-      products: both((p) => ({
-        name: p.name,
-        vendorName: vendorName.get(p.vendorSlug) ?? null,
-        brandColor: p.brandColor,
-        href: productHref(p.slug),
-      })),
+      products: both((p) => {
+        const vendor = vendorBySlug.get(p.vendorSlug);
+        return {
+          name: p.name,
+          vendorName: vendor?.name ?? null,
+          brandColor: p.brandColor,
+          logo: resolveLogo(p, vendor),
+          href: productHref(p.slug),
+        };
+      }),
       rows: [
         { label: "Vendor", values: both((p) => vendorName.get(p.vendorSlug) ?? "Not verified") },
         { label: "Free plan", values: both((p) => yesNo(p.pricing.freePlan)) },

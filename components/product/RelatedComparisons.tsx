@@ -1,7 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { compareHref } from "@/components/layout/navigation";
-import { LogoMark } from "@/components/ui/LogoMark";
+import { ProductLogo } from "@/components/ui/ProductLogo";
 import type { ProfileComparison } from "@/lib/products/profile";
 import { cn } from "@/lib/utils";
 
@@ -25,7 +25,7 @@ export function RelatedComparisons({
             >
               <span aria-hidden="true" className="flex shrink-0 -space-x-1">
                 {comparison.products.map((p) => (
-                  <LogoMark key={p.slug} name={p.name} color={p.brandColor} size={32} className="ring-2 ring-surface rounded-md" />
+                  <ProductLogo key={p.slug} name={p.name} color={p.brandColor} logo={p.logo} size={32} className="ring-2 ring-surface rounded-md" />
                 ))}
               </span>
               <span className="min-w-0 flex-1 text-[0.9375rem] font-medium text-navy group-hover:text-blue-ink">

@@ -14,7 +14,7 @@ import {
   type KeyboardEvent,
   type ReactNode,
 } from "react";
-import { LogoMark } from "@/components/ui/LogoMark";
+import { ProductLogo } from "@/components/ui/ProductLogo";
 import {
   MAX_QUERY_LENGTH,
   suggestedSearches,
@@ -441,7 +441,7 @@ function OptionRow({
     case "product":
       body = (
         <>
-          <LogoMark name={option.hit.name} color={option.hit.brandColor} size={32} />
+          <ProductLogo name={option.hit.name} color={option.hit.brandColor} logo={option.hit.logo} size={32} />
           <span className="min-w-0 flex-1">
             <span className="block truncate font-medium">{option.hit.name}</span>
             <span className="block truncate text-[0.8125rem] text-subtle">

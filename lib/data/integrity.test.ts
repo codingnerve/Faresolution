@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { articles } from "./content/articles";
 import { authors } from "./content/authors";
@@ -362,6 +364,51 @@ describe("content hygiene", () => {
     const collections = { products, categories, industries, features, integrations, vendors, authors, articles, popularComparisons };
     for (const [name, items] of Object.entries(collections)) {
       expect(JSON.stringify(items).toLowerCase(), name).not.toContain("lorem");
+    }
+  });
+});
+
+describe("media and logo integrity", () => {
+  const publicRoot = path.join(process.cwd(), "public");
+  const isLocalPublicFile = (src: string, prefix: string) => {
+    if (!src.startsWith(prefix)) return false;
+    const rel = src.replace(/^\/+/, "");
+    return fs.existsSync(path.join(publicRoot, rel));
+  };
+
+  it("leaves every vendor and product logo empty in the showcase and validates any set logo", () => {
+    for (const item of [...products, ...vendors]) {
+      expect(item.logo, `${item.slug} logo should be unset in showcase`).toBeUndefined();
+      if (item.logo) {
+        expect(["press-kit", "licensed-provider"]).toContain(item.logo.source);
+        expect(item.logo.width).toBeGreaterThan(0);
+        expect(item.logo.height).toBeGreaterThan(0);
+        expect(isLocalPublicFile(item.logo.src, "/logos/"), `${item.slug} logo path`).toBe(true);
+      }
+    }
+  });
+
+  it("ensures every article, industry, and author image points to an existing file with non-empty alt text", () => {
+    for (const a of articles) {
+      expect(a.cover, `${a.slug} missing cover`).toBeDefined();
+      if (a.cover) {
+        expect(a.cover.alt.trim().length, `${a.slug} alt`).toBeGreaterThan(0);
+        expect(isLocalPublicFile(a.cover.src, "/images/"), `${a.slug} cover file ${a.cover.src}`).toBe(true);
+      }
+    }
+    for (const i of industries) {
+      expect(i.image, `${i.slug} missing image`).toBeDefined();
+      if (i.image) {
+        expect(i.image.alt.trim().length, `${i.slug} alt`).toBeGreaterThan(0);
+        expect(isLocalPublicFile(i.image.src, "/images/"), `${i.slug} image file ${i.image.src}`).toBe(true);
+      }
+    }
+    for (const au of authors) {
+      expect(au.avatar, `${au.slug} missing avatar`).toBeDefined();
+      if (au.avatar) {
+        expect(au.avatar.alt.trim().length, `${au.slug} alt`).toBeGreaterThan(0);
+        expect(isLocalPublicFile(au.avatar.src, "/images/"), `${au.slug} avatar file ${au.avatar.src}`).toBe(true);
+      }
     }
   });
 });

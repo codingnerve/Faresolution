@@ -10,7 +10,9 @@ import {
   getIntegrations,
   getProducts,
   getVendors,
+  resolveLogo,
   type Product,
+  type VendorLogo,
 } from "@/lib/data";
 import { buildCategoryChildren, type DirectoryItem } from "./query";
 
@@ -18,6 +20,7 @@ export interface DirectoryProduct extends DirectoryItem {
   vendorName: string | null;
   tagline: string;
   brandColor: string;
+  logo?: VendorLogo | null;
   primaryCategory: string;
   /** At most three. */
   highlights: string[];
@@ -44,13 +47,18 @@ export interface DirectoryData {
   ratingsAvailable: boolean;
 }
 
-export function toDirectoryProduct(p: Product, vendorName: string | null): DirectoryProduct {
+export function toDirectoryProduct(
+  p: Product,
+  vendorName: string | null,
+  logo: VendorLogo | null = p.logo ?? null,
+): DirectoryProduct {
   return {
     slug: p.slug,
     name: p.name,
     vendorName,
     tagline: p.tagline,
     brandColor: p.brandColor,
+    ...(logo ? { logo } : {}),
     primaryCategory: p.primaryCategory,
     categorySlugs: p.categorySlugs,
     industrySlugs: p.industrySlugs,
@@ -85,7 +93,7 @@ export async function getDirectoryData(include?: (p: Product) => boolean): Promi
     getFeatures(),
     getIntegrations(),
   ]);
-  const vendorName = new Map(vendors.map((v) => [v.slug, v.name]));
+  const vendorBySlug = new Map(vendors.map((v) => [v.slug, v]));
   const products = include ? all.filter(include) : all;
   const used = (pick: (p: Product) => string[]) => new Set(products.flatMap(pick));
   const usedIndustries = used((p) => p.industrySlugs);
@@ -93,7 +101,10 @@ export async function getDirectoryData(include?: (p: Product) => boolean): Promi
   const usedIntegrations = used((p) => p.integrationSlugs);
 
   return {
-    products: products.map((p) => toDirectoryProduct(p, vendorName.get(p.vendorSlug) ?? null)),
+    products: products.map((p) => {
+      const vendor = vendorBySlug.get(p.vendorSlug);
+      return toDirectoryProduct(p, vendor?.name ?? null, resolveLogo(p, vendor));
+    }),
     labels: {
       categories: categories.map((c) => ({ slug: c.slug, name: c.name, parentSlug: c.parentSlug })),
       industries: industries

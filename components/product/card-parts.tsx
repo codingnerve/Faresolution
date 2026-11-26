@@ -1,7 +1,7 @@
 import { ArrowRight, Check } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
-import type { Pricing, Product } from "@/lib/data";
+import type { Pricing, Product, VendorLogo } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
 /**
@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 export type ProductCardData = Pick<
   Product,
   "slug" | "name" | "tagline" | "brandColor" | "rating" | "reviewCount" | "highlights"
-> & { pricing: Pick<Pricing, "freePlan" | "freeTrial"> };
+> & { pricing: Pick<Pricing, "freePlan" | "freeTrial">; logo?: VendorLogo | null };
 
 interface PricingFact {
   label: string;

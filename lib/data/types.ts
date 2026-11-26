@@ -69,6 +69,7 @@ export interface Product {
   /** Always false in the showcase build: sample data, not vendor-verified. */
   verified: boolean;
   brandColor: string;
+  logo?: VendorLogo;
 }
 
 export interface GuideSection {
@@ -98,6 +99,14 @@ export interface ImageAsset {
   alt: string;
 }
 
+export interface VendorLogo {
+  src: string;
+  width: number;
+  height: number;
+  source: "press-kit" | "licensed-provider";
+  retrievedAt: string;
+}
+
 export interface Industry {
   slug: string;
   name: string;
@@ -123,6 +132,7 @@ export interface Vendor {
   website: string;
   description: string;
   headquarters: string | null;
+  logo?: VendorLogo;
 }
 
 export interface Feature {

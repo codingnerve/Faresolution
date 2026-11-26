@@ -1,7 +1,7 @@
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { productHref } from "@/components/layout/navigation";
-import { LogoMark } from "@/components/ui/LogoMark";
+import { ProductLogo } from "@/components/ui/ProductLogo";
 import type { Product } from "@/lib/data";
 import type { ProfileIntegration } from "@/lib/products/profile";
 import { cn, isWebUrl } from "@/lib/utils";
@@ -9,7 +9,7 @@ import { cn, isWebUrl } from "@/lib/utils";
 type IntegrationGridProps = {
   integrations: readonly ProfileIntegration[];
   /** Products by slug, for integrations that have their own profile here. */
-  products: ReadonlyMap<string, Pick<Product, "name" | "brandColor">>;
+  products: ReadonlyMap<string, Pick<Product, "name" | "brandColor" | "logo">>;
   className?: string;
 };
 
@@ -25,7 +25,7 @@ export function IntegrationGrid({ integrations, products, className }: Integrati
         const external = !profile && isWebUrl(integration.website);
         const body = (
           <>
-            <LogoMark name={integration.name} color={profile?.brandColor ?? "#22324D"} size={36} />
+            <ProductLogo name={integration.name} color={profile?.brandColor ?? "#22324D"} logo={profile?.logo} size={36} />
             <span className="min-w-0 flex-1">
               <span className="block truncate text-[0.9375rem] font-semibold text-navy">{integration.name}</span>
               <span className="type-meta block">{profile ? "Profile on Faresolution" : external ? "Vendor website" : "Integration"}</span>

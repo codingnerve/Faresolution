@@ -3,7 +3,7 @@ import { CompareButton } from "@/components/compare/CompareButton";
 import { compareHref, productHref } from "@/components/layout/navigation";
 import { HighlightList, PricingFacts, ViewDetailsLink } from "@/components/product/card-parts";
 import { buttonClasses } from "@/components/ui/Button";
-import { LogoMark } from "@/components/ui/LogoMark";
+import { ProductLogo } from "@/components/ui/ProductLogo";
 import { Rating } from "@/components/ui/Rating";
 import type { Alternative } from "@/lib/alternatives/score";
 import { WhySimilar } from "./WhySimilar";
@@ -28,7 +28,7 @@ export function AlternativeCard({
   return (
     <article className="group relative grid gap-5 rounded-lg border border-line bg-surface p-5 shadow-card transition-[border-color,box-shadow] duration-200 hover:border-line-strong hover:shadow-raised sm:p-6 md:grid-cols-[minmax(0,1fr)_14rem] md:gap-8">
       <div className="flex min-w-0 gap-4">
-        <LogoMark name={product.name} color={product.brandColor} size={48} className="shrink-0" />
+        <ProductLogo name={product.name} color={product.brandColor} logo={product.logo} size={48} className="shrink-0" />
         <div className="min-w-0 flex-1">
           <h3 className="type-h3 text-navy">
             <Link href={href} className="rounded-xs hover:text-blue-ink">

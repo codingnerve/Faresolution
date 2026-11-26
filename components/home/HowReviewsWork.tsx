@@ -2,7 +2,7 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { articleHref } from "@/components/layout/navigation";
 import { Container } from "@/components/ui/Container";
-import { LogoMark } from "@/components/ui/LogoMark";
+import { ProductLogo } from "@/components/ui/ProductLogo";
 import { Rating } from "@/components/ui/Rating";
 import { getArticle, getProduct } from "@/lib/data";
 
@@ -51,7 +51,7 @@ export async function HowReviewsWork() {
           {example && (
             <figure className="mt-8 max-w-sm rounded-lg border border-line bg-surface p-4 shadow-card">
               <div className="flex items-center gap-3">
-                <LogoMark name={example.name} color={example.brandColor} size={36} />
+                <ProductLogo name={example.name} color={example.brandColor} logo={example.logo} size={36} />
                 <div className="min-w-0">
                   <p className="truncate text-sm font-semibold text-navy">{example.name}</p>
                   <Rating value={example.rating} count={example.reviewCount} />

@@ -6,7 +6,7 @@
  * runs against it in the browser. No part of a query ever reaches a RegExp: all
  * matching is done with string operations on a normalised copy of the input.
  */
-import type { Category, Feature, Industry, Product, Vendor } from "@/lib/data/types";
+import type { Category, Feature, Industry, Product, Vendor, VendorLogo } from "@/lib/data/types";
 import { levenshtein } from "./distance";
 
 export const MAX_QUERY_LENGTH = 100;
@@ -36,6 +36,7 @@ export interface IndexedProduct {
   categoryName: string;
   categorySlug: string;
   brandColor: string;
+  logo?: VendorLogo | null;
   /** Normalised category, industry and feature names mapped to this product. */
   terms: string[];
 }
@@ -75,6 +76,7 @@ export interface ProductHit {
   tagline: string;
   primaryCategoryName: string;
   brandColor: string;
+  logo?: VendorLogo | null;
 }
 
 export interface CategoryHit {
@@ -127,7 +129,7 @@ export function buildSearchIndex(input: BuildInput): SearchIndex {
   const vendors = uniqueBy(input.vendors);
 
   const categoryName = new Map(categories.map((c) => [c.slug, c.name]));
-  const vendorName = new Map(vendors.map((v) => [v.slug, v.name]));
+  const vendorBySlug = new Map(vendors.map((v) => [v.slug, v]));
   const industryName = new Map(input.industries.map((i) => [i.slug, i.name]));
   const featureName = new Map(input.features.map((f) => [f.slug, f.name]));
 
@@ -155,14 +157,17 @@ export function buildSearchIndex(input: BuildInput): SearchIndex {
             .filter((n) => n.length > 0),
         ),
       ];
+      const vendor = vendorBySlug.get(p.vendorSlug);
+      const logo = p.logo ?? vendor?.logo ?? null;
       return {
         slug: p.slug,
         name: p.name,
-        vendorName: vendorName.get(p.vendorSlug) ?? "",
+        vendorName: vendor?.name ?? "",
         tagline: p.tagline,
         categoryName: categoryName.get(p.primaryCategory) ?? p.primaryCategory,
         categorySlug: p.primaryCategory,
         brandColor: p.brandColor,
+        ...(logo ? { logo } : {}),
         terms,
       };
     }),
@@ -354,6 +359,7 @@ export function search(
       tagline: p.tagline,
       primaryCategoryName: p.categoryName,
       brandColor: p.brandColor,
+      ...(p.logo ? { logo: p.logo } : {}),
     }),
   );
 

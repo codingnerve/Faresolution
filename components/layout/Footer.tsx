@@ -169,9 +169,14 @@ export async function Footer() {
         <DemoDataNotice tone="dark" className="mt-12" />
 
         <div className="mt-8 flex flex-col gap-4 border-t border-white/10 pt-6 text-[0.8125rem] text-white/60 sm:flex-row sm:items-center sm:justify-between">
-          <p>
-            &copy; {COPYRIGHT_YEAR} {SITE_NAME}. All rights reserved.
-          </p>
+          <div className="space-y-1">
+            <p>
+              &copy; {COPYRIGHT_YEAR} {SITE_NAME}. All rights reserved.
+            </p>
+            <p className="text-xs text-white/55">
+              Product names and logos are trademarks of their respective owners and are used for identification only.
+            </p>
+          </div>
           {socialLinks.length > 0 && (
             <ul className="flex flex-wrap gap-x-5 gap-y-2" aria-label="Social profiles">
               {socialLinks.map((social) => (

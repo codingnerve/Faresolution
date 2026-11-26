@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { CompareButton } from "@/components/compare/CompareButton";
 import { productHref } from "@/components/layout/navigation";
-import { LogoMark } from "@/components/ui/LogoMark";
+import { ProductLogo } from "@/components/ui/ProductLogo";
 import { Rating } from "@/components/ui/Rating";
 import { cn } from "@/lib/utils";
 import { HighlightList, PricingFacts, ViewDetailsLink, type ProductCardData } from "./card-parts";
@@ -40,7 +40,7 @@ export function ProductRow({
       )}
     >
       <div className="flex min-w-0 gap-4">
-        <LogoMark name={product.name} color={product.brandColor} size={48} className="shrink-0" />
+        <ProductLogo name={product.name} color={product.brandColor} logo={product.logo} size={48} className="shrink-0" />
         <div className="min-w-0 flex-1">
           <Heading className="type-h3 text-navy">
             <Link href={href} className="rounded-xs hover:text-blue-ink">

@@ -4,13 +4,15 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useId, useRef, useState, type KeyboardEvent } from "react";
-import { LogoMark } from "@/components/ui/LogoMark";
+import { ProductLogo } from "@/components/ui/ProductLogo";
+import type { VendorLogo } from "@/lib/data/types";
 import { cn } from "@/lib/utils";
 
 export interface PanelProduct {
   name: string;
   vendorName: string | null;
   brandColor: string;
+  logo?: VendorLogo | null;
   href: string;
 }
 
@@ -129,7 +131,7 @@ export function HeroComparePanel({ comparisons }: { comparisons: PanelComparison
                   {[a, b].map((product) => (
                     <th key={product.href} scope="col" className="pb-4 align-top font-normal">
                       <Link href={product.href} className="group/p flex flex-col items-start gap-2 rounded-xs pr-2">
-                        <LogoMark name={product.name} color={product.brandColor} size={32} />
+                        <ProductLogo name={product.name} color={product.brandColor} logo={product.logo} size={32} />
                         <span className="text-sm leading-5 font-semibold text-navy group-hover/p:text-blue-ink">
                           {product.name}
                         </span>

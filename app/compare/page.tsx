@@ -7,7 +7,7 @@ import { compareHref } from "@/components/layout/navigation";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Container } from "@/components/ui/Container";
 import { DemoDataNotice } from "@/components/ui/DemoDataNotice";
-import { LogoMark } from "@/components/ui/LogoMark";
+import { ProductLogo } from "@/components/ui/ProductLogo";
 import { getCategories, getPopularComparisons, getProducts, type Product } from "@/lib/data";
 import { MAX_COMPARE } from "@/lib/compare/slug";
 import { buildMetadata } from "@/lib/seo";
@@ -77,7 +77,7 @@ export default async function ComparePage() {
                     <Link href={href} className="group flex items-center gap-4 rounded-xs py-4">
                       <span aria-hidden="true" className="flex w-[5.75rem] shrink-0 items-center gap-1">
                         {items.map((p) => (
-                          <LogoMark key={p.slug} name={p.name} color={p.brandColor} size={28} />
+                          <ProductLogo key={p.slug} name={p.name} color={p.brandColor} logo={p.logo} size={28} />
                         ))}
                       </span>
                       <span className="min-w-0 flex-1">

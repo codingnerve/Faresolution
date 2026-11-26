@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { SavedItems, type SavedProductCard } from "@/components/saved/SavedItems";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Container } from "@/components/ui/Container";
-import { getProducts, getVendors } from "@/lib/data";
+import { getProducts, getVendors, resolveLogo } from "@/lib/data";
 import { buildMetadata } from "@/lib/seo";
 
 const title = "Saved items";
@@ -14,20 +14,24 @@ export const metadata: Metadata = buildMetadata({ title, description, path: "/sa
 
 export default async function SavedPage() {
   const [products, vendors] = await Promise.all([getProducts(), getVendors()]);
-  const vendorName = new Map(vendors.map((v) => [v.slug, v.name]));
+  const vendorBySlug = new Map(vendors.map((v) => [v.slug, v]));
   // The whole catalogue as card data (small: no descriptions, plans or FAQs),
   // so the client can show whatever this browser has saved.
-  const cards: SavedProductCard[] = products.map((p) => ({
-    slug: p.slug,
-    name: p.name,
-    vendorName: vendorName.get(p.vendorSlug) ?? null,
-    tagline: p.tagline,
-    brandColor: p.brandColor,
-    rating: p.rating,
-    reviewCount: p.reviewCount,
-    highlights: p.highlights.slice(0, 3),
-    pricing: { freePlan: p.pricing.freePlan, freeTrial: p.pricing.freeTrial },
-  }));
+  const cards: SavedProductCard[] = products.map((p) => {
+    const vendor = vendorBySlug.get(p.vendorSlug);
+    return {
+      slug: p.slug,
+      name: p.name,
+      vendorName: vendor?.name ?? null,
+      tagline: p.tagline,
+      brandColor: p.brandColor,
+      logo: resolveLogo(p, vendor),
+      rating: p.rating,
+      reviewCount: p.reviewCount,
+      highlights: p.highlights.slice(0, 3),
+      pricing: { freePlan: p.pricing.freePlan, freeTrial: p.pricing.freeTrial },
+    };
+  });
 
   return (
     <>

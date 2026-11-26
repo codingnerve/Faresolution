@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { ProductSearchField } from "@/components/compare/ProductSearchField";
 import { useProductLookup } from "@/components/compare/useProductLookup";
 import { Button } from "@/components/ui/Button";
-import { LogoMark } from "@/components/ui/LogoMark";
+import { ProductLogo } from "@/components/ui/ProductLogo";
 
 const NO_EXCLUSIONS: readonly string[] = [];
 
@@ -61,7 +61,7 @@ export function ProductPicker({
             aria-labelledby={`${inputId}-label`}
             className="flex items-center gap-3 rounded-md border border-line-strong bg-surface p-3 shadow-card"
           >
-            <LogoMark name={selected.name} color={selected.brandColor} size={36} />
+            <ProductLogo name={selected.name} color={selected.brandColor} logo={selected.logo} size={36} />
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-semibold text-navy">{selected.name}</p>
               <p className="type-meta truncate">

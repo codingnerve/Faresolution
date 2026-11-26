@@ -4,7 +4,7 @@ import { CompareButton } from "@/components/compare/CompareButton";
 import { categoryHref, reviewWriteHref } from "@/components/layout/navigation";
 import { Badge } from "@/components/ui/Badge";
 import { Button, buttonClasses } from "@/components/ui/Button";
-import { LogoMark } from "@/components/ui/LogoMark";
+import { ProductLogo } from "@/components/ui/ProductLogo";
 import { Rating } from "@/components/ui/Rating";
 import type { Category, Product, Vendor } from "@/lib/data";
 import { isWebUrl } from "@/lib/utils";
@@ -26,7 +26,13 @@ export function ProductHeader({ product, vendor, primaryCategory }: ProductHeade
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-12">
       <div className="flex min-w-0 gap-4 sm:gap-5">
-        <LogoMark name={product.name} color={product.brandColor} size={64} className="size-13 sm:size-16" />
+        <ProductLogo
+          name={product.name}
+          color={product.brandColor}
+          logo={product.logo ?? vendor?.logo}
+          size={64}
+          className="size-13 sm:size-16"
+        />
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
             {primaryCategory && (

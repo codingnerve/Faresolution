@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useId } from "react";
 import { productHref } from "@/components/layout/navigation";
 import { Button } from "@/components/ui/Button";
-import { LogoMark } from "@/components/ui/LogoMark";
+import { ProductLogo } from "@/components/ui/ProductLogo";
 import { compareHref, MAX_COMPARE, MIN_COMPARE } from "@/lib/compare/slug";
 import { COMPARE_FULL_MESSAGE, useCompare, useCompareNotice } from "@/lib/compare/useCompare";
 import { cn } from "@/lib/utils";
@@ -52,7 +52,7 @@ export function ComparePicker() {
           const name = product?.name ?? slug;
           return (
             <li key={slug} className="flex min-h-20 items-center gap-3 rounded-md border border-line bg-surface-alt px-3.5 py-3">
-              <LogoMark name={name} color={product?.brandColor ?? "#17243A"} size={36} />
+              <ProductLogo name={name} color={product?.brandColor ?? "#17243A"} logo={product?.logo} size={36} />
               <div className="min-w-0 flex-1">
                 <Link href={productHref(slug)} className="block truncate rounded-xs text-[0.9375rem] font-semibold text-navy hover:text-blue-ink">
                   {name}

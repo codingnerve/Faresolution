@@ -4,13 +4,15 @@ import { Search } from "lucide-react";
 import Link from "next/link";
 import { useId, useMemo, useState } from "react";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { LogoMark } from "@/components/ui/LogoMark";
+import { ProductLogo } from "@/components/ui/ProductLogo";
+import type { VendorLogo } from "@/lib/data/types";
 
 export interface FinderProduct {
   slug: string;
   name: string;
   vendorName: string | null;
   brandColor: string;
+  logo?: VendorLogo | null;
 }
 
 export interface FinderGroup {
@@ -111,7 +113,7 @@ export function AlternativesFinder({
                 {group.products.map((p) => (
                   <li key={p.slug}>
                     <Link href={`${hrefBase}${p.slug}`} className="group flex items-center gap-3 rounded-xs py-2.5">
-                      <LogoMark name={p.name} color={p.brandColor} size={28} className="shrink-0" />
+                      <ProductLogo name={p.name} color={p.brandColor} logo={p.logo} size={28} className="shrink-0" />
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-[0.9375rem] leading-5 font-medium text-ink group-hover:text-blue-ink">
                           {p.name}

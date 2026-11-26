@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
-import { LogoMark } from "@/components/ui/LogoMark";
+import { ProductLogo } from "@/components/ui/ProductLogo";
 import { compareHref, MAX_COMPARE, MIN_COMPARE } from "@/lib/compare/slug";
 import { useCompare, useCompareNotice } from "@/lib/compare/useCompare";
 import { useProductLookup } from "./useProductLookup";
@@ -105,7 +105,7 @@ function Tray() {
                       key={slug}
                       className="relative flex items-center gap-2 sm:rounded-md sm:border sm:border-line sm:bg-surface-alt sm:py-1 sm:pr-1 sm:pl-1.5"
                     >
-                      <LogoMark name={name} color={product?.brandColor ?? "#17243A"} size={32} className="sm:size-6" />
+                      <ProductLogo name={name} color={product?.brandColor ?? "#17243A"} logo={product?.logo} size={32} className="sm:size-6" />
                       <span className="sr-only text-[0.8125rem] font-medium text-ink sm:not-sr-only sm:max-w-36 sm:truncate">
                         {name}
                       </span>

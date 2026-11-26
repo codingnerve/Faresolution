@@ -29,6 +29,7 @@ import type {
   PopularComparison,
   Product,
   Vendor,
+  VendorLogo,
 } from "./types";
 
 export type * from "./types";
@@ -136,4 +137,12 @@ export async function getAuthor(slug: string): Promise<Author | null> {
 
 export async function getPopularComparisons(): Promise<PopularComparison[]> {
   return [...popularComparisons];
+}
+
+/** Resolve a product's logo, preferring the product-specific logo over its vendor's. */
+export function resolveLogo(
+  product?: Pick<Product, "logo"> | null,
+  vendor?: Pick<Vendor, "logo"> | null,
+): VendorLogo | null {
+  return product?.logo ?? vendor?.logo ?? null;
 }

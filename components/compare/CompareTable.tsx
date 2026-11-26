@@ -3,8 +3,9 @@
 import { Check, Minus, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useId, useRef, useState, type CSSProperties } from "react";
-import { LogoMark } from "@/components/ui/LogoMark";
+import { ProductLogo } from "@/components/ui/ProductLogo";
 import { NO_REVIEWS, NOT_RATED, NOT_VERIFIED, type CompareRow } from "@/lib/compare/diff";
+import type { VendorLogo } from "@/lib/data/types";
 import { cn } from "@/lib/utils";
 
 export interface CompareColumn {
@@ -12,6 +13,7 @@ export interface CompareColumn {
   name: string;
   vendorName: string | null;
   brandColor: string;
+  logo?: VendorLogo | null;
   href: string;
   /** Where "Remove" goes: the comparison without this product, or /compare. */
   removeHref: string;
@@ -136,7 +138,7 @@ export function CompareTable({ columns, groups }: CompareTableProps) {
             <div className="sticky left-0 bg-surface" />
             {columns.map((c) => (
               <div key={c.slug} className="flex min-w-0 items-center gap-2 px-3 py-2.5 sm:px-4">
-                <LogoMark name={c.name} color={c.brandColor} size={24} />
+                <ProductLogo name={c.name} color={c.brandColor} logo={c.logo} size={24} />
                 <span className="truncate text-sm font-semibold text-navy">{c.name}</span>
               </div>
             ))}
@@ -173,7 +175,7 @@ export function CompareTable({ columns, groups }: CompareTableProps) {
               {columns.map((c) => (
                 <th key={c.slug} scope="col" className="border-b border-l border-line px-3 py-4 align-top font-normal sm:px-4">
                   <div className="flex min-w-0 flex-col gap-2.5 sm:flex-row sm:items-start sm:gap-3">
-                    <LogoMark name={c.name} color={c.brandColor} size={40} className="size-9 sm:size-10" />
+                    <ProductLogo name={c.name} color={c.brandColor} logo={c.logo} size={40} className="size-9 sm:size-10" />
                     <div className="min-w-0">
                       <Link href={c.href} className="block rounded-xs text-[0.9375rem] leading-5 font-semibold [overflow-wrap:anywhere] text-navy hover:text-blue-ink">
                         {c.name}

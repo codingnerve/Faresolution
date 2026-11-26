@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { productHref } from "@/components/layout/navigation";
 import { PricingFacts, ViewDetailsLink } from "@/components/product/card-parts";
-import { LogoMark } from "@/components/ui/LogoMark";
+import { ProductLogo } from "@/components/ui/ProductLogo";
 import type { Product } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
@@ -43,7 +43,7 @@ export function TopProducts({
               </span>
             )}
             <div className="flex min-w-0 items-start gap-3.5">
-              <LogoMark name={p.name} color={p.brandColor} size={40} className="shrink-0" />
+              <ProductLogo name={p.name} color={p.brandColor} logo={p.logo} size={40} className="shrink-0" />
               <div className="min-w-0">
                 <h3 className="text-[1.0625rem] leading-6 font-semibold tracking-[-0.01em] text-navy">
                   <Link href={href} className="rounded-xs hover:text-blue-ink">

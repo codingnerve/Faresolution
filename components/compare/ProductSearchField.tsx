@@ -3,7 +3,7 @@
 import { Search } from "lucide-react";
 import { useId, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { useSearchIndex } from "@/components/layout/SearchIndexProvider";
-import { LogoMark } from "@/components/ui/LogoMark";
+import { ProductLogo } from "@/components/ui/ProductLogo";
 import { search } from "@/lib/search";
 import { cn } from "@/lib/utils";
 
@@ -170,7 +170,7 @@ export function ProductSearchField({
               i === activeIndex && "bg-surface-alt",
             )}
           >
-            <LogoMark name={product.name} color={product.brandColor} size={28} />
+            <ProductLogo name={product.name} color={product.brandColor} logo={product.logo} size={28} />
             <span className="min-w-0 flex-1">
               <span className="block truncate text-sm font-medium text-navy">{product.name}</span>
               <span className="type-meta block truncate">

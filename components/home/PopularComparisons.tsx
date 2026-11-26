@@ -2,7 +2,7 @@ import { ArrowRight, Columns3 } from "lucide-react";
 import Link from "next/link";
 import { compareHref } from "@/components/layout/navigation";
 import { Container } from "@/components/ui/Container";
-import { LogoMark } from "@/components/ui/LogoMark";
+import { ProductLogo } from "@/components/ui/ProductLogo";
 import { getCategories, getPopularComparisons, getProducts, type Product } from "@/lib/data";
 
 const ROWS = 8;
@@ -62,7 +62,7 @@ export async function PopularComparisons() {
                   {/* Fixed width (room for three marks) keeps the names aligned. */}
                   <span aria-hidden="true" className="flex w-[5.75rem] shrink-0 items-center gap-1">
                     {row.items.map((p) => (
-                      <LogoMark key={p.slug} name={p.name} color={p.brandColor} size={28} />
+                      <ProductLogo key={p.slug} name={p.name} color={p.brandColor} logo={p.logo} size={28} />
                     ))}
                   </span>
                   <span className="min-w-0 flex-1">

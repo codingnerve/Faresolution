@@ -45,6 +45,7 @@ export default async function ComparisonPage({ params }: PageProps<"/compare/[sl
     name: product.name,
     vendorName,
     brandColor: product.brandColor,
+    logo: product.logo,
     href: productHref(product.slug),
     removeHref,
   }));

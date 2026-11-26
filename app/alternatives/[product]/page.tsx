@@ -10,7 +10,7 @@ import { buttonClasses } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { DemoDataNotice } from "@/components/ui/DemoDataNotice";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { LogoMark } from "@/components/ui/LogoMark";
+import { ProductLogo } from "@/components/ui/ProductLogo";
 import { getAlternativesPage, getAlternativesParams } from "@/lib/alternatives/page-data";
 import { itemListJsonLd, safeJsonLd } from "@/lib/jsonld";
 import { buildMetadata } from "@/lib/seo";
@@ -59,7 +59,7 @@ export default async function AlternativesPage({ params }: PageProps<"/alternati
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-4 rounded-lg border border-line bg-surface p-4 shadow-card sm:p-5">
-            <LogoMark name={product.name} color={product.brandColor} size={48} className="shrink-0" />
+            <ProductLogo name={product.name} color={product.brandColor} logo={product.logo ?? vendor?.logo} size={48} className="shrink-0" />
             <div className="min-w-0 flex-1 basis-56">
               <p className="type-label">Looking for alternatives to</p>
               <p className="mt-0.5 text-lg leading-6 font-semibold text-navy">{product.name}</p>

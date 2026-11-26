@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { CompareButton } from "@/components/compare/CompareButton";
 import { productHref } from "@/components/layout/navigation";
-import { LogoMark } from "@/components/ui/LogoMark";
+import { ProductLogo } from "@/components/ui/ProductLogo";
 import { Rating } from "@/components/ui/Rating";
 import { cn } from "@/lib/utils";
 import { PricingFacts, ViewDetailsLink, type ProductCardData } from "./card-parts";
@@ -41,7 +41,7 @@ export function ProductCompact({
       )}
     >
       <div className="flex items-start gap-3">
-        <LogoMark name={product.name} color={product.brandColor} size={36} className="shrink-0" />
+        <ProductLogo name={product.name} color={product.brandColor} logo={product.logo} size={36} className="shrink-0" />
         <div className="min-w-0 flex-1">
           <Heading className="text-[0.9375rem] leading-5 font-semibold tracking-[-0.01em] text-navy">
             <Link href={href} className="rounded-xs hover:text-blue-ink">

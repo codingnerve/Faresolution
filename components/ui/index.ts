@@ -6,6 +6,7 @@ export { DemoDataNotice } from "./DemoDataNotice";
 export { EmptyState } from "./EmptyState";
 export { Logo, LogoMarkSymbol } from "./Logo";
 export { LogoMark } from "./LogoMark";
+export { ProductLogo } from "./ProductLogo";
 export { Rating } from "./Rating";
 export { SectionHeader } from "./SectionHeader";
 export { Tabs, type TabItem } from "./Tabs";

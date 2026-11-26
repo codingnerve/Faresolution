@@ -9,7 +9,7 @@ import { ProductRow } from "@/components/product/ProductRow";
 import { SAVED_PRODUCTS_KEY } from "@/components/product/SaveButton";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { LogoMark } from "@/components/ui/LogoMark";
+import { ProductLogo } from "@/components/ui/ProductLogo";
 import { compareHref, MAX_COMPARE, MIN_COMPARE } from "@/lib/compare/slug";
 import { useCompare } from "@/lib/compare/useCompare";
 import { useMounted } from "@/lib/hooks/useMounted";
@@ -182,7 +182,7 @@ function CompareSelection({ mounted, bySlug }: SectionProps) {
                   key={product.slug}
                   className="flex items-center gap-3 rounded-md border border-line bg-surface-alt px-3.5 py-3"
                 >
-                  <LogoMark name={product.name} color={product.brandColor} size={32} />
+                  <ProductLogo name={product.name} color={product.brandColor} logo={product.logo} size={32} />
                   <div className="min-w-0 flex-1">
                     <Link
                       href={productHref(product.slug)}

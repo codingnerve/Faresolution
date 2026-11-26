@@ -168,6 +168,9 @@ export default async function AboutPage() {
               </Link>
               .
             </p>
+            <p className="type-meta">
+              Product names and logos are trademarks of their respective owners and are used for identification only.
+            </p>
           </div>
         </Container>
       </section>

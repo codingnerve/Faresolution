@@ -38,7 +38,8 @@ export function ReviewsEmptyState({ product, className }: { product: Product; cl
     <EmptyState
       icon={MessageSquareText}
       className={className}
-      title="No reviews yet"
+      // Not "No reviews yet": the header and the ratings summary already say that.
+      title="Be the first to draft a review"
       description={`Review collection has not opened yet. You can draft a review of ${product.name} now; once collection opens, reviews will be checked before they are published here.`}
       action={
         <Button href={reviewWriteHref(product.slug)} variant="secondary">

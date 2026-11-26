@@ -34,7 +34,7 @@ export function ShareLinks({ url, title, className }: { url: string; title: stri
             <span className="sr-only">(opens in a new tab)</span>
           </a>
         ))}
-        <ShareButton url={url} label="Copy link" />
+        <ShareButton url={url} label="Copy link" inRow />
       </div>
     </section>
   );

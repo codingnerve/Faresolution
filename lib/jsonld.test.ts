@@ -124,6 +124,19 @@ describe("productJsonLd", () => {
     expect(ld.offers).toMatchObject({ "@type": "Offer", description: "From 15 USD per seat" });
   });
 
+  it("drops sameAs, offer url and publisher url unless they are http(s) URLs", async () => {
+    const product = await sample();
+    const ld = productJsonLd(
+      { ...product, website: "javascript:alert(1)", pricing: { ...product.pricing, startingPrice: "From 15 USD" } },
+      { vendor: { name: "HubSpot", website: "/relative" } },
+    );
+    expect(ld).not.toHaveProperty("sameAs");
+    expect(ld.offers).toEqual({ "@type": "Offer", description: "From 15 USD" });
+    expect(ld.publisher).toEqual({ "@type": "Organization", name: "HubSpot" });
+    expect(safeJsonLd(ld)).not.toMatch(/javascript:|\/relative|null|undefined/);
+    expect(productJsonLd({ ...product, website: "" })).not.toHaveProperty("sameAs");
+  });
+
   it("omits publisher and category when they are not given", async () => {
     const ld = productJsonLd(await sample());
     expect(ld).not.toHaveProperty("publisher");

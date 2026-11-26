@@ -5,7 +5,7 @@
 import type { Article, Author, FaqItem, Platform, Product, Vendor } from "@/lib/data/types";
 import { articleHref } from "@/lib/editorial";
 import { SITE_TAGLINE } from "@/lib/site";
-import { SITE_NAME, SITE_URL, absoluteUrl } from "@/lib/utils";
+import { SITE_NAME, SITE_URL, absoluteUrl, isWebUrl } from "@/lib/utils";
 
 /**
  * JSON for an inline script. `<` becomes `<` so no string in the data can
@@ -100,6 +100,8 @@ const OPERATING_SYSTEM: Partial<Record<Platform, string>> = {
   linux: "Linux",
 };
 
+const webUrl = (url: string | null | undefined): string | null => (url && isWebUrl(url) ? url : null);
+
 export interface ProductJsonLdContext {
   vendor?: Pick<Vendor, "name" | "website"> | null;
   /** Display name of the product's primary category. */
@@ -119,6 +121,9 @@ export function productJsonLd(product: Product, context: ProductJsonLdContext = 
   const startingPrice = product.pricing.startingPrice?.trim();
   const rated =
     product.rating !== null && Number.isFinite(product.rating) && product.rating > 0 && product.reviewCount > 0;
+  // Outbound URLs only when they are absolute http(s) addresses.
+  const website = webUrl(product.website);
+  const vendorWebsite = webUrl(vendor?.website);
 
   return {
     "@context": "https://schema.org",
@@ -126,11 +131,15 @@ export function productJsonLd(product: Product, context: ProductJsonLdContext = 
     name: product.name,
     description: product.description,
     url: absoluteUrl(`/products/${product.slug}`),
-    sameAs: product.website,
+    ...(website ? { sameAs: website } : {}),
     ...(categoryName ? { applicationCategory: categoryName } : {}),
     ...(operatingSystems.length > 0 ? { operatingSystem: operatingSystems.join(", ") } : {}),
-    ...(vendor ? { publisher: { "@type": "Organization", name: vendor.name, url: vendor.website } } : {}),
-    ...(startingPrice ? { offers: { "@type": "Offer", description: startingPrice, url: product.website } } : {}),
+    ...(vendor
+      ? { publisher: { "@type": "Organization", name: vendor.name, ...(vendorWebsite ? { url: vendorWebsite } : {}) } }
+      : {}),
+    ...(startingPrice
+      ? { offers: { "@type": "Offer", description: startingPrice, ...(website ? { url: website } : {}) } }
+      : {}),
     ...(rated
       ? {
           aggregateRating: {

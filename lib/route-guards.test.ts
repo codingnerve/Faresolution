@@ -137,11 +137,33 @@ describe("isKnownPath and canonicalPath: comparisons", () => {
 
   it("gives no canonical path when the path is already canonical, unknown or unguarded", () => {
     expect(canonicalPath("/compare/hubspot-crm-vs-zoho-crm")).toBeNull();
-    expect(canonicalPath("/compare/hubspot-crm%2Dvs-zoho-crm")).toBeNull();
+    expect(canonicalPath("/compare/hubspot-crm-vs-zoho-crm/")).toBeNull();
     expect(canonicalPath("/compare/zoho-crm-vs-nope")).toBeNull();
     expect(canonicalPath("/compare/hubspot-crm")).toBeNull();
     expect(canonicalPath("/products/hubspot-crm")).toBeNull();
     expect(canonicalPath("/software")).toBeNull();
+  });
+});
+
+describe("canonicalPath: needless percent-encoding", () => {
+  it("redirects an escaped spelling of a known path to the plain one", () => {
+    expect(canonicalPath("/compare/hubspot-crm%2Dvs-zoho-crm")).toBe("/compare/hubspot-crm-vs-zoho-crm");
+    // Escaped and out of order: one hop straight to the canonical comparison.
+    expect(canonicalPath("/compare/zoho-crm%2Dvs-hubspot-crm")).toBe("/compare/hubspot-crm-vs-zoho-crm");
+    expect(canonicalPath("/categories/crm%2Dsoftware")).toBe("/categories/crm-software");
+    expect(canonicalPath("/products/hubspot%2Dcrm")).toBe("/products/hubspot-crm");
+    expect(canonicalPath("/products/hubspot-crm/pric%69ng")).toBe("/products/hubspot-crm/pricing");
+    expect(canonicalPath("/products/hubspot%2Dcrm/pricing/")).toBe("/products/hubspot-crm/pricing");
+    expect(canonicalPath("/industries/real%2Destate")).toBe("/industries/real-estate");
+  });
+
+  it("leaves plain, unknown and malformed paths alone", () => {
+    expect(canonicalPath("/categories/crm-software")).toBeNull();
+    expect(canonicalPath("/categories/crm-software/")).toBeNull();
+    expect(canonicalPath("/products/hubspot-crm/pricing")).toBeNull();
+    expect(canonicalPath("/categories/nope%2Dx")).toBeNull();
+    expect(canonicalPath("/categories/%E0%A4%A")).toBeNull();
+    expect(canonicalPath("/categories/crm-software%2Fx")).toBeNull();
   });
 });
 

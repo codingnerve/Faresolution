@@ -13,8 +13,9 @@
  *
  * A guard may also name a canonical form of a known slug (comparisons list
  * their products in sorted order); `canonicalPath` gives the path the proxy
- * permanently redirects to. Like a 404, a redirect issued while the page
- * streams would arrive as a client-side meta refresh, not a real 308.
+ * permanently redirects to, which also undoes needless percent-encoding on
+ * any guarded route. Like a 404, a redirect issued while the page streams
+ * would arrive as a client-side meta refresh, not a real 308.
  *
  * Guards use the slug-only lists in `lib/data/content/slugs.ts`, not the
  * content arrays or the async data layer, to keep the proxy bundle small.
@@ -109,16 +110,19 @@ export function isKnownPath(pathname: string): boolean | null {
 }
 
 /**
- * The canonical path for a known path whose guard defines a canonical form
- * that differs from the requested slug (sub-path kept, trailing slash
- * dropped); null otherwise.
+ * The canonical path for a known path when it differs from the one requested
+ * (sub-path kept, trailing slash dropped); null otherwise. It differs when the
+ * guard names a canonical form of the slug (comparison order) or when the
+ * request percent-encodes characters that need no encoding
+ * (`/compare/a%2Dvs-b`), so each page answers 200 at one URL only.
  */
 export function canonicalPath(pathname: string): string | null {
   const match = matchGuard(pathname);
   if (match.kind !== "match") return null;
-  const canonical = match.guard.canonical?.(match.slug) ?? null;
-  if (canonical === null) return null;
-  return match.guard.prefix + canonical + (match.subpath === null ? "" : `/${match.subpath}`);
+  const slug = match.guard.canonical?.(match.slug) ?? match.slug;
+  const target = match.guard.prefix + slug + (match.subpath === null ? "" : `/${match.subpath}`);
+  // A lone trailing slash is left to Next.js, as in matchGuard.
+  return target === pathname.replace(/\/$/, "") ? null : target;
 }
 
 /**

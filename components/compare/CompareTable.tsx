@@ -30,8 +30,14 @@ type CompareTableProps = {
 
 const MISSING = new Set([NOT_VERIFIED, NOT_RATED, NO_REVIEWS, "Not listed"]);
 
-/** Header height the sticky product bar sits under (the site header is h-16). */
-const STICKY_TOP = 64;
+/** Fallback for the site header height (h-16 + 1px border); see `--header-h` in globals.css. */
+const HEADER_FALLBACK_PX = 65;
+
+/** The sticky site header's height in px, from the shared `--header-h` CSS variable. */
+function headerHeight(): number {
+  const value = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--header-h"));
+  return Number.isFinite(value) && value > 0 ? value : HEADER_FALLBACK_PX;
+}
 
 /**
  * Side-by-side table: products as columns, facts as rows (row headers in the
@@ -72,16 +78,17 @@ export function CompareTable({ columns, groups }: CompareTableProps) {
     if (!head || !end || typeof IntersectionObserver === "undefined") return;
     let headGone = false;
     let endBelow = true;
+    const top = headerHeight();
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          const above = !entry.isIntersecting && entry.boundingClientRect.top < STICKY_TOP;
+          const above = !entry.isIntersecting && entry.boundingClientRect.top < top;
           if (entry.target === head) headGone = above;
           else endBelow = !above;
         }
         setStuck(headGone && endBelow);
       },
-      { rootMargin: `-${STICKY_TOP}px 0px 0px 0px` },
+      { rootMargin: `-${top}px 0px 0px 0px` },
     );
     observer.observe(head);
     observer.observe(end);
@@ -116,7 +123,7 @@ export function CompareTable({ columns, groups }: CompareTableProps) {
       </div>
 
       {/* Zero-height sticky anchor: the bar overlays the table instead of taking space. */}
-      <div className="sticky z-20 mt-4 h-0" style={{ top: STICKY_TOP }}>
+      <div className="sticky top-(--header-h) z-20 mt-4 h-0">
         <div
           aria-hidden="true"
           className={cn(
@@ -175,7 +182,8 @@ export function CompareTable({ columns, groups }: CompareTableProps) {
                       <Link
                         href={c.removeHref}
                         aria-label={`Remove ${c.name} from this comparison`}
-                        className="mt-1.5 inline-flex items-center gap-1 rounded-xs text-[0.8125rem] font-medium text-subtle hover:text-danger"
+                        // min-h-6: at least a 24px target (WCAG 2.2, 2.5.8).
+                        className="mt-1 inline-flex min-h-6 items-center gap-1 rounded-xs text-[0.8125rem] font-medium text-subtle hover:text-danger"
                       >
                         <X aria-hidden="true" className="size-3.5" strokeWidth={2.25} />
                         Remove

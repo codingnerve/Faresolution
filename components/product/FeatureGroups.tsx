@@ -1,4 +1,4 @@
-import { Check } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import Link from "next/link";
 import type { FeatureGroup } from "@/lib/products/profile";
 import { cn } from "@/lib/utils";
@@ -24,10 +24,11 @@ export function FeatureGroups({ groups, className }: { groups: readonly FeatureG
                   <p className="mt-0.5 text-sm leading-6 text-subtle">{feature.description}</p>
                   <Link
                     href={featureFilterHref(feature.slug)}
-                    className="mt-1 inline-block rounded-xs text-[0.8125rem] font-medium text-blue-ink hover:text-navy"
+                    className="mt-1 inline-flex items-center gap-1 rounded-xs text-[0.8125rem] font-medium text-blue-ink hover:text-navy"
                   >
-                    Browse products with this feature
-                    <span className="sr-only">: {feature.name}</span>
+                    Other products
+                    <span className="sr-only"> with {feature.name}</span>
+                    <ArrowRight aria-hidden="true" className="size-3.5" strokeWidth={2} />
                   </Link>
                 </div>
               </li>

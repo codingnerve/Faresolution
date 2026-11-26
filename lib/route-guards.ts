@@ -22,7 +22,8 @@
  * or `constructor` never resolve.
  */
 import { resolveCompareSlug } from "@/lib/compare/slug";
-import { categorySlugSet, industrySlugSet, productSlugSet } from "@/lib/data/content/slugs";
+import { articleSlugSets, categorySlugSet, industrySlugSet, productSlugSet } from "@/lib/data/content/slugs";
+import { ARTICLE_KINDS, articleIndexHref } from "@/lib/editorial";
 import { PRODUCT_TAB_SEGMENTS } from "@/lib/products/tabs";
 
 export interface RouteGuard {
@@ -58,6 +59,11 @@ export const routeGuards: readonly RouteGuard[] = [
       return resolved.ok && !resolved.isCanonical ? resolved.canonical : null;
     },
   },
+  // One guard per article kind (/blog/, /guides/, /best-software/, /research/,
+  // /software-buying-guides/): a slug only exists under its own kind's route.
+  ...ARTICLE_KINDS.map(
+    (kind): RouteGuard => ({ prefix: `${articleIndexHref[kind]}/`, exists: (slug) => articleSlugSets[kind].has(slug) }),
+  ),
 ];
 
 type GuardMatch =

@@ -274,6 +274,63 @@ describe("isKnownPath: industries", () => {
   });
 });
 
+describe("isKnownPath: editorial articles", () => {
+  const known: [string, string][] = [
+    ["/blog/", "five-questions-before-adding-another-saas-tool"],
+    ["/blog/", "what-a-free-plan-is-really-for"],
+    ["/guides/", "how-to-run-a-software-trial"],
+    ["/guides/", "automate-a-business-process-without-breaking-it"],
+    ["/best-software/", "crm-tools-to-shortlist-for-small-sales-teams"],
+    ["/research/", "a-framework-for-scoring-software-vendors"],
+    ["/research/", "how-faresolution-handles-product-facts-and-reviews"],
+    ["/software-buying-guides/", "how-to-choose-accounting-software"],
+    ["/software-buying-guides/", "how-to-choose-customer-support-software"],
+  ];
+  const prefixes = ["/blog/", "/guides/", "/best-software/", "/research/", "/software-buying-guides/"];
+
+  it("is true for a known article of each kind under its own route", () => {
+    for (const [prefix, slug] of known) expect(isKnownPath(prefix + slug), prefix + slug).toBe(true);
+    expect(isKnownPath("/guides/how-to-run-a-software-trial/")).toBe(true);
+    expect(isKnownPath("/guides/how%2Dto-run-a-software-trial")).toBe(true);
+  });
+
+  it("is false for an unknown slug under every prefix", () => {
+    for (const prefix of prefixes) expect(isKnownPath(`${prefix}nope`), prefix).toBe(false);
+  });
+
+  it("is false for an article of another kind under the wrong prefix", () => {
+    expect(isKnownPath("/guides/what-a-free-plan-is-really-for")).toBe(false);
+    expect(isKnownPath("/blog/how-to-run-a-software-trial")).toBe(false);
+    expect(isKnownPath("/research/how-to-choose-accounting-software")).toBe(false);
+    expect(isKnownPath("/software-buying-guides/crm-tools-to-shortlist-for-small-sales-teams")).toBe(false);
+    expect(isKnownPath("/best-software/a-framework-for-scoring-software-vendors")).toBe(false);
+  });
+
+  it("is false for extra segments, malformed escapes, encoded slashes and other case", () => {
+    expect(isKnownPath("/research/x/y")).toBe(false);
+    expect(isKnownPath("/blog/what-a-free-plan-is-really-for/extra")).toBe(false);
+    expect(isKnownPath("/blog/what-a-free-plan-is-really-for//")).toBe(false);
+    expect(isKnownPath("/blog/%E0%A4%A")).toBe(false);
+    expect(isKnownPath("/blog/what-a-free-plan-is-really-for%2Fx")).toBe(false);
+    expect(isKnownPath("/blog/What-a-free-plan-is-really-for")).toBe(false);
+  });
+
+  it("never resolves prototype keys", () => {
+    for (const prefix of prefixes) {
+      for (const key of ["__proto__", "constructor", "toString", "hasOwnProperty"]) {
+        expect(isKnownPath(prefix + key), prefix + key).toBe(false);
+      }
+    }
+  });
+
+  it("leaves the index pages and the resources hub unguarded, with no canonical redirect", () => {
+    for (const path of ["/blog", "/blog/", "/guides", "/best-software", "/research", "/software-buying-guides", "/resources"]) {
+      expect(isKnownPath(path), path).toBeNull();
+    }
+    expect(canonicalPath("/blog/what-a-free-plan-is-really-for")).toBeNull();
+  });
+});
+
 describe("isKnownPath: unguarded paths", () => {
   it("is null when no guard applies", () => {
     for (const path of ["/", "/software", "/categories", "/categories/", "/products", "/products/", "/software/free", "/unknown/thing", "/compare", "/compare/"]) {

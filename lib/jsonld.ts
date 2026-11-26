@@ -2,7 +2,8 @@
  * Structured data (schema.org JSON-LD) helpers. Render the output in a native
  * `<script type="application/ld+json">` via `dangerouslySetInnerHTML`.
  */
-import type { FaqItem, Platform, Product, Vendor } from "@/lib/data/types";
+import type { Article, Author, FaqItem, Platform, Product, Vendor } from "@/lib/data/types";
+import { articleHref } from "@/lib/editorial";
 import { SITE_TAGLINE } from "@/lib/site";
 import { SITE_NAME, SITE_URL, absoluteUrl } from "@/lib/utils";
 
@@ -140,5 +141,28 @@ export function productJsonLd(product: Product, context: ProductJsonLdContext = 
           },
         }
       : {}),
+  };
+}
+
+/**
+ * Article for an editorial page: headline, the real published and updated
+ * dates, the author (omitted when unknown), Faresolution as publisher and the
+ * canonical page as the main entity.
+ */
+export function articleJsonLd(article: Article, author: Author | null): Record<string, unknown> {
+  const url = absoluteUrl(articleHref(article.kind, article.slug));
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title,
+    description: article.excerpt,
+    datePublished: article.publishedAt,
+    dateModified: article.updatedAt,
+    url,
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    articleSection: article.categoryLabel,
+    inLanguage: "en",
+    ...(author ? { author: { "@type": "Person", name: author.name, jobTitle: author.role } } : {}),
+    publisher: { "@type": "Organization", "@id": ORGANIZATION_ID, name: SITE_NAME, url: SITE_URL },
   };
 }

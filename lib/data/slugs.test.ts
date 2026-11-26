@@ -1,11 +1,15 @@
 import { describe, expect, it } from "vitest";
+import { articles } from "./content/articles";
 import { categories } from "./content/categories";
 import { industries } from "./content/industries";
 import { products } from "./content/products";
+import type { ArticleKind } from "./types";
 import {
+  ARTICLE_SLUGS,
   CATEGORY_SLUGS,
   INDUSTRY_SLUGS,
   PRODUCT_SLUGS,
+  articleSlugSets,
   categorySlugSet,
   industrySlugSet,
   productSlugSet,
@@ -27,5 +31,15 @@ describe("slug lists", () => {
   it("lists every industry slug, in catalogue order", () => {
     expect(INDUSTRY_SLUGS).toEqual(industries.map((i) => i.slug));
     expect(industrySlugSet.size).toBe(industries.length);
+  });
+
+  it("lists every article slug per kind, in content order, and nothing else", () => {
+    const kinds: ArticleKind[] = ["blog", "guide", "best-software", "research", "buying-guide"];
+    expect(Object.keys(ARTICLE_SLUGS).sort()).toEqual([...kinds].sort());
+    for (const kind of kinds) {
+      const expected = articles.filter((a) => a.kind === kind).map((a) => a.slug);
+      expect(ARTICLE_SLUGS[kind], kind).toEqual(expected);
+      expect(articleSlugSets[kind].size, kind).toBe(expected.length);
+    }
   });
 });

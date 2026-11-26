@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { getProduct } from "@/lib/data";
-import { faqJsonLd, itemListJsonLd, organizationJsonLd, productJsonLd, safeJsonLd } from "@/lib/jsonld";
+import { getArticle, getAuthor } from "@/lib/data";
+import type { Article } from "@/lib/data/types";
+import { articleJsonLd, faqJsonLd, itemListJsonLd, organizationJsonLd, productJsonLd, safeJsonLd } from "@/lib/jsonld";
 
 describe("safeJsonLd", () => {
   it("escapes < so text can never close the script tag", () => {
@@ -152,5 +154,51 @@ describe("itemListJsonLd", () => {
       { "@type": "ListItem", position: 1, name: "Zoho CRM", url: "https://faresolution.com/products/zoho-crm" },
       { "@type": "ListItem", position: 2, name: "Pipedrive", url: "https://faresolution.com/products/pipedrive" },
     ]);
+  });
+});
+
+describe("articleJsonLd", () => {
+  async function sample(): Promise<Article> {
+    const article = await getArticle("best-software", "crm-tools-to-shortlist-for-small-sales-teams");
+    if (!article) throw new Error("sample article missing");
+    return article;
+  }
+
+  it("describes the article with its real dates, author, publisher and canonical page", async () => {
+    const article = await sample();
+    const author = await getAuthor(article.authorSlug);
+    const ld = articleJsonLd(article, author);
+    const url = "https://faresolution.com/best-software/crm-tools-to-shortlist-for-small-sales-teams";
+    expect(ld).toMatchObject({
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: article.title,
+      description: article.excerpt,
+      datePublished: "2026-03-24",
+      dateModified: "2026-10-15",
+      url,
+      mainEntityOfPage: { "@type": "WebPage", "@id": url },
+      author: { "@type": "Person", name: "Priya Raman", jobTitle: "Software research editor" },
+      publisher: { "@type": "Organization", "@id": "https://faresolution.com/#organization", name: "Faresolution" },
+    });
+  });
+
+  it("uses the kind's route for the page URL", async () => {
+    const article = await getArticle("buying-guide", "how-to-choose-accounting-software");
+    const ld = articleJsonLd(article as Article, null);
+    expect(ld.url).toBe("https://faresolution.com/software-buying-guides/how-to-choose-accounting-software");
+  });
+
+  it("omits the author when unknown, and carries no ratings or reviews", async () => {
+    const ld = articleJsonLd(await sample(), null);
+    expect(ld).not.toHaveProperty("author");
+    expect(safeJsonLd(ld)).not.toMatch(/aggregateRating|"review/i);
+  });
+
+  it("escapes < in text once serialised", async () => {
+    const article = { ...(await sample()), title: "</script><b>x", excerpt: "a < b" };
+    const out = safeJsonLd(articleJsonLd(article, { slug: "s", name: "<i>n", role: "r", bio: "b" }));
+    expect(out).not.toContain("<");
+    expect(JSON.parse(out).headline).toBe("</script><b>x");
   });
 });

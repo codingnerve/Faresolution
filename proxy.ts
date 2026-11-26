@@ -32,5 +32,10 @@ export const config = {
     "/compare/:slug",
     "/alternatives/:product",
     "/reviews/write/:product",
+    "/blog/:slug",
+    "/guides/:slug",
+    "/best-software/:slug",
+    "/research/:slug",
+    "/software-buying-guides/:slug",
   ],
 };

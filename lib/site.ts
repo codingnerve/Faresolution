@@ -4,6 +4,13 @@
 
 export const SITE_TAGLINE = "Find. Compare. Choose Better.";
 
+export const OWNER_CONTACT = {
+  phone: "+91 85868 18383",
+  phoneHref: "tel:+918586818383",
+  email: "nkumar92729@gmail.com",
+  emailHref: "mailto:nkumar92729@gmail.com",
+} as const;
+
 /**
  * Year shown in the footer copyright. A constant rather than `new Date()`:
  * with Cache Components, reading the clock during prerender is not allowed

@@ -6,7 +6,7 @@ import { Container } from "@/components/ui/Container";
 import { DemoDataNotice } from "@/components/ui/DemoDataNotice";
 import { getArticle, getCategories, getProducts } from "@/lib/data";
 import { articleHref } from "@/lib/editorial";
-import { SITE_TAGLINE } from "@/lib/site";
+import { SITE_TAGLINE, OWNER_CONTACT } from "@/lib/site";
 import { buildMetadata } from "@/lib/seo";
 
 const title = "About";
@@ -217,6 +217,22 @@ export default async function AboutPage() {
                 <Link href="/contact" className="rounded-xs text-sm font-medium text-ink hover:text-navy">
                   Contact
                 </Link>
+              </li>
+              <li>
+                <a
+                  href={OWNER_CONTACT.emailHref}
+                  className="rounded-xs text-sm font-medium text-blue-ink hover:text-navy"
+                >
+                  {OWNER_CONTACT.email}
+                </a>
+              </li>
+              <li>
+                <a
+                  href={OWNER_CONTACT.phoneHref}
+                  className="rounded-xs text-sm font-medium text-blue-ink hover:text-navy"
+                >
+                  {OWNER_CONTACT.phone}
+                </a>
               </li>
             </ul>
           </div>

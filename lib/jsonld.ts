@@ -4,7 +4,7 @@
  */
 import type { Article, Author, FaqItem, Platform, Product, Vendor } from "@/lib/data/types";
 import { articleHref } from "@/lib/editorial";
-import { SITE_TAGLINE } from "@/lib/site";
+import { OWNER_CONTACT, SITE_TAGLINE } from "@/lib/site";
 import { SITE_NAME, SITE_URL, absoluteUrl, isWebUrl } from "@/lib/utils";
 
 /**
@@ -32,6 +32,14 @@ export function organizationJsonLd(): Record<string, unknown> {
         name: SITE_NAME,
         url: SITE_URL,
         slogan: SITE_TAGLINE,
+        email: OWNER_CONTACT.email,
+        telephone: OWNER_CONTACT.phone,
+        contactPoint: {
+          "@type": "ContactPoint",
+          contactType: "customer support",
+          email: OWNER_CONTACT.email,
+          telephone: OWNER_CONTACT.phone,
+        },
         description:
           "An independent directory for finding, comparing and shortlisting business software.",
       },

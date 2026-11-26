@@ -1,9 +1,11 @@
+import { Mail, Phone } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CompanyHeader } from "@/components/company/CompanyHeader";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { Container } from "@/components/ui/Container";
 import { buildMetadata } from "@/lib/seo";
+import { OWNER_CONTACT } from "@/lib/site";
 
 const title = "Contact";
 const description =
@@ -64,24 +66,55 @@ export default function ContactPage() {
             </div>
           </section>
 
-          <aside aria-labelledby="contact-guides-title">
-            <h2 id="contact-guides-title" className="type-h3 text-navy">
-              Before you write
-            </h2>
-            <ul className="mt-4 divide-y divide-line border-y border-line">
-              {GUIDES.map((guide) => (
-                <li key={guide.title} className="py-4">
-                  <p className="text-sm font-semibold text-navy">{guide.title}</p>
-                  <p className="mt-1 text-sm leading-6 text-subtle">{guide.body}</p>
-                  <Link
-                    href={guide.href}
-                    className="mt-2 inline-block rounded-xs text-sm font-medium text-blue-ink underline-offset-2 hover:text-navy hover:underline"
+          <aside aria-labelledby="contact-direct-title" className="space-y-8">
+            <div className="rounded-lg border border-line bg-surface-alt p-5">
+              <h2 id="contact-direct-title" className="type-h3 text-navy">
+                Owner &amp; direct contact
+              </h2>
+              <p className="mt-1.5 text-sm leading-6 text-subtle">
+                Reach the site owner directly for listing inquiries, corrections, or feedback.
+              </p>
+              <ul className="mt-4 space-y-2.5 text-sm">
+                <li>
+                  <a
+                    href={OWNER_CONTACT.emailHref}
+                    className="inline-flex items-center gap-2 rounded-xs font-medium text-blue-ink underline-offset-2 hover:text-navy hover:underline"
                   >
-                    {guide.link}
-                  </Link>
+                    <Mail aria-hidden="true" className="size-4 shrink-0" strokeWidth={1.75} />
+                    <span>{OWNER_CONTACT.email}</span>
+                  </a>
                 </li>
-              ))}
-            </ul>
+                <li>
+                  <a
+                    href={OWNER_CONTACT.phoneHref}
+                    className="inline-flex items-center gap-2 rounded-xs font-medium text-blue-ink underline-offset-2 hover:text-navy hover:underline"
+                  >
+                    <Phone aria-hidden="true" className="size-4 shrink-0" strokeWidth={1.75} />
+                    <span>{OWNER_CONTACT.phone}</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h2 id="contact-guides-title" className="type-h3 text-navy">
+                Before you write
+              </h2>
+              <ul className="mt-4 divide-y divide-line border-y border-line">
+                {GUIDES.map((guide) => (
+                  <li key={guide.title} className="py-4">
+                    <p className="text-sm font-semibold text-navy">{guide.title}</p>
+                    <p className="mt-1 text-sm leading-6 text-subtle">{guide.body}</p>
+                    <Link
+                      href={guide.href}
+                      className="mt-2 inline-block rounded-xs text-sm font-medium text-blue-ink underline-offset-2 hover:text-navy hover:underline"
+                    >
+                      {guide.link}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </aside>
         </div>
       </Container>

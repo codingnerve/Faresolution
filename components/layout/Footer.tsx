@@ -1,3 +1,4 @@
+import { Mail, Phone } from "lucide-react";
 import Link from "next/link";
 import { NewsletterForm } from "@/components/forms/NewsletterForm";
 import { Container } from "@/components/ui/Container";
@@ -9,7 +10,7 @@ import {
   getPopularComparisons,
   getProducts,
 } from "@/lib/data";
-import { COPYRIGHT_YEAR, SITE_TAGLINE, socialLinks } from "@/lib/site";
+import { COPYRIGHT_YEAR, OWNER_CONTACT, SITE_TAGLINE, socialLinks } from "@/lib/site";
 import { SITE_NAME } from "@/lib/utils";
 import {
   allCategoriesLink,
@@ -133,6 +134,20 @@ export async function Footer() {
               An independent directory for finding, comparing and shortlisting
               business software.
             </p>
+            <ul className="mt-4 space-y-1.5 text-sm" aria-label="Owner contact">
+              <li>
+                <a href={OWNER_CONTACT.emailHref} className={`${footerLink} inline-flex items-center gap-2`}>
+                  <Mail aria-hidden="true" className="size-3.5 shrink-0 opacity-80" strokeWidth={1.75} />
+                  <span>{OWNER_CONTACT.email}</span>
+                </a>
+              </li>
+              <li>
+                <a href={OWNER_CONTACT.phoneHref} className={`${footerLink} inline-flex items-center gap-2`}>
+                  <Phone aria-hidden="true" className="size-3.5 shrink-0 opacity-80" strokeWidth={1.75} />
+                  <span>{OWNER_CONTACT.phone}</span>
+                </a>
+              </li>
+            </ul>
 
             <div className="mt-8">
               <h2 className="text-sm font-semibold text-white">The buyer&rsquo;s brief</h2>

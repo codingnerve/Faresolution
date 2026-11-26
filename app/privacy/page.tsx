@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { CompanyHeader, LegalDraftNotice, Placeholder } from "@/components/company/CompanyHeader";
 import { PolicyPage, type PolicySection } from "@/components/reviews/PolicyPage";
 import { buildMetadata } from "@/lib/seo";
+import { OWNER_CONTACT } from "@/lib/site";
 
 const title = "Privacy notice";
 const description =
@@ -98,7 +99,15 @@ const SECTIONS: PolicySection[] = [
     paragraphs: [
       "You can use the contact form and choose “Privacy or my data”. Because the demo isn't connected to email yet, the message is kept in your browser and not received by anyone.",
       <>
-        Privacy contact: <Placeholder>a monitored privacy contact address</Placeholder>.
+        Privacy &amp; owner contact:{" "}
+        <a href={OWNER_CONTACT.emailHref} className="text-blue-ink underline underline-offset-2 hover:text-navy">
+          {OWNER_CONTACT.email}
+        </a>{" "}
+        &middot;{" "}
+        <a href={OWNER_CONTACT.phoneHref} className="text-blue-ink underline underline-offset-2 hover:text-navy">
+          {OWNER_CONTACT.phone}
+        </a>
+        .
       </>,
     ],
   },

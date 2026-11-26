@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { CompanyHeader, LegalDraftNotice, Placeholder } from "@/components/company/CompanyHeader";
 import { PolicyPage, type PolicySection } from "@/components/reviews/PolicyPage";
 import { buildMetadata } from "@/lib/seo";
+import { OWNER_CONTACT } from "@/lib/site";
 
 const title = "Terms of use";
 const description =
@@ -95,7 +96,18 @@ const SECTIONS: PolicySection[] = [
     id: "changes",
     heading: "Changes and questions",
     paragraphs: [
-      "This is a working draft and will change before launch; the date at the top will change with it. Questions can be written through the contact form, which in this demo keeps the message in your browser rather than sending it.",
+      "This is a working draft and will change before launch; the date at the top will change with it. Questions can be sent through the contact form or directly to the owner below.",
+      <>
+        Owner &amp; contact:{" "}
+        <a href={OWNER_CONTACT.emailHref} className="text-blue-ink underline underline-offset-2 hover:text-navy">
+          {OWNER_CONTACT.email}
+        </a>{" "}
+        &middot;{" "}
+        <a href={OWNER_CONTACT.phoneHref} className="text-blue-ink underline underline-offset-2 hover:text-navy">
+          {OWNER_CONTACT.phone}
+        </a>
+        .
+      </>,
     ],
   },
 ];

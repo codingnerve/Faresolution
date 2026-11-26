@@ -16,6 +16,10 @@ export const buyingGuideArticles: Article[] = [
     relatedProductSlugs: ["quickbooks-online", "xero", "freshbooks", "netsuite", "odoo"],
     relatedCategorySlugs: ["accounting-software", "erp-software"],
     featured: false,
+    cover: {
+      src: "/images/articles/how-to-choose-accounting-software.webp",
+      alt: "Symmetrical twin ledger columns balanced above a geometric fulcrum.",
+    },
     body: [
       p(
         "Accounting software is the system of record for your finances, so a poor choice is expensive to unwind. The market ranges from lightweight invoicing tools for freelancers to full financial platforms for larger organisations. The right pick depends less on a feature list than on who does the bookkeeping, what you sell and where you operate.",
@@ -105,6 +109,10 @@ export const buyingGuideArticles: Article[] = [
     relatedProductSlugs: ["bamboohr", "gusto", "adp-workforce-now", "greenhouse"],
     relatedCategorySlugs: ["hr-software", "payroll-software", "recruiting-software"],
     featured: false,
+    cover: {
+      src: "/images/articles/hr-and-payroll-software-buying-guide.webp",
+      alt: "Modular roster and payroll cycle grid with highlighted pay-run anchor tiles.",
+    },
     body: [
       p(
         "HR and payroll software touches every employee, holds some of the most sensitive records a company keeps and affects whether people are paid correctly and on time. That raises the stakes for the buying process. This guide covers what to define before you shortlist, what to test and what to ask.",
@@ -201,6 +209,10 @@ export const buyingGuideArticles: Article[] = [
     relatedProductSlugs: ["zendesk", "freshdesk", "intercom", "tidio"],
     relatedCategorySlugs: ["customer-support", "help-desk", "ai-chatbots"],
     featured: false,
+    cover: {
+      src: "/images/articles/how-to-choose-customer-support-software.webp",
+      alt: "Central support intake hub branching into three structured priority lanes.",
+    },
     body: [
       p(
         "Customer support software ranges from a shared inbox that keeps messages from getting lost to a platform that handles tickets, live chat, social channels, a help centre and automation. Buying more than you need adds cost and complexity, and buying less leaves customers waiting. This guide helps you size the need and test the options.",

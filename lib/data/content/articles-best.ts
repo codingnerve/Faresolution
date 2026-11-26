@@ -16,6 +16,10 @@ export const bestSoftwareArticles: Article[] = [
     relatedProductSlugs: ["hubspot-crm", "zoho-crm", "pipedrive", "salesforce-sales-cloud"],
     relatedCategorySlugs: ["crm-software", "sales-software"],
     featured: true,
+    cover: {
+      src: "/images/articles/crm-tools-to-shortlist-for-small-sales-teams.webp",
+      alt: "Geometric diagram showing a broad CRM pipeline narrowing down to three curated shortlist bars.",
+    },
     body: [
       p(
         "This is an editor's shortlist: a set of products worth including in a first round of trials if you run a small sales team and are choosing your first or second CRM. The products are listed in no particular order. They are not ranked, scored or rated.",
@@ -106,6 +110,10 @@ export const bestSoftwareArticles: Article[] = [
     relatedProductSlugs: ["asana", "trello", "monday-com", "clickup", "jira"],
     relatedCategorySlugs: ["project-management", "collaboration-software"],
     featured: false,
+    cover: {
+      src: "/images/articles/project-management-tools-to-shortlist-for-small-teams.webp",
+      alt: "Architectural three-column board layout of structured project task blocks in navy, blue, and violet.",
+    },
     body: [
       p(
         "Project management is a crowded category, and most products can display tasks on a board. What differs is how each handles planning, workload, reporting and structure as a team grows. This shortlist offers five products that are worth including in a first round of trials, selected against the criteria below. They are presented in no particular order.",

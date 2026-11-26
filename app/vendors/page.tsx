@@ -13,6 +13,7 @@ import {
   X,
 } from "lucide-react";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
@@ -136,7 +137,36 @@ export default async function VendorsPage() {
               </p>
             </div>
 
-            <figure className="min-w-0 rounded-lg border border-line bg-surface shadow-raised">
+            <figure className="min-w-0 overflow-hidden rounded-lg border border-line bg-surface shadow-raised">
+              <Image
+                src="/images/sections/vendors-hero.webp"
+                alt="Architectural illustration of three structured software profile frames side by side."
+                width={1600}
+                height={1000}
+                priority
+                sizes="(min-width: 1024px) 42vw, 94vw"
+                className="aspect-[16/10] w-full object-cover"
+              />
+            </figure>
+          </div>
+          <VendorNav current="/vendors" className="mt-12" />
+        </Container>
+      </header>
+
+      <section aria-labelledby="vendors-listing-title" className="py-16 sm:py-20">
+        <Container>
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start lg:gap-12">
+            <div className="max-w-2xl">
+              <p className="type-label mb-3">Listing</p>
+              <h2 id="vendors-listing-title" className="type-h2 text-navy">
+                Where your product shows up
+              </h2>
+              <p className="type-body mt-3 text-subtle">
+                Listings today are sample entries, marked as not verified with their vendors. Claiming your listing, once
+                claims open, will be how you make sure buyers read the right facts.
+              </p>
+            </div>
+            <figure className="min-w-0 rounded-lg border border-line bg-surface shadow-card">
               <div className="flex items-center justify-between gap-3 border-b border-line px-5 py-3">
                 <p className="type-label">Anatomy of a listing</p>
                 <Badge>Illustration</Badge>
@@ -174,22 +204,6 @@ export default async function VendorsPage() {
                 Every product gets this structure whether or not its vendor takes a plan.
               </figcaption>
             </figure>
-          </div>
-          <VendorNav current="/vendors" className="mt-12" />
-        </Container>
-      </header>
-
-      <section aria-labelledby="vendors-listing-title" className="py-16 sm:py-20">
-        <Container>
-          <div className="max-w-2xl">
-            <p className="type-label mb-3">Listing</p>
-            <h2 id="vendors-listing-title" className="type-h2 text-navy">
-              Where your product shows up
-            </h2>
-            <p className="type-body mt-3 text-subtle">
-              Listings today are sample entries, marked as not verified with their vendors. Claiming your listing, once
-              claims open, will be how you make sure buyers read the right facts.
-            </p>
           </div>
           <ul className="mt-10 grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-2">
             {benefits.map(({ icon: Icon, title: heading, body, href, linkLabel }) => (

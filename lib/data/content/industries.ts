@@ -44,6 +44,10 @@ export const industries: Industry[] = [
     ],
     seoTitle: "Software for Healthcare Organisations",
     seoDescription: "How healthcare practices and care organisations can choose business software, with guidance on data protection, access controls and categories to shortlist.",
+    image: {
+      src: "/images/industries/healthcare.webp",
+      alt: "Calm modular cross-grid geometric diagram representing structured healthcare operations.",
+    },
   },
   {
     slug: "education",
@@ -86,6 +90,10 @@ export const industries: Industry[] = [
     ],
     seoTitle: "Software for Schools, Colleges and Training",
     seoDescription: "Guidance on choosing communication, document, HR and support software for education, with advice on student data, single sign-on and education pricing.",
+    image: {
+      src: "/images/industries/education.webp",
+      alt: "Ascending architectural tiers representing structured academic programmes and administration.",
+    },
   },
   {
     slug: "retail",
@@ -128,6 +136,10 @@ export const industries: Industry[] = [
     ],
     seoTitle: "Software for Retail and Online Selling",
     seoDescription: "How retailers can choose ecommerce, inventory, marketing and accounting software, with advice on fees, stock accuracy and seasonal peaks.",
+    image: {
+      src: "/images/industries/retail.webp",
+      alt: "Three synchronized storefront bays showing aligned modular inventory blocks.",
+    },
   },
   {
     slug: "finance",
@@ -170,6 +182,10 @@ export const industries: Industry[] = [
     ],
     seoTitle: "Software for Financial Services Firms",
     seoDescription: "What financial services teams should check when choosing business software: security documentation, audit logs, data location and vendor due diligence.",
+    image: {
+      src: "/images/industries/finance.webp",
+      alt: "Vaulted architectural ledger columns inside a deep navy security frame.",
+    },
   },
   {
     slug: "real-estate",
@@ -212,6 +228,10 @@ export const industries: Industry[] = [
     ],
     seoTitle: "Software for Real Estate and Property Firms",
     seoDescription: "Practical guidance for real estate teams choosing CRM, document, email marketing, website and accounting software.",
+    image: {
+      src: "/images/industries/real-estate.webp",
+      alt: "Architectural floor-plan geometry showing interlocking rectangular property parcels.",
+    },
   },
   {
     slug: "manufacturing",
@@ -254,6 +274,10 @@ export const industries: Industry[] = [
     ],
     seoTitle: "Software for Manufacturers: ERP and Inventory",
     seoDescription: "How manufacturers can choose ERP, inventory, accounting and automation software, with advice on traceability, implementation and shop-floor integration.",
+    image: {
+      src: "/images/industries/manufacturing.webp",
+      alt: "Precision sequence of repeating production modules moving along a central line.",
+    },
   },
   {
     slug: "construction",
@@ -296,6 +320,10 @@ export const industries: Industry[] = [
     ],
     seoTitle: "Software for Construction Companies",
     seoDescription: "Guidance on project management, accounting, document control and payroll tools for construction firms, with a focus on job costing and field mobile use.",
+    image: {
+      src: "/images/industries/construction.webp",
+      alt: "Stacked structural beams and vertical pillars forming a balanced architectural frame.",
+    },
   },
   {
     slug: "hospitality",
@@ -338,6 +366,10 @@ export const industries: Industry[] = [
     ],
     seoTitle: "Software for Restaurants, Hotels and Venues",
     seoDescription: "Choosing HR, payroll, guest-marketing, website and inventory software for hospitality businesses, with advice on reliability and seasonal staffing.",
+    image: {
+      src: "/images/industries/hospitality.webp",
+      alt: "Symmetrical arched architectural alcoves arranged across a calm hospitality grid.",
+    },
   },
   {
     slug: "transportation",
@@ -380,6 +412,10 @@ export const industries: Industry[] = [
     ],
     seoTitle: "Software for Transportation and Logistics",
     seoDescription: "How logistics and transportation businesses can choose customer-support, accounting, HR and automation software that connects with dispatch systems.",
+    image: {
+      src: "/images/industries/transportation.webp",
+      alt: "Parallel transit corridors and synchronized hub nodes on a geometric logistics grid.",
+    },
   },
   {
     slug: "legal",
@@ -422,6 +458,10 @@ export const industries: Industry[] = [
     ],
     seoTitle: "Software for Law Firms and Legal Teams",
     seoDescription: "Guidance for legal teams choosing document management, accounting, collaboration and security tools, with focus on confidentiality and matter-based records.",
+    image: {
+      src: "/images/industries/legal.webp",
+      alt: "Balanced classical pediment above four proportional columns representing structured governance.",
+    },
   },
   {
     slug: "marketing",
@@ -464,6 +504,10 @@ export const industries: Industry[] = [
     ],
     seoTitle: "Software for Marketing Teams and Agencies",
     seoDescription: "Choose marketing automation, email, analytics, CRM and project tools for in-house teams and agencies, with advice on consent, metrics and tool sprawl.",
+    image: {
+      src: "/images/industries/marketing.webp",
+      alt: "Central signal core paired with three segmented horizontal campaign bars.",
+    },
   },
   {
     slug: "professional-services",
@@ -506,5 +550,9 @@ export const industries: Industry[] = [
     ],
     seoTitle: "Software for Professional Services Firms",
     seoDescription: "Choose CRM, project, accounting, collaboration and document tools for professional services firms, with advice on time tracking, billing and client work.",
+    image: {
+      src: "/images/industries/professional-services.webp",
+      alt: "Modular grid of proportional project and time-allocation blocks.",
+    },
   },
 ];

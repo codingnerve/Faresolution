@@ -78,6 +78,10 @@ function SavedList({ mounted, bySlug }: SectionProps) {
         ) : count === 0 ? (
           <EmptyState
             icon={Bookmark}
+            image={{
+              src: "/images/empty/saved-empty.webp",
+              alt: "Empty archive tray illustration representing an empty saved items list.",
+            }}
             title="Nothing saved in this browser yet"
             description="Use the Save button on any product page to keep it here while you shortlist. Saved products stay in this browser only."
             action={<Button href="/software">Browse software</Button>}

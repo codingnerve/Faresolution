@@ -93,6 +93,11 @@ export interface CategoryNode extends Category {
   children: Category[];
 }
 
+export interface ImageAsset {
+  src: string;
+  alt: string;
+}
+
 export interface Industry {
   slug: string;
   name: string;
@@ -109,6 +114,7 @@ export interface Industry {
   faq: FaqItem[];
   seoTitle: string;
   seoDescription: string;
+  image?: ImageAsset;
 }
 
 export interface Vendor {
@@ -159,6 +165,7 @@ export interface Article {
   relatedProductSlugs: string[];
   relatedCategorySlugs: string[];
   featured: boolean;
+  cover?: ImageAsset;
 }
 
 export interface Author {

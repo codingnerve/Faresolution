@@ -3,7 +3,7 @@
  * reading, index filtering and share links. Pure functions over the content
  * types, so they run on the server, in client components and in the proxy.
  */
-import type { Article, ArticleKind, Block } from "@/lib/data/types";
+import type { Article, ArticleKind, Block, ImageAsset } from "@/lib/data/types";
 
 export const ARTICLE_KINDS: readonly ArticleKind[] = ["blog", "guide", "best-software", "research", "buying-guide"];
 
@@ -258,6 +258,7 @@ export interface ArticleCardData {
   authorName: string | null;
   readingMinutes: number;
   featured: boolean;
+  cover?: ImageAsset;
 }
 
 export function toArticleCard(article: Article, authorName: string | null): ArticleCardData {
@@ -274,6 +275,7 @@ export function toArticleCard(article: Article, authorName: string | null): Arti
     authorName,
     readingMinutes: readingTime(article.body),
     featured: article.featured,
+    ...(article.cover ? { cover: article.cover } : {}),
   };
 }
 

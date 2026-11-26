@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { ArticleCard } from "@/components/editorial/cards";
 import { RelatedArticles } from "@/components/industries/RelatedArticles";
@@ -68,20 +69,33 @@ export default async function ResourcesPage() {
       <header className="border-b border-line bg-surface-alt">
         <Container className="py-8 sm:py-12">
           <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Resources" }]} />
-          <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-16">
+          <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:items-center lg:gap-12">
             <div className="min-w-0">
               <p className="type-label">Read before you choose</p>
-              <h1 className="type-h1 mt-2 text-navy">Resources</h1>
-              <p className="mt-4 max-w-[46rem] text-[1.125rem] leading-8 text-pretty text-ink">
+              <div className="mt-2 flex flex-wrap items-baseline justify-between gap-4">
+                <h1 className="type-h1 text-navy">Resources</h1>
+                <p className="flex items-baseline gap-2 border-l-2 border-navy pl-3">
+                  <span className="font-serif text-3xl leading-none text-navy tabular-nums">{all.length}</span>
+                  <span className="type-meta">{all.length === 1 ? "piece published" : "pieces published"}</span>
+                </p>
+              </div>
+              <p className="mt-4 max-w-[46rem] text-[1.0625rem] leading-7 text-pretty text-ink">
                 Practical writing from the Faresolution editors on choosing, buying and rolling out business software.
                 Each piece says what it is based on. Shortlists explain their criteria and are not rankings: no user
                 reviews have been collected yet, and no product has been tested hands-on.
               </p>
             </div>
-            <p className="flex items-baseline gap-2.5 border-l-2 border-navy pl-4">
-              <span className="font-serif text-4xl leading-none text-navy tabular-nums">{all.length}</span>
-              <span className="type-meta">{all.length === 1 ? "piece published" : "pieces published"}</span>
-            </p>
+            <figure className="overflow-hidden rounded-lg border border-line bg-surface shadow-card">
+              <Image
+                src="/images/sections/resources-hero.webp"
+                alt="Layered architectural folio sheets and editorial index blocks arranged on a structured grid."
+                width={1600}
+                height={1000}
+                priority
+                sizes="(min-width: 1024px) 38vw, 94vw"
+                className="aspect-[16/10] w-full object-cover"
+              />
+            </figure>
           </div>
         </Container>
       </header>

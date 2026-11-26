@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { Fragment, type ReactNode } from "react";
 import type { ArticleCardData } from "@/lib/editorial";
@@ -45,29 +46,43 @@ export function ArticleCard({
   return (
     <article
       className={cn(
-        "group relative flex h-full flex-col rounded-lg border border-line bg-surface p-6 shadow-card transition-[border-color,box-shadow] duration-200 hover:border-line-strong hover:shadow-raised",
+        "group relative flex h-full flex-col overflow-hidden rounded-lg border border-line bg-surface shadow-card transition-[border-color,box-shadow] duration-200 hover:border-line-strong hover:shadow-raised",
         className,
       )}
     >
-      <p className="type-label">{label === "kind" ? item.kindLabel : item.categoryLabel}</p>
-      <Heading className="mt-3 font-serif text-[1.375rem] leading-[1.22] font-[460] tracking-[-0.012em] text-balance text-navy">
-        <Link
-          href={item.href}
-          className="rounded-xs after:absolute after:inset-0 after:rounded-lg group-hover:text-blue-ink"
-        >
-          {item.title}
-        </Link>
-      </Heading>
-      <p className="type-body mt-3 line-clamp-3 text-[0.9375rem] leading-6 text-subtle">{item.excerpt}</p>
-      <ArticleMetaLine item={item} className="mt-auto pt-6" />
+      {item.cover && (
+        <div className="border-b border-line bg-surface-alt">
+          <Image
+            src={item.cover.src}
+            alt={item.cover.alt}
+            width={1600}
+            height={900}
+            sizes="(min-width: 1024px) 30vw, (min-width: 640px) 46vw, 94vw"
+            className="aspect-[16/9] w-full object-cover"
+          />
+        </div>
+      )}
+      <div className="flex flex-1 flex-col p-6">
+        <p className="type-label">{label === "kind" ? item.kindLabel : item.categoryLabel}</p>
+        <Heading className="mt-3 font-serif text-[1.375rem] leading-[1.22] font-[460] tracking-[-0.012em] text-balance text-navy">
+          <Link
+            href={item.href}
+            className="rounded-xs after:absolute after:inset-0 after:rounded-lg group-hover:text-blue-ink"
+          >
+            {item.title}
+          </Link>
+        </Heading>
+        <p className="type-body mt-3 line-clamp-3 text-[0.9375rem] leading-6 text-subtle">{item.excerpt}</p>
+        <ArticleMetaLine item={item} className="mt-auto pt-6" />
+      </div>
     </article>
   );
 }
 
-/** Lead story for an index page: large serif headline with the meta set apart. */
+/** Lead story for an index page: large serif headline with the meta and cover image set apart. */
 export function FeaturedArticle({ item, headingLevel: Heading = "h2" }: { item: ArticleCardData; headingLevel?: "h2" | "h3" }) {
   return (
-    <article className="group relative grid overflow-hidden rounded-lg border border-line bg-surface shadow-card transition-[border-color,box-shadow] duration-200 hover:border-line-strong hover:shadow-raised lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)]">
+    <article className="group relative grid overflow-hidden rounded-lg border border-line bg-surface shadow-card transition-[border-color,box-shadow] duration-200 hover:border-line-strong hover:shadow-raised lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)]">
       <div className="p-6 sm:p-8 lg:p-10">
         <p className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <span className="inline-flex items-center gap-2 text-xs font-semibold tracking-[0.08em] text-blue-ink uppercase">
@@ -88,31 +103,46 @@ export function FeaturedArticle({ item, headingLevel: Heading = "h2" }: { item: 
           {item.excerpt}
         </p>
       </div>
-      <div className="flex flex-col justify-between gap-6 border-t border-line bg-surface-alt p-6 sm:p-8 lg:border-t-0 lg:border-l lg:p-10">
-        <dl className="grid grid-cols-2 gap-x-6 gap-y-4 text-sm lg:grid-cols-1">
-          {item.authorName && (
-            <div>
-              <dt className="type-meta">Written by</dt>
-              <dd className="mt-0.5 font-medium text-ink">{item.authorName}</dd>
-            </div>
-          )}
-          {item.publishedLabel && (
-            <div>
-              <dt className="type-meta">Published</dt>
-              <dd className="mt-0.5 font-medium text-ink">
-                <time dateTime={item.publishedAt}>{item.publishedLabel}</time>
-              </dd>
-            </div>
-          )}
-          <div>
-            <dt className="type-meta">Reading time</dt>
-            <dd className="mt-0.5 font-medium text-ink">{item.readingMinutes} min</dd>
+      <div className="flex flex-col justify-between border-t border-line bg-surface-alt lg:border-t-0 lg:border-l">
+        {item.cover && (
+          <div className="border-b border-line">
+            <Image
+              src={item.cover.src}
+              alt={item.cover.alt}
+              width={1600}
+              height={900}
+              priority
+              sizes="(min-width: 1024px) 36vw, 94vw"
+              className="aspect-[16/9] w-full object-cover"
+            />
           </div>
-        </dl>
-        <span aria-hidden="true" className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-ink">
-          Read article
-          <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" strokeWidth={2} />
-        </span>
+        )}
+        <div className="flex flex-1 flex-col justify-between gap-6 p-6 sm:p-8">
+          <dl className="grid grid-cols-2 gap-x-6 gap-y-4 text-sm lg:grid-cols-1">
+            {item.authorName && (
+              <div>
+                <dt className="type-meta">Written by</dt>
+                <dd className="mt-0.5 font-medium text-ink">{item.authorName}</dd>
+              </div>
+            )}
+            {item.publishedLabel && (
+              <div>
+                <dt className="type-meta">Published</dt>
+                <dd className="mt-0.5 font-medium text-ink">
+                  <time dateTime={item.publishedAt}>{item.publishedLabel}</time>
+                </dd>
+              </div>
+            )}
+            <div>
+              <dt className="type-meta">Reading time</dt>
+              <dd className="mt-0.5 font-medium text-ink">{item.readingMinutes} min</dd>
+            </div>
+          </dl>
+          <span aria-hidden="true" className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-ink">
+            Read article
+            <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" strokeWidth={2} />
+          </span>
+        </div>
       </div>
     </article>
   );

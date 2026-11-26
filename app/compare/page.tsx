@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { ComparePicker } from "@/components/compare/ComparePicker";
 import { compareHref } from "@/components/layout/navigation";
@@ -29,14 +30,29 @@ export default async function ComparePage() {
       <header className="border-b border-line bg-surface-alt">
         <Container className="py-8 sm:py-12">
           <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Compare" }]} />
-          <p className="type-label mt-6">Compare</p>
-          <h1 className="type-h1 mt-2 max-w-3xl text-navy">Compare software side by side</h1>
-          <p className="type-body mt-3 max-w-2xl text-subtle">
-            Choose two to {MAX_COMPARE} products to see their pricing model, free plan and trial, features, deployment,
-            platforms and integrations in one table, with the differences marked. The facts come from public product
-            information we have not yet verified with vendors; anything we could not confirm says &ldquo;Not
-            verified&rdquo;, and ratings appear only once reviews are collected.
-          </p>
+          <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:items-center lg:gap-12">
+            <div className="min-w-0">
+              <p className="type-label">Compare</p>
+              <h1 className="type-h1 mt-2 max-w-3xl text-navy">Compare software side by side</h1>
+              <p className="type-body mt-3 max-w-2xl text-subtle">
+                Choose two to {MAX_COMPARE} products to see their pricing model, free plan and trial, features, deployment,
+                platforms and integrations in one table, with the differences marked. The facts come from public product
+                information we have not yet verified with vendors; anything we could not confirm says &ldquo;Not
+                verified&rdquo;, and ratings appear only once reviews are collected.
+              </p>
+            </div>
+            <figure className="overflow-hidden rounded-lg border border-line bg-surface shadow-card">
+              <Image
+                src="/images/sections/compare-hero.webp"
+                alt="Three aligned vertical columns with horizontal comparison bars in navy, blue, and violet."
+                width={1600}
+                height={1000}
+                priority
+                sizes="(min-width: 1024px) 38vw, 94vw"
+                className="aspect-[16/10] w-full object-cover"
+              />
+            </figure>
+          </div>
         </Container>
       </header>
 

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { RelatedCategories } from "@/components/categories/RelatedCategories";
@@ -168,6 +169,19 @@ export async function ArticlePage({ kind, slug }: { kind: ArticleKind; slug: str
                 <span>{minutes} min read</span>
               </p>
             </div>
+            {article.cover && (
+              <figure className="mt-8 overflow-hidden rounded-lg border border-line bg-surface shadow-card">
+                <Image
+                  src={article.cover.src}
+                  alt={article.cover.alt}
+                  width={1600}
+                  height={900}
+                  priority
+                  sizes="(min-width: 1024px) 48rem, 94vw"
+                  className="aspect-[16/9] w-full object-cover"
+                />
+              </figure>
+            )}
           </div>
         </Container>
       </header>

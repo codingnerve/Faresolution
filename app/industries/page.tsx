@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { industryHref } from "@/components/layout/navigation";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
@@ -77,7 +78,20 @@ export default async function IndustriesPage() {
                         {industry.name}
                       </Link>
                     </h3>
-                    <p className="type-body mt-2 max-w-xl text-subtle">{industry.tagline}</p>
+                    <div className="flex items-start gap-4">
+                      {industry.image && (
+                        <Image
+                          src={industry.image.src}
+                          alt=""
+                          aria-hidden="true"
+                          width={1200}
+                          height={800}
+                          sizes="96px"
+                          className="mt-1 hidden aspect-[3/2] w-24 shrink-0 rounded-sm border border-line object-cover sm:block"
+                        />
+                      )}
+                      <p className="type-body mt-2 max-w-xl text-subtle sm:mt-0">{industry.tagline}</p>
+                    </div>
                   </div>
                   <div className="flex flex-col gap-3 md:items-start">
                     <p className="flex items-baseline gap-2">

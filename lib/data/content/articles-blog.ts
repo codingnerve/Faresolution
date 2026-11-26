@@ -16,6 +16,10 @@ export const blogArticles: Article[] = [
     relatedProductSlugs: ["notion", "slack", "zapier", "asana"],
     relatedCategorySlugs: ["collaboration-software", "workflow-automation", "project-management"],
     featured: false,
+    cover: {
+      src: "/images/articles/five-questions-before-adding-another-saas-tool.webp",
+      alt: "Five sequential geometric gate frames aligned along a single horizontal evaluation axis.",
+    },
     body: [
       p(
         "Most businesses do not decide to own thirty subscriptions. They arrive there one reasonable purchase at a time: a form builder for a campaign, a second chat app because a client prefers it, a note-taking tool a new hire brought along. Each choice made sense on the day. The cost shows up later, as scattered data, overlapping features and a renewal calendar nobody owns.",
@@ -91,6 +95,10 @@ export const blogArticles: Article[] = [
     relatedProductSlugs: ["hubspot-crm", "trello", "mailchimp", "supabase"],
     relatedCategorySlugs: ["crm-software", "project-management", "email-marketing"],
     featured: false,
+    cover: {
+      src: "/images/articles/what-a-free-plan-is-really-for.webp",
+      alt: "Compact entry tier block separated by a dashed boundary line from larger stepped capacity tiers.",
+    },
     body: [
       p(
         "A free plan is a product decision, not a gift. Vendors offer one because it lowers the cost of trying the product, and because some users will grow into paid tiers. That is a fair arrangement, and many small teams run real work on free plans for years. The trouble starts when a team treats the free tier as the permanent answer without checking where its edges are.",

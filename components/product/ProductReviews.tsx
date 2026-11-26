@@ -37,6 +37,10 @@ export function ReviewsEmptyState({ product, className }: { product: Product; cl
   return (
     <EmptyState
       icon={MessageSquareText}
+      image={{
+        src: "/images/empty/no-reviews.webp",
+        alt: "Minimal card illustration showing blank review lines waiting for verified user reviews.",
+      }}
       className={className}
       // Not "No reviews yet": the header and the ratings summary already say that.
       title="Be the first to draft a review"

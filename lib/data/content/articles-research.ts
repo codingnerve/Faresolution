@@ -16,6 +16,10 @@ export const researchArticles: Article[] = [
     relatedProductSlugs: ["hubspot-crm", "zoho-crm", "asana", "zendesk"],
     relatedCategorySlugs: ["crm-software", "project-management", "customer-support"],
     featured: true,
+    cover: {
+      src: "/images/articles/a-framework-for-scoring-software-vendors.webp",
+      alt: "Weighted vendor evaluation matrix showing calibrated horizontal bars across criteria rows.",
+    },
     body: [
       p(
         "Scorecards are the standard tool for comparing software vendors, and they are easy to misuse. A team with a strong preference can build a scorecard that produces the answer it already wanted, and the resulting numbers look objective. This piece sets out a framework designed to keep a scorecard honest. It is a method, not a data report: there are no scores for any product here.",
@@ -99,6 +103,10 @@ export const researchArticles: Article[] = [
     relatedProductSlugs: [],
     relatedCategorySlugs: [],
     featured: false,
+    cover: {
+      src: "/images/articles/how-faresolution-handles-product-facts-and-reviews.webp",
+      alt: "Split architectural ledger contrasting solid verified blocks against open dashed unverified slots.",
+    },
     body: [
       p(
         "A comparison site is only as useful as the trust you can place in its facts. This piece describes how Faresolution currently treats product information and the principles it intends to follow as the site matures. It is a statement of method rather than a report of findings.",

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { AlternativesFinder, type FinderGroup } from "@/components/alternatives/AlternativesFinder";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Container } from "@/components/ui/Container";
@@ -48,12 +49,27 @@ export default async function AlternativesIndexPage() {
       <header className="border-b border-line bg-surface-alt">
         <Container className="py-8 sm:py-12">
           <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Alternatives" }]} />
-          <p className="type-label mt-6">Alternatives</p>
-          <h1 className="type-h1 mt-2 max-w-3xl text-navy">Software alternatives</h1>
-          <p className="type-body mt-3 max-w-2xl text-subtle">
-            Choose a product you already know and see similar products in the catalogue. Each alternative comes with a
-            plain-language reason for the match and a link to compare the two side by side.
-          </p>
+          <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:items-center lg:gap-12">
+            <div className="min-w-0">
+              <p className="type-label">Alternatives</p>
+              <h1 className="type-h1 mt-2 max-w-3xl text-navy">Software alternatives</h1>
+              <p className="type-body mt-3 max-w-2xl text-subtle">
+                Choose a product you already know and see similar products in the catalogue. Each alternative comes with a
+                plain-language reason for the match and a link to compare the two side by side.
+              </p>
+            </div>
+            <figure className="overflow-hidden rounded-lg border border-line bg-surface shadow-card">
+              <Image
+                src="/images/sections/alternatives-hero.webp"
+                alt="Central product tile branching via orthogonal paths to three comparable geometric alternatives."
+                width={1600}
+                height={1000}
+                priority
+                sizes="(min-width: 1024px) 38vw, 94vw"
+                className="aspect-[16/10] w-full object-cover"
+              />
+            </figure>
+          </div>
         </Container>
       </header>
 

@@ -16,6 +16,10 @@ export const guideArticles: Article[] = [
     relatedProductSlugs: ["hubspot-crm", "asana", "zendesk", "quickbooks-online"],
     relatedCategorySlugs: ["crm-software", "project-management", "customer-support"],
     featured: true,
+    cover: {
+      src: "/images/articles/how-to-run-a-software-trial.webp",
+      alt: "Four stepped trial milestone blocks rising along a structured evaluation timeline.",
+    },
     body: [
       p(
         "A free trial is the single best source of evidence a software buyer gets, and most teams waste it. They sign up, click around the demo data for an afternoon, decide it looks fine, and let the trial lapse. A month later they are either committed to a tool they never properly tested or starting the search again.",
@@ -103,6 +107,10 @@ export const guideArticles: Article[] = [
     relatedProductSlugs: ["quickbooks-online", "xero", "hubspot-crm", "zoho-crm"],
     relatedCategorySlugs: ["accounting-software", "crm-software", "erp-software"],
     featured: false,
+    cover: {
+      src: "/images/articles/software-data-migration-checklist.webp",
+      alt: "Two parallel system containers linked by orthogonal transfer channels and verification nodes.",
+    },
     body: [
       p(
         "Choosing new software is the visible part of a change. Moving your data across is the part that decides whether the change succeeds. Customer histories, invoices, tickets and documents were created under the rules of the old system, and the new system will interpret them under different rules. A little planning prevents the most common problems: missing history, broken links between records and a team that loses trust in the numbers.",
@@ -187,6 +195,10 @@ export const guideArticles: Article[] = [
     relatedProductSlugs: ["okta", "1password", "crowdstrike-falcon"],
     relatedCategorySlugs: ["cybersecurity"],
     featured: false,
+    cover: {
+      src: "/images/articles/security-questionnaire-basics-for-small-teams.webp",
+      alt: "Concentric architectural security perimeter frames guarding a central core with verification notches.",
+    },
     body: [
       p(
         "Every piece of business software you adopt becomes part of your security surface. It holds your data, authenticates your people and may connect to other systems you rely on. Large companies handle this with long vendor questionnaires and dedicated teams. Smaller teams can get most of the value from a much shorter list, asked consistently of every vendor.",
@@ -272,6 +284,10 @@ export const guideArticles: Article[] = [
     relatedProductSlugs: ["zapier", "make", "n8n", "slack"],
     relatedCategorySlugs: ["workflow-automation", "collaboration-software"],
     featured: false,
+    cover: {
+      src: "/images/articles/automate-a-business-process-without-breaking-it.webp",
+      alt: "Modular workflow blocks linked by right-angle conduits and a central diamond guardrail.",
+    },
     body: [
       p(
         "Workflow automation platforms connect the apps you already use so that work moves between them without someone copying and pasting. Done well, they remove dull, error-prone steps. Done carelessly, they spread bad data faster than a person ever could and fail in ways nobody notices until a customer complains.",

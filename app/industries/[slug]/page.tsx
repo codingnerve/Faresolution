@@ -1,5 +1,6 @@
 import { PackageSearch } from "lucide-react";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BuyingGuide } from "@/components/categories/BuyingGuide";
@@ -75,16 +76,27 @@ export default async function IndustryPage({ params }: PageProps<"/industries/[s
             </p>
           </div>
 
-          <div className="mt-8 grid gap-x-12 gap-y-5 lg:grid-cols-2">
-            {lede && <p className="text-[1.125rem] leading-8 text-ink">{lede}</p>}
-            {rest.length > 0 && (
-              <div className="space-y-4">
-                {rest.map((paragraph) => (
-                  <p key={paragraph} className="type-body text-subtle">
-                    {paragraph}
-                  </p>
-                ))}
-              </div>
+          <div className="mt-8 grid gap-x-12 gap-y-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:items-start">
+            <div className="space-y-4">
+              {lede && <p className="text-[1.125rem] leading-8 text-ink">{lede}</p>}
+              {rest.map((paragraph) => (
+                <p key={paragraph} className="type-body text-subtle">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+            {industry.image && (
+              <figure className="overflow-hidden rounded-lg border border-line bg-surface shadow-card">
+                <Image
+                  src={industry.image.src}
+                  alt={industry.image.alt}
+                  width={1200}
+                  height={800}
+                  priority
+                  sizes="(min-width: 1024px) 38vw, 94vw"
+                  className="aspect-[3/2] w-full object-cover"
+                />
+              </figure>
             )}
           </div>
         </Container>

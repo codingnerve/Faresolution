@@ -173,6 +173,7 @@ export interface Author {
   name: string;
   role: string;
   bio: string;
+  avatar?: ImageAsset;
 }
 
 export interface PopularComparison {

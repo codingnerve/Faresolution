@@ -150,7 +150,7 @@ export async function ArticlePage({ kind, slug }: { kind: ArticleKind; slug: str
             <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4 border-t border-line pt-6">
               {author && (
                 <div className="flex items-center gap-3">
-                  <AuthorMonogram name={author.name} size="sm" />
+                  <AuthorMonogram name={author.name} avatar={author.avatar} size="sm" />
                   <div className="text-sm leading-5">
                     <p className="font-medium text-ink">{author.name}</p>
                     <p className="text-subtle">{author.role}</p>

@@ -15,6 +15,7 @@ import {
 import { suggestedSearches } from "@/lib/search";
 import { SITE_TAGLINE } from "@/lib/site";
 import { HeroComparePanel, type PanelComparison } from "./HeroComparePanel";
+import { HeroStage } from "./HeroStage";
 
 /** Head-to-heads shown in the hero panel, in tab order (must be popular comparisons). */
 const PANEL_COMPARISONS = [
@@ -116,18 +117,22 @@ export async function Hero() {
   ];
 
   return (
-    <section aria-labelledby="home-hero-title" className="border-b border-line">
-      <Container className="grid items-center gap-12 py-12 sm:py-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-14 lg:py-20 xl:grid-cols-[minmax(0,1fr)_28rem] xl:gap-20">
+    <section aria-labelledby="home-hero-title" className="relative isolate overflow-x-clip border-b border-line">
+      {/* Only the grid is clipped, so the search suggestions can overflow the hero. */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="depth-grid" />
+      </div>
+      <Container className="relative grid items-center gap-12 py-12 sm:py-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-14 lg:py-20 xl:grid-cols-[minmax(0,1fr)_28rem] xl:gap-20">
         <div className="min-w-0">
-          <p className="flex items-center gap-3 text-[0.8125rem] font-semibold tracking-[0.01em] text-blue-ink">
+          <p className="rise-on-load flex items-center gap-3 text-[0.8125rem] font-semibold tracking-[0.01em] text-blue-ink">
             <span aria-hidden="true" className="h-px w-8 bg-blue" />
             {SITE_TAGLINE}
           </p>
-          <h1 id="home-hero-title" className="type-display mt-5 max-w-[15ch] text-navy">
+          <h1 id="home-hero-title" className="rise-on-load type-display mt-5 max-w-[15ch] text-navy [--rise-delay:80ms]">
             Find the software that moves your business{" "}
             <em className="text-violet-ink italic">forward.</em>
           </h1>
-          <p className="type-body mt-6 max-w-[36rem] text-[1.0625rem] leading-7 text-subtle">
+          <p className="rise-on-load type-body mt-6 max-w-[36rem] [--rise-delay:160ms] text-[1.0625rem] leading-7 text-subtle">
             Browse business software by category, compare products side by
             side on the facts that matter, and leave with a shortlist your team
             can agree on.
@@ -138,10 +143,10 @@ export async function Hero() {
             size="lg"
             label="Search software, categories or brands"
             placeholder="Search software or categories"
-            className="mt-8 max-w-[38rem]"
+            className="rise-on-load relative z-20 mt-8 max-w-[38rem] [--rise-delay:240ms]"
           />
 
-          <div className="mt-5 flex max-w-[38rem] flex-wrap items-center gap-2">
+          <div className="rise-on-load mt-5 flex max-w-[38rem] flex-wrap items-center gap-2 [--rise-delay:320ms]">
             <span className="mr-1 text-[0.8125rem] text-subtle">Try:</span>
             {suggestedSearches.slice(0, 5).map((term) => (
               <Link key={term} href={softwareSearchHref(term)} className={chipClass}>
@@ -150,7 +155,7 @@ export async function Hero() {
             ))}
           </div>
 
-          <dl className="mt-10 grid grid-cols-3 gap-4 border-t border-line pt-6 sm:flex sm:flex-wrap sm:gap-x-10 sm:gap-y-4">
+          <dl className="rise-on-load mt-10 grid [--rise-delay:400ms] grid-cols-3 gap-4 border-t border-line pt-6 sm:flex sm:flex-wrap sm:gap-x-10 sm:gap-y-4">
             {stats.map((stat) => (
               <div key={stat.label} className="flex flex-col gap-1.5 sm:flex-row sm:items-baseline sm:gap-2">
                 <dt className="sr-only">{stat.label}</dt>
@@ -165,7 +170,9 @@ export async function Hero() {
 
         {panel.length > 0 && (
           <div className="min-w-0">
-            <HeroComparePanel comparisons={panel} />
+            <HeroStage>
+              <HeroComparePanel comparisons={panel} />
+            </HeroStage>
           </div>
         )}
       </Container>

@@ -11,8 +11,9 @@ export async function IndustryList() {
   const count = (slug: string) => products.filter((p) => p.industrySlugs.includes(slug)).length;
 
   return (
-    <section aria-labelledby="home-industries-title" className="on-dark bg-navy py-16 text-white sm:py-20 lg:py-24">
-      <Container>
+    <section aria-labelledby="home-industries-title" className="on-dark relative isolate overflow-hidden bg-navy py-16 text-white sm:py-20 lg:py-24">
+      <div aria-hidden="true" className="depth-grid -z-10 [--grid-line:rgb(255_255_255/0.07)]" />
+      <Container className="relative">
         <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between md:gap-10">
           <div className="max-w-2xl">
             <p className="mb-3 text-xs font-semibold tracking-[0.08em] text-blue-light uppercase">Industries</p>
@@ -34,18 +35,18 @@ export async function IndustryList() {
           </Link>
         </div>
 
-        <ol className="mt-12 grid border-t border-white/12 sm:grid-cols-2 sm:gap-x-10 lg:grid-cols-3">
+        <ol className="reveal-stagger mt-12 grid border-t border-white/12 sm:grid-cols-2 sm:gap-x-10 lg:grid-cols-3">
           {industries.map((industry, index) => {
             const n = count(industry.slug);
             return (
               <li key={industry.slug} className="border-b border-white/12">
                 <Link href={industryHref(industry.slug)} className="group flex gap-4 rounded-xs py-5">
-                  <span aria-hidden="true" className="w-6 shrink-0 pt-1.5 font-mono text-xs text-blue-light tabular-nums">
+                  <span aria-hidden="true" className="w-6 shrink-0 pt-1.5 font-mono text-xs text-blue-light tabular-nums transition-transform duration-300 group-hover:translate-x-1">
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="flex items-baseline justify-between gap-3">
-                      <span className="font-serif text-[1.5rem] leading-tight text-white transition-colors group-hover:text-blue-light">
+                      <span className="font-serif text-[1.5rem] leading-tight text-white transition-[color,transform] duration-300 group-hover:translate-x-1 group-hover:text-blue-light">
                         {industry.name}
                       </span>
                       <span className="shrink-0 text-xs text-white/60 tabular-nums">

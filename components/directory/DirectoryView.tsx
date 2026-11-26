@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchIndex } from "@/components/layout/SearchIndexProvider";
 import { ProductRow } from "@/components/product/ProductRow";
+import { Tilt } from "@/components/motion/Tilt";
 import { ProductTile } from "@/components/product/ProductTile";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -229,7 +230,9 @@ export function DirectoryView({ data, preset, params, headingLevel = 2 }: Direct
             <ul className="grid gap-4 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3">
               {current.items.map((p) => (
                 <li key={p.slug}>
-                  <ProductTile product={p} vendorName={p.vendorName} headingLevel={cardHeading} />
+                  <Tilt max={4} lift={4}>
+                    <ProductTile product={p} vendorName={p.vendorName} headingLevel={cardHeading} />
+                  </Tilt>
                 </li>
               ))}
             </ul>

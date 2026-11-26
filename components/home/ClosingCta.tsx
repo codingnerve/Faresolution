@@ -2,6 +2,7 @@ import type { LucideIcon } from "lucide-react";
 import { ArrowRight, BookOpen, Columns3, PenLine } from "lucide-react";
 import Link from "next/link";
 import { articleIndexHref } from "@/components/layout/navigation";
+import { Tilt } from "@/components/motion/Tilt";
 import { Container } from "@/components/ui/Container";
 
 interface NextStep {
@@ -44,21 +45,28 @@ export function ClosingCta() {
           </h2>
         </div>
 
-        <ul className="grid gap-px overflow-hidden rounded-lg border border-line bg-line md:grid-cols-3">
+        <ul className="reveal-stagger grid gap-4 md:grid-cols-3">
           {STEPS.map(({ title, body, href, icon: Icon }) => (
-            <li key={href} className="bg-surface">
-              <Link href={href} className="group flex h-full flex-col p-5 sm:p-6">
-                <Icon aria-hidden="true" className="size-5 text-blue" strokeWidth={1.75} />
-                <span className="mt-4 flex items-center gap-1.5 text-[0.9375rem] font-semibold text-navy group-hover:text-blue-ink">
-                  {title}
-                  <ArrowRight
-                    aria-hidden="true"
-                    className="size-4 transition-transform duration-200 group-hover:translate-x-0.5"
-                    strokeWidth={2}
-                  />
-                </span>
-                <span className="mt-1.5 text-[0.8125rem] leading-5 text-subtle">{body}</span>
-              </Link>
+            <li key={href}>
+              <Tilt max={7}>
+                <Link
+                  href={href}
+                  className="group flex h-full flex-col rounded-lg border border-line bg-surface p-5 shadow-card transition-[border-color,box-shadow] duration-300 hover:border-line-strong hover:shadow-overlay sm:p-6"
+                >
+                  <span className="flex size-10 items-center justify-center rounded-md bg-blue-tint transition-colors duration-300 group-hover:bg-blue">
+                    <Icon aria-hidden="true" className="size-5 text-blue transition-colors duration-300 group-hover:text-white" strokeWidth={1.75} />
+                  </span>
+                  <span className="mt-4 flex items-center gap-1.5 text-[0.9375rem] font-semibold text-navy group-hover:text-blue-ink">
+                    {title}
+                    <ArrowRight
+                      aria-hidden="true"
+                      className="size-4 transition-transform duration-200 group-hover:translate-x-0.5"
+                      strokeWidth={2}
+                    />
+                  </span>
+                  <span className="mt-1.5 text-[0.8125rem] leading-5 text-subtle">{body}</span>
+                </Link>
+              </Tilt>
             </li>
           ))}
         </ul>

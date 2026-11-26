@@ -1,5 +1,6 @@
 import { ArrowRight, Columns3 } from "lucide-react";
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { compareHref } from "@/components/layout/navigation";
 import { Container } from "@/components/ui/Container";
 import { ProductLogo } from "@/components/ui/ProductLogo";
@@ -49,7 +50,7 @@ export async function PopularComparisons() {
           </Link>
         </div>
 
-        <ul className="grid border-t border-line md:grid-cols-2 md:gap-x-10">
+        <ul className="reveal grid border-t border-line md:grid-cols-2 md:gap-x-10">
           {rows.map((row) => {
             const names = row.items.map((p) => p.name);
             const category = categoryName.get(row.items[0].primaryCategory);
@@ -60,9 +61,15 @@ export async function PopularComparisons() {
                   className="group flex items-center gap-4 rounded-xs py-4 sm:py-5"
                 >
                   {/* Fixed width (room for three marks) keeps the names aligned. */}
-                  <span aria-hidden="true" className="flex w-[5.75rem] shrink-0 items-center gap-1">
-                    {row.items.map((p) => (
-                      <ProductLogo key={p.slug} name={p.name} color={p.brandColor} logo={p.logo} size={28} />
+                  <span aria-hidden="true" className="flex w-[5.75rem] shrink-0 items-center [perspective:400px]">
+                    {row.items.map((p, i) => (
+                      <span
+                        key={p.slug}
+                        style={{ zIndex: row.items.length - i, transitionDelay: `${i * 40}ms`, "--i": i } as CSSProperties}
+                        className="-ml-2 rounded-md ring-2 ring-surface transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] first:ml-0 group-hover:[transform:translateX(calc(var(--i)*6px))_rotateY(-14deg)]"
+                      >
+                        <ProductLogo name={p.name} color={p.brandColor} logo={p.logo} size={28} />
+                      </span>
                     ))}
                   </span>
                   <span className="min-w-0 flex-1">

@@ -43,11 +43,15 @@ export async function CategoryIndex() {
           }
         />
 
-        <ul className="mt-10 grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-2 lg:mt-12 lg:grid-cols-3">
+        <ul className="reveal mt-10 grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-2 lg:mt-12 lg:grid-cols-3">
           {tree.map((root) => {
             const total = count(root.slug);
             return (
-              <li key={root.slug} className="flex flex-col bg-surface p-5 sm:p-6">
+              <li key={root.slug} className="group/cell relative flex flex-col bg-surface p-5 transition-colors duration-300 hover:bg-[#fbfbfd] sm:p-6">
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-blue transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/cell:scale-x-100"
+                />
                 <div className="flex items-start justify-between gap-4">
                   <Link
                     href={categoryHref(root.slug)}
@@ -56,7 +60,7 @@ export async function CategoryIndex() {
                     {root.name}
                   </Link>
                   <span className="flex shrink-0 flex-col items-end">
-                    <span className="font-serif text-[1.75rem] leading-none text-navy tabular-nums">{total}</span>
+                    <span className="font-serif text-[1.75rem] leading-none text-navy tabular-nums transition-[color,transform] duration-300 group-hover/cell:-translate-y-0.5 group-hover/cell:text-blue-ink">{total}</span>
                     <span className="mt-1 text-[0.6875rem] font-medium tracking-[0.06em] text-subtle uppercase">
                       {total === 1 ? "product" : "products"}
                     </span>

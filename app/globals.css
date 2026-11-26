@@ -122,6 +122,88 @@
   color: var(--color-subtle);
 }
 
+/*
+ * Depth: a receding perspective grid ("floor") for hero and navy bands. The
+ * parent needs `relative overflow-hidden`; the grid sits behind content
+ * (give content `relative`). The lines drift slowly towards the viewer.
+ * Set --grid-line to recolour it (e.g. on navy).
+ */
+@utility depth-grid {
+  position: absolute;
+  inset-inline: -40%;
+  bottom: -18%;
+  height: 90%;
+  pointer-events: none;
+  overflow: hidden;
+  transform: perspective(900px) rotateX(52deg);
+  transform-origin: 50% 100%;
+  mask-image: linear-gradient(to top, #000 0%, #000 30%, transparent 80%);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -56px 0 0;
+    background-image:
+      linear-gradient(to right, var(--grid-line, rgb(65 105 225 / 0.16)) 1.5px, transparent 1.5px),
+      linear-gradient(to bottom, var(--grid-line, rgb(65 105 225 / 0.16)) 1.5px, transparent 1.5px);
+    background-size: 56px 56px;
+    background-position: center top;
+    animation: depth-grid-drift 6s linear infinite;
+  }
+}
+
+@keyframes depth-grid-drift {
+  to {
+    transform: translateY(56px);
+  }
+}
+
+/* Rise-and-settle entrance: lifts out of the page with a slight 3D tilt. */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: perspective(1200px) translateY(36px) rotateX(10deg) scale(0.985);
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@layer components {
+  /* Hero copy on first paint, staggered with --rise-delay. */
+  .rise-on-load {
+    animation: rise-in 0.8s both;
+    animation-delay: var(--rise-delay, 0ms);
+    transform-origin: 50% 100%;
+  }
+
+  /*
+   * Scroll reveals. Scroll-driven, so no JS: where `view()` timelines are not
+   * supported (or motion is reduced) the content is simply shown. `.reveal`
+   * animates one block; `.reveal-stagger` animates its children in a
+   * three-column reading order.
+   */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .reveal,
+      .reveal-stagger > * {
+        animation: rise-in linear both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 26%;
+        transform-origin: 50% 100%;
+      }
+      .reveal-stagger > :nth-child(3n + 2) {
+        animation-range: entry 8% cover 30%;
+      }
+      .reveal-stagger > :nth-child(3n) {
+        animation-range: entry 16% cover 34%;
+      }
+    }
+  }
+}
+
 @layer base {
   :root {
     color-scheme: light;

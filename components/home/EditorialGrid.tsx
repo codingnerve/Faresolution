@@ -82,16 +82,16 @@ export async function EditorialGrid() {
         />
 
         <div className="mt-10 grid gap-10 lg:mt-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-14">
-          <article className="group relative flex flex-col overflow-hidden rounded-lg border border-line bg-surface-alt lg:self-start">
+          <article className="reveal group relative flex flex-col overflow-hidden rounded-lg border border-line bg-surface-alt transition-shadow duration-300 hover:shadow-raised lg:self-start">
             {lead.cover && (
-              <div className="border-b border-line bg-surface">
+              <div className="overflow-hidden border-b border-line bg-surface">
                 <Image
                   src={lead.cover.src}
                   alt={lead.cover.alt}
                   width={1600}
                   height={900}
                   sizes="(min-width: 1024px) 48vw, 94vw"
-                  className="aspect-[16/9] w-full object-cover"
+                  className="aspect-[16/9] w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
                 />
               </div>
             )}
@@ -117,7 +117,7 @@ export async function EditorialGrid() {
           </article>
 
           {rest.length > 0 && (
-            <ul className="border-t border-line">
+            <ul className="reveal-stagger border-t border-line">
               {rest.map((item) => (
                 <li key={`${item.kind}/${item.slug}`} className="border-b border-line">
                   <article className="group relative flex items-start gap-4 py-5 sm:py-6">
@@ -141,7 +141,7 @@ export async function EditorialGrid() {
                         width={1600}
                         height={900}
                         sizes="112px"
-                        className="mt-1 aspect-[16/9] w-24 shrink-0 rounded-sm border border-line object-cover sm:w-28"
+                        className="mt-1 aspect-[16/9] w-24 shrink-0 rounded-sm border border-line object-cover transition-transform duration-500 group-hover:-translate-y-0.5 group-hover:shadow-raised sm:w-28"
                       />
                     )}
                   </article>

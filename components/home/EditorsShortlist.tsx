@@ -1,3 +1,4 @@
+import { Tilt } from "@/components/motion/Tilt";
 import { ProductTile } from "@/components/product/ProductTile";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
@@ -37,16 +38,18 @@ export async function EditorsShortlist() {
           }
         />
 
-        <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3 lg:gap-6">
+        <ul className="reveal-stagger mt-10 grid gap-5 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3 lg:gap-6">
           {shortlist.map((product) => {
             const vendor = vendorBySlug.get(product.vendorSlug);
             const logo = resolveLogo(product, vendor);
             return (
               <li key={product.slug}>
-                <ProductTile
-                  product={logo ? { ...product, logo } : product}
-                  vendorName={vendor?.name ?? null}
-                />
+                <Tilt>
+                  <ProductTile
+                    product={logo ? { ...product, logo } : product}
+                    vendorName={vendor?.name ?? null}
+                  />
+                </Tilt>
               </li>
             );
           })}

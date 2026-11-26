@@ -49,7 +49,7 @@ export async function HowReviewsWork() {
           </p>
 
           {example && (
-            <figure className="mt-8 max-w-sm rounded-lg border border-line bg-surface p-4 shadow-card">
+            <figure className="reveal mt-8 max-w-sm rounded-lg border border-line bg-surface p-4 shadow-card">
               <div className="flex items-center gap-3">
                 <ProductLogo name={example.name} color={example.brandColor} logo={example.logo} size={36} />
                 <div className="min-w-0">
@@ -65,7 +65,7 @@ export async function HowReviewsWork() {
         </div>
 
         <div>
-          <ol className="border-t border-line">
+          <ol className="reveal-stagger border-t border-line">
             {STEPS.map((step, index) => (
               <li key={step.title} className="grid grid-cols-[2.5rem_minmax(0,1fr)] gap-x-4 border-b border-line py-6">
                 <span aria-hidden="true" className="font-serif text-[1.75rem] leading-none text-violet-ink tabular-nums">

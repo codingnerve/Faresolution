@@ -19,6 +19,7 @@ import {
 } from "@/lib/data";
 import {
   ARTICLE_KIND_LABEL,
+  ARTICLE_PAGE_IDS,
   ARTICLE_SECTIONS,
   articleHref,
   articleIndexHref,
@@ -175,7 +176,7 @@ export async function ArticlePage({ kind, slug }: { kind: ArticleKind; slug: str
           <aside className={toc.length === 0 ? "hidden lg:block" : undefined}>
             <TableOfContents entries={toc} />
           </aside>
-          <div className="min-w-0 max-w-[44rem]">
+          <div className="max-w-[35rem] min-w-0">
             <ArticleBody blocks={article.body} />
             <div className="mt-14 space-y-8 border-t border-line pt-8">
               <ShareLinks url={absoluteUrl(path)} title={article.title} />
@@ -186,12 +187,12 @@ export async function ArticlePage({ kind, slug }: { kind: ArticleKind; slug: str
       </Container>
 
       {products.length > 0 && (
-        <section aria-labelledby="article-products-title" className="border-t border-line bg-surface-alt py-12 sm:py-16">
+        <section aria-labelledby={ARTICLE_PAGE_IDS.products} className="border-t border-line bg-surface-alt py-12 sm:py-16">
           <Container>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <p className="type-label mb-2">From the directory</p>
-                <h2 id="article-products-title" className="type-h2 text-navy">
+                <h2 id={ARTICLE_PAGE_IDS.products} className="type-h2 text-navy">
                   Products in this {section.nouns.one}
                 </h2>
               </div>
@@ -212,14 +213,14 @@ export async function ArticlePage({ kind, slug }: { kind: ArticleKind; slug: str
 
       {categories.length > 0 && (
         <section
-          aria-labelledby="article-categories-title"
+          aria-labelledby={ARTICLE_PAGE_IDS.categories}
           className={products.length > 0 ? "pb-12 sm:pb-16 bg-surface-alt" : "border-t border-line py-12 sm:py-16"}
         >
           <Container>
             <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,5fr)] lg:gap-12">
               <div>
                 <p className="type-label mb-2">Browse</p>
-                <h2 id="article-categories-title" className="type-h2 text-navy">
+                <h2 id={ARTICLE_PAGE_IDS.categories} className="type-h2 text-navy">
                   Related categories
                 </h2>
               </div>
@@ -230,10 +231,10 @@ export async function ArticlePage({ kind, slug }: { kind: ArticleKind; slug: str
       )}
 
       {related.length > 0 && (
-        <section aria-labelledby="article-related-title" className="border-t border-line py-12 sm:py-16">
+        <section aria-labelledby={ARTICLE_PAGE_IDS.related} className="border-t border-line py-12 sm:py-16">
           <Container>
             <p className="type-label mb-2">Keep reading</p>
-            <h2 id="article-related-title" className="type-h2 text-navy">
+            <h2 id={ARTICLE_PAGE_IDS.related} className="type-h2 text-navy">
               Related reading
             </h2>
             <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

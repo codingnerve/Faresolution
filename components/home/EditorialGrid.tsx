@@ -4,28 +4,16 @@ import { articleHref, articleIndexHref } from "@/components/layout/navigation";
 import { Container } from "@/components/ui/Container";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { getArticles, getAuthor, type Article, type ArticleKind } from "@/lib/data";
+import { ARTICLE_KIND_LABEL, formatArticleDate } from "@/lib/editorial";
 import { cn } from "@/lib/utils";
 
 const KINDS = ["buying-guide", "research"] as const satisfies readonly ArticleKind[];
 const MAX_ARTICLES = 5;
 
-const KIND_LABEL: Record<(typeof KINDS)[number], string> = {
-  "buying-guide": "Buying guide",
-  research: "Research",
-};
-
 const KIND_RULE: Record<(typeof KINDS)[number], string> = {
   "buying-guide": "bg-blue",
   research: "bg-violet",
 };
-
-// Dates in content are calendar dates; format in UTC so they never shift a day.
-const dateFormat = new Intl.DateTimeFormat("en-US", {
-  day: "numeric",
-  month: "short",
-  year: "numeric",
-  timeZone: "UTC",
-});
 
 type EditorialKind = (typeof KINDS)[number];
 type Item = Article & { kind: EditorialKind; authorName: string | null };
@@ -34,11 +22,12 @@ const isEditorialKind = (kind: ArticleKind): kind is EditorialKind =>
   (KINDS as readonly ArticleKind[]).includes(kind);
 
 function Meta({ item, className }: { item: Item; className?: string }) {
+  const published = formatArticleDate(item.publishedAt);
   return (
     <p className={cn("type-meta flex flex-wrap items-center gap-x-2", className)}>
       {item.authorName && <span>{item.authorName}</span>}
-      {item.authorName && <span aria-hidden="true">&middot;</span>}
-      <time dateTime={item.publishedAt}>{dateFormat.format(new Date(item.publishedAt))}</time>
+      {item.authorName && published && <span aria-hidden="true">&middot;</span>}
+      {published && <time dateTime={item.publishedAt}>{published}</time>}
     </p>
   );
 }
@@ -47,7 +36,7 @@ function KindLabel({ kind }: { kind: EditorialKind }) {
   return (
     <span className="flex items-center gap-2 text-xs font-semibold tracking-[0.06em] text-subtle uppercase">
       <span aria-hidden="true" className={cn("h-2 w-2 rounded-xs", KIND_RULE[kind])} />
-      {KIND_LABEL[kind]}
+      {ARTICLE_KIND_LABEL[kind]}
     </span>
   );
 }

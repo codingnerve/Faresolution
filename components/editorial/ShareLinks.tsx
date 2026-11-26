@@ -1,7 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 import { ShareButton } from "@/components/compare/ShareButton";
 import { buttonClasses } from "@/components/ui/Button";
-import { shareLinks } from "@/lib/editorial";
+import { ARTICLE_PAGE_IDS, shareLinks } from "@/lib/editorial";
 import { cn } from "@/lib/utils";
 
 /**
@@ -16,8 +16,8 @@ export function ShareLinks({ url, title, className }: { url: string; title: stri
     { label: "Share on LinkedIn", href: links.linkedin },
   ];
   return (
-    <section aria-labelledby="article-share-title" className={cn("min-w-0", className)}>
-      <h2 id="article-share-title" className="type-label">
+    <section aria-labelledby={ARTICLE_PAGE_IDS.share} className={cn("min-w-0", className)}>
+      <h2 id={ARTICLE_PAGE_IDS.share} className="type-label">
         Share this article
       </h2>
       <div className="mt-3 flex flex-wrap items-start gap-2.5">

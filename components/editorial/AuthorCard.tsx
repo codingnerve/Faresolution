@@ -1,4 +1,5 @@
 import type { Author } from "@/lib/data/types";
+import { ARTICLE_PAGE_IDS } from "@/lib/editorial";
 import { cn, getInitials } from "@/lib/utils";
 
 /** Monogram for an author: there are no author photos. */
@@ -19,12 +20,12 @@ export function AuthorMonogram({ name, size = "md" }: { name: string; size?: "sm
 /** Name, role and bio exactly as recorded; no credentials are added. */
 export function AuthorCard({ author, className }: { author: Author; className?: string }) {
   return (
-    <section aria-labelledby="article-author-title" className={cn("rounded-lg border border-line bg-surface-alt p-6", className)}>
+    <section aria-labelledby={ARTICLE_PAGE_IDS.author} className={cn("rounded-lg border border-line bg-surface-alt p-6", className)}>
       <p className="type-label">About the author</p>
       <div className="mt-4 flex gap-4">
         <AuthorMonogram name={author.name} />
         <div className="min-w-0">
-          <h2 id="article-author-title" className="text-[1.0625rem] leading-6 font-semibold text-navy">
+          <h2 id={ARTICLE_PAGE_IDS.author} className="text-[1.0625rem] leading-6 font-semibold text-navy">
             {author.name}
           </h2>
           <p className="type-meta">{author.role}</p>

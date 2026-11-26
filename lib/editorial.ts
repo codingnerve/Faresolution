@@ -114,10 +114,31 @@ export function slugify(text: string): string {
   return slug || "section";
 }
 
+/** Fixed element ids on an article page (section headings outside the body). */
+export const ARTICLE_PAGE_IDS = {
+  share: "article-share-title",
+  author: "article-author-title",
+  products: "article-products-title",
+  categories: "article-categories-title",
+  related: "article-related-title",
+} as const;
+
+/**
+ * Every fixed id an article page can contain: its own section ids plus the
+ * layout's (skip-link target, compare tray). Heading ids never take one.
+ * (React `useId` ids contain characters `slugify` never produces.)
+ */
+export const RESERVED_PAGE_IDS: ReadonlySet<string> = new Set([
+  ...Object.values(ARTICLE_PAGE_IDS),
+  "main-content",
+  "compare-tray-heading",
+]);
+
 /**
  * The id of each block when rendered: a unique slug for h2/h3 blocks (a
- * repeated heading gets "-2", "-3", ...), null for every other block.
- * `buildToc` uses the same ids, so the contents always link to the headings.
+ * repeated heading, or one whose slug is a reserved page id, gets "-2",
+ * "-3", ...), null for every other block. `buildToc` uses the same ids, so
+ * the contents always link to the headings.
  */
 export function headingIds(blocks: readonly Block[]): (string | null)[] {
   const used = new Set<string>();
@@ -125,7 +146,7 @@ export function headingIds(blocks: readonly Block[]): (string | null)[] {
     if (block.type !== "h2" && block.type !== "h3") return null;
     const base = slugify(block.text);
     let id = base;
-    for (let n = 2; used.has(id); n++) id = `${base}-${n}`;
+    for (let n = 2; used.has(id) || RESERVED_PAGE_IDS.has(id); n++) id = `${base}-${n}`;
     used.add(id);
     return id;
   });
@@ -148,6 +169,19 @@ export function buildToc(blocks: readonly Block[]): TocEntry[] {
     }
   });
   return toc;
+}
+
+/**
+ * The section the reader is in: the last heading, in document order, whose
+ * top (viewport px) is at or above the line; null above the first heading.
+ */
+export function activeHeadingId(headings: readonly { id: string; top: number }[], line: number): string | null {
+  let current: string | null = null;
+  for (const heading of headings) {
+    if (heading.top <= line) current = heading.id;
+    else break;
+  }
+  return current;
 }
 
 // ---------------------------------------------------------------------------

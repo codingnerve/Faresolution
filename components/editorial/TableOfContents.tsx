@@ -2,16 +2,20 @@
 
 import { ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import type { TocEntry } from "@/lib/editorial";
+import { activeHeadingId, type TocEntry } from "@/lib/editorial";
 import { cn } from "@/lib/utils";
 
 /** A heading counts as the current section once its top passes this share of the viewport. */
 const ACTIVE_LINE = 0.3;
 
 /**
- * Tracks which heading the reader is in: the last heading whose top has
- * passed the active line. An IntersectionObserver on a band ending at that
- * line fires whenever a heading crosses it, so no scroll listener is needed.
+ * Tracks which heading the reader is in (`activeHeadingId`: the last heading
+ * whose top has passed the active line). The observer's band runs from far
+ * above the viewport down to that line, so a heading is "intersecting"
+ * exactly when its top has passed the line, and every crossing fires the
+ * callback, even when a jump (End key, scrollbar drag, find in page, a hash
+ * link or restored scroll) moves it from below the viewport to far above in
+ * one frame. The observer's first report on observe sets the initial state.
  */
 function useActiveHeading(ids: readonly string[]): string | null {
   const [active, setActive] = useState<string | null>(null);
@@ -26,17 +30,11 @@ function useActiveHeading(ids: readonly string[]): string | null {
     if (headings.length === 0) return;
 
     const update = () => {
-      const line = window.innerHeight * ACTIVE_LINE;
-      let current: string | null = null;
-      for (const heading of headings) {
-        if (heading.getBoundingClientRect().top <= line) current = heading.id;
-        else break;
-      }
-      setActive(current);
+      const tops = headings.map((h) => ({ id: h.id, top: h.getBoundingClientRect().top }));
+      setActive(activeHeadingId(tops, window.innerHeight * ACTIVE_LINE));
     };
-    // The observer also reports every target once on observe, which sets the initial state.
     const observer = new IntersectionObserver(update, {
-      rootMargin: `0px 0px -${(1 - ACTIVE_LINE) * 100}% 0px`,
+      rootMargin: `100000px 0px -${(1 - ACTIVE_LINE) * 100}% 0px`,
     });
     for (const heading of headings) observer.observe(heading);
     return () => observer.disconnect();
@@ -94,6 +92,11 @@ export function TableOfContents({ entries }: { entries: readonly TocEntry[] }) {
   const detailsRef = useRef<HTMLDetailsElement>(null);
 
   if (entries.length === 0) return null;
+  const sections = entries.filter((e) => e.level === 2).length;
+  const count =
+    sections > 0
+      ? `${sections} ${sections === 1 ? "section" : "sections"}`
+      : `${entries.length} ${entries.length === 1 ? "heading" : "headings"}`;
 
   // Collapse the mobile panel before the browser follows the link, so the
   // jump lands on the heading in the shortened page.
@@ -106,7 +109,7 @@ export function TableOfContents({ entries }: { entries: readonly TocEntry[] }) {
       <details ref={detailsRef} className="group rounded-md border border-line bg-surface-alt lg:hidden">
         <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-sm font-medium text-navy [&::-webkit-details-marker]:hidden">
           <span>
-            On this page <span className="font-normal text-subtle">({entries.length} sections)</span>
+            On this page <span className="font-normal text-subtle">({count})</span>
           </span>
           <ChevronDown
             aria-hidden="true"

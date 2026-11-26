@@ -3,6 +3,9 @@ import { articles } from "@/lib/data/content/articles";
 import type { Article, Block } from "@/lib/data/types";
 import {
   ARTICLE_KINDS,
+  ARTICLE_PAGE_IDS,
+  RESERVED_PAGE_IDS,
+  activeHeadingId,
   articleHref,
   articleIndexHref,
   buildToc,
@@ -143,6 +146,52 @@ describe("buildToc", () => {
       const ids = buildToc(a.body).map((e) => e.id);
       expect(new Set(ids).size, a.slug).toBe(ids.length);
     }
+  });
+});
+
+describe("heading ids and fixed page ids", () => {
+  it("never gives a heading an id already used by the page", () => {
+    const blocks: Block[] = [
+      { type: "h2", text: "Main content" },
+      { type: "h2", text: "Article share title" },
+    ];
+    expect(headingIds(blocks)).toEqual(["main-content-2", "article-share-title-2"]);
+  });
+
+  it("reserves every fixed article-page id plus the layout ids", () => {
+    for (const id of Object.values(ARTICLE_PAGE_IDS)) expect(RESERVED_PAGE_IDS.has(id), id).toBe(true);
+    expect(RESERVED_PAGE_IDS.has("main-content")).toBe(true);
+  });
+
+  it("gives no real article a heading id that equals a fixed page id", () => {
+    for (const a of articles) {
+      for (const entry of buildToc(a.body)) expect(RESERVED_PAGE_IDS.has(entry.id), `${a.slug}#${entry.id}`).toBe(false);
+    }
+  });
+});
+
+describe("activeHeadingId", () => {
+  const headings = [
+    { id: "a", top: -900 },
+    { id: "b", top: -20 },
+    { id: "c", top: 150 },
+    { id: "d", top: 700 },
+  ];
+
+  it("is the last heading, in document order, whose top has passed the line", () => {
+    expect(activeHeadingId(headings, 200)).toBe("c");
+    expect(activeHeadingId(headings, 150)).toBe("c");
+    expect(activeHeadingId(headings, 149)).toBe("b");
+  });
+
+  it("is the last heading after a jump to the end of the page", () => {
+    const atEnd = headings.map((h) => ({ ...h, top: h.top - 5000 }));
+    expect(activeHeadingId(atEnd, 200)).toBe("d");
+  });
+
+  it("is null above the first heading or with no headings", () => {
+    expect(activeHeadingId(headings, -1000)).toBeNull();
+    expect(activeHeadingId([], 200)).toBeNull();
   });
 });
 

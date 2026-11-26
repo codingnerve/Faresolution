@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getProduct } from "@/lib/data";
-import { getArticle, getAuthor } from "@/lib/data";
+import { getArticle, getAuthor, getProduct } from "@/lib/data";
 import type { Article } from "@/lib/data/types";
 import { articleJsonLd, faqJsonLd, itemListJsonLd, organizationJsonLd, productJsonLd, safeJsonLd } from "@/lib/jsonld";
 

@@ -65,6 +65,7 @@ const companyLinks: NavLink[] = [
   { label: "Review guidelines", href: "/review-guidelines" },
   { label: "Privacy policy", href: "/privacy" },
   { label: "Terms", href: "/terms" },
+  { label: "Refund policy", href: "/refund-policy" },
 ];
 
 async function buildGroups(): Promise<FooterGroup[]> {

@@ -61,6 +61,7 @@ describe("buildSitemapEntries", () => {
       "/contact",
       "/privacy",
       "/terms",
+      "/refund-policy",
     ]) {
       expect(has(path), path).toBe(true);
     }

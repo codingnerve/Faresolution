@@ -60,6 +60,7 @@ export const STATIC_SITEMAP_PATHS: readonly string[] = [
   "/contact",
   "/privacy",
   "/terms",
+  "/refund-policy",
 ];
 
 /**

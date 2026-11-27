@@ -3,11 +3,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { categoryHref } from "@/components/layout/navigation";
 import { FeatureChips } from "@/components/product/FeatureGroups";
-import { ProductCompact } from "@/components/product/ProductCompact";
 import { ReviewsEmptyState, RatingsSummary } from "@/components/product/ProductReviews";
+import { PlanCards } from "@/components/product/PlanCards";
 import { ProfileSection } from "@/components/product/ProfileSection";
 import { ProsCons } from "@/components/product/ProsCons";
+import { RecommendedSoftware } from "@/components/product/RecommendedSoftware";
 import { RelatedComparisons } from "@/components/product/RelatedComparisons";
+import { SimilarComparison } from "@/components/product/SimilarComparison";
 import { Faq } from "@/components/ui/Faq";
 import { faqJsonLd, productJsonLd, safeJsonLd } from "@/lib/jsonld";
 import { productTabMetadata } from "@/lib/products/metadata";
@@ -15,7 +17,8 @@ import { getProductProfile } from "@/lib/products/profile";
 import { productTabHref } from "@/lib/products/tabs";
 import { formatPricing } from "@/lib/utils";
 
-const SIMILAR_ON_OVERVIEW = 4;
+const PLANS_ON_OVERVIEW = 4;
+const COMPARED_ON_OVERVIEW = 3;
 
 export async function generateMetadata({ params }: PageProps<"/products/[slug]">) {
   const { slug } = await params;
@@ -53,7 +56,17 @@ export default async function ProductOverviewPage({ params }: PageProps<"/produc
         )}
       </ProfileSection>
 
-      {/* 2. Highlights */}
+      {/* 2. Pricing: plans with published prices, high on the page (what most buyers came for) */}
+      <ProfileSection
+        id="pricing"
+        title={`${product.name} pricing`}
+        description={formatPricing(product)}
+        more={{ href: tab("pricing"), label: "All plans and pricing" }}
+      >
+        <PlanCards pricing={product.pricing} productName={product.name} website={product.website} limit={PLANS_ON_OVERVIEW} />
+      </ProfileSection>
+
+      {/* 3. Highlights */}
       {product.highlights.length > 0 && (
         <ProfileSection id="highlights" title="Highlights">
           <ul className="grid gap-x-8 gap-y-4 sm:grid-cols-2">
@@ -67,7 +80,7 @@ export default async function ProductOverviewPage({ params }: PageProps<"/produc
         </ProfileSection>
       )}
 
-      {/* 3. Features */}
+      {/* 4. Features */}
       {featureCount > 0 && (
         <ProfileSection
           id="features"
@@ -79,7 +92,22 @@ export default async function ProductOverviewPage({ params }: PageProps<"/produc
         </ProfileSection>
       )}
 
-      {/* 4. Pros and cons */}
+      {/* 5. Side-by-side with the closest alternatives */}
+      {alternatives.length > 0 && (
+        <ProfileSection
+          id="compare"
+          title={`Compare ${product.name} with similar products`}
+          description="Starting price, plans and platforms beside the closest alternatives."
+        >
+          <SimilarComparison
+            product={product}
+            others={alternatives.slice(0, COMPARED_ON_OVERVIEW).map((a) => a.product)}
+            vendorNames={vendorNames}
+          />
+        </ProfileSection>
+      )}
+
+      {/* 6. Pros and cons */}
       {(product.pros.length > 0 || product.cons.length > 0) && (
         <ProfileSection
           id="pros-cons"
@@ -90,59 +118,40 @@ export default async function ProductOverviewPage({ params }: PageProps<"/produc
         </ProfileSection>
       )}
 
-      {/* 5. Customer ratings */}
+      {/* 7. Customer ratings */}
       <ProfileSection id="ratings" title="Customer ratings">
         <RatingsSummary product={product} />
       </ProfileSection>
 
-      {/* 6. Pricing overview */}
-      <ProfileSection id="pricing" title="Pricing overview" more={{ href: tab("pricing"), label: "Plans and pricing" }}>
-        <div className="rounded-lg border border-line bg-surface p-5 sm:p-6">
-          <p className="text-[1.0625rem] font-semibold text-navy">{formatPricing(product)}</p>
-          {product.pricing.plans.length > 0 && (
-            <p className="type-body mt-2 text-ink">
-              Plans: {product.pricing.plans.map((plan) => plan.name).join(", ")}.
-            </p>
-          )}
-          {product.pricing.note && <p className="type-meta mt-3">{product.pricing.note}</p>}
-        </div>
-      </ProfileSection>
-
-      {/* 7. Similar products */}
+      {/* 8. Recommended software */}
       {alternatives.length > 0 && (
         <ProfileSection
-          id="similar"
-          title="Similar products"
-          description={
+          id="recommended"
+          title={
             primaryCategory
-              ? `Other ${primaryCategory.name} options and products with overlapping features.`
-              : "Products with overlapping categories and features."
+              ? `Recommended ${primaryCategory.name}${/software$/i.test(primaryCategory.name) ? "" : " software"}`
+              : "Recommended software"
           }
+          description={`Picked for overlap with ${product.name} in category, features and pricing model. Never paid placement.`}
           more={{ href: tab("alternatives"), label: "All alternatives" }}
         >
-          <ul className="grid gap-4 sm:grid-cols-2">
-            {alternatives.slice(0, SIMILAR_ON_OVERVIEW).map(({ product: p }) => (
-              <li key={p.slug}>
-                <ProductCompact product={p} vendorName={vendorNames.get(p.vendorSlug) ?? null} />
-              </li>
-            ))}
-          </ul>
+          <RecommendedSoftware alternatives={alternatives} vendorNames={vendorNames} />
         </ProfileSection>
       )}
 
-      {/* 8. Related comparisons (hidden when there are none) */}
+      {/* 9. Related comparisons (hidden when there are none) */}
       {comparisons.length > 0 && (
         <ProfileSection id="comparisons" title="Related comparisons" description="Picked by our editors.">
           <RelatedComparisons comparisons={comparisons} />
         </ProfileSection>
       )}
 
-      {/* 9. Customer reviews */}
+      {/* 10. Customer reviews */}
       <ProfileSection id="reviews" title="Customer reviews">
         <ReviewsEmptyState product={product} />
       </ProfileSection>
 
-      {/* 10. FAQ */}
+      {/* 11. FAQ */}
       {product.faq.length > 0 && (
         <ProfileSection id="faq" title={`${product.name} FAQ`}>
           <Faq items={product.faq} />

@@ -90,10 +90,12 @@ describe("formatPricing", () => {
     );
   });
 
-  it("never renders null, NaN, undefined or a currency sign for unknown values, for every catalogue product", async () => {
+  it("never renders null, NaN or undefined, and a currency sign only for a published price, for every catalogue product", async () => {
     for (const product of await getProducts()) {
       const text = formatPricing(product);
-      expect(text, product.slug).not.toMatch(/null|NaN|undefined|\$/);
+      expect(text, product.slug).not.toMatch(/null|NaN|undefined/);
+      if (!product.pricing.startingPrice) expect(text, product.slug).not.toMatch(/\$/);
+      else expect(text, product.slug).toContain(`From ${product.pricing.startingPrice}`);
       expect(text.length, product.slug).toBeGreaterThan(0);
     }
   });

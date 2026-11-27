@@ -22,6 +22,7 @@ type ProductHeaderProps = {
  */
 export function ProductHeader({ product, vendor, primaryCategory }: ProductHeaderProps) {
   const website = isWebUrl(product.website) ? product.website : null;
+  const startingPrice = product.pricing.startingPrice?.trim() || null;
 
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-12">
@@ -48,8 +49,18 @@ export function ProductHeader({ product, vendor, primaryCategory }: ProductHeade
           <h1 className="type-h1 mt-1.5 text-navy">{product.name}</h1>
           {vendor && <p className="type-meta mt-1">by {vendor.name}</p>}
           <p className="mt-3 max-w-2xl text-[1.0625rem] leading-7 text-ink">{product.tagline}</p>
-          <div className="mt-3">
+          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
             <Rating value={product.rating} count={product.reviewCount} size="md" />
+            {startingPrice && (
+              <>
+                <span aria-hidden="true" className="h-4 w-px bg-line-strong" />
+                <p className="text-sm text-subtle">
+                  Starting from{" "}
+                  <span className="font-semibold text-navy tabular-nums">{startingPrice}</span>
+                </p>
+              </>
+            )}
+            {product.pricing.freePlan === true && <Badge tone="success">Free plan</Badge>}
           </div>
         </div>
       </div>

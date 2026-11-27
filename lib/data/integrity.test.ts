@@ -193,15 +193,33 @@ describe("products", () => {
     }
   });
 
-  it("never invents ratings, reviews, verification or prices", () => {
+  it("never invents ratings, reviews or verification", () => {
     for (const p of products) {
       expect(p.rating, p.slug).toBeNull();
       expect(p.reviewCount, p.slug).toBe(0);
       expect(p.verified, p.slug).toBe(false);
-      expect(p.pricing.startingPrice, `${p.slug} startingPrice`).toBeNull();
-      for (const plan of p.pricing.plans) {
-        expect(plan.price, `${p.slug} plan ${plan.name}`).toBeNull();
+    }
+  });
+
+  it("shows a price only with the date it was checked and the vendor page it came from", () => {
+    for (const p of products) {
+      const { pricing } = p;
+      const prices = [pricing.startingPrice, ...pricing.plans.map((plan) => plan.price)].filter(
+        (price): price is string => price !== null,
+      );
+      if (prices.length === 0) {
+        expect(pricing.checkedAt, `${p.slug} checkedAt without prices`).toBeUndefined();
+        continue;
       }
+      expect(pricing.checkedAt, `${p.slug} checkedAt`).toMatch(/^20\d{2}-\d{2}-\d{2}$/);
+      expect(Number.isNaN(Date.parse(pricing.checkedAt ?? "")), `${p.slug} checkedAt date`).toBe(false);
+      expect(pricing.sourceUrl, `${p.slug} sourceUrl`).toMatch(/^https:\/\//);
+      for (const price of prices) {
+        expect(price.trim(), `${p.slug} price`).not.toBe("");
+        expect(price, `${p.slug} price`).not.toMatch(/null|NaN|undefined/);
+      }
+      // A starting price is a paid entry price, never "Free".
+      if (pricing.startingPrice) expect(pricing.startingPrice.toLowerCase(), p.slug).not.toBe("free");
     }
   });
 

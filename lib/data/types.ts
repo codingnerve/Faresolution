@@ -31,6 +31,15 @@ export interface Pricing {
   startingPrice: string | null;
   note: string | null;
   plans: PricingPlan[];
+  /**
+   * Set when prices were copied from the vendor's own pricing page: the ISO
+   * date they were checked and the page they came from. A price without both
+   * fails lib/data/integrity.test.ts.
+   */
+  checkedAt?: string;
+  sourceUrl?: string;
+  /** How the published prices are billed, e.g. "Billed annually". */
+  billingNote?: string;
 }
 
 export interface FaqItem {

@@ -1,10 +1,11 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { PricingTable } from "@/components/product/PricingTable";
+import { PlanCards } from "@/components/product/PlanCards";
 import { ProductFacts } from "@/components/product/ProductFacts";
 import { ProductHeader } from "@/components/product/ProductHeader";
 import { RatingsSummary, ReviewsEmptyState } from "@/components/product/ProductReviews";
 import { ScreenshotFrame } from "@/components/product/ScreenshotFrame";
+import { SimilarComparison } from "@/components/product/SimilarComparison";
 import { getProductProfile } from "@/lib/products/profile";
 
 async function profile(slug = "hubspot-crm") {
@@ -69,30 +70,52 @@ describe("ProductHeader", () => {
   });
 });
 
-describe("PricingTable", () => {
-  it("shows a price only when known, otherwise a vendor-site link, never null, NaN or a currency sign", async () => {
+describe("PlanCards", () => {
+  it("shows each published price, says 'Price on request' otherwise, and never null, NaN or undefined", async () => {
     const { product } = await profile();
     const html = renderToStaticMarkup(
-      <PricingTable plans={product.pricing.plans} website={product.website} productName={product.name} />,
+      <PlanCards pricing={product.pricing} website={product.website} productName={product.name} />,
     );
-    expect(text(html)).not.toMatch(/null|NaN|undefined|\$/);
-    // Once in the phone card list and once in the table (only one is displayed).
-    expect(html.match(/See vendor site/g)).toHaveLength(product.pricing.plans.length * 2);
-    // A real table (one row header per plan) plus a labelled list for phones.
-    expect(html.match(/<table[\s>]/g)).toHaveLength(1);
-    expect(html.match(/<th[^>]*scope="row"/g)).toHaveLength(product.pricing.plans.length);
+    expect(text(html)).not.toMatch(/null|NaN|undefined/);
     expect(html).toMatch(/<ul[^>]*aria-label="HubSpot CRM plans"/);
+    expect(html.match(/<h3/g)).toHaveLength(product.pricing.plans.length);
+    // "$20/seat/mo" is set as a large amount and a small unit.
+    expect(text(html)).toMatch(/\$20\s+\/seat\/mo/);
+    // Where the prices came from, with the check date and a source link.
+    expect(text(html)).toContain("checked 27 Nov 2026");
+    expect(html).toContain('href="https://www.hubspot.com/pricing/sales"');
 
-    const priced = renderToStaticMarkup(
-      <PricingTable plans={[{ name: "Pro", price: "15 EUR per seat", summary: "All features." }]} website={null} productName="X" />,
+    const quote = renderToStaticMarkup(
+      <PlanCards
+        pricing={{ ...product.pricing, plans: [{ name: "Pro", price: null, summary: "All features." }] }}
+        website="https://example.com"
+        productName="X"
+      />,
     );
-    expect(priced).toContain("15 EUR per seat");
-    expect(priced).not.toContain("See vendor site");
+    expect(text(quote)).toContain("Price on request");
+    expect(text(quote)).toContain("Ask X for a quote");
+  });
 
-    const noSite = renderToStaticMarkup(
-      <PricingTable plans={[{ name: "Pro", price: null, summary: "All features." }]} website={null} productName="X" />,
+  it("respects the plan limit", async () => {
+    const { product } = await profile("zoho-crm");
+    const html = renderToStaticMarkup(
+      <PlanCards pricing={product.pricing} website={product.website} productName={product.name} limit={2} />,
     );
-    expect(noSite).toContain("Not verified");
+    expect(html.match(/<h3/g)).toHaveLength(2);
+  });
+});
+
+describe("SimilarComparison", () => {
+  it("puts the product beside its alternatives with starting prices and compare links", async () => {
+    const { product, alternatives, vendorNames } = await profile();
+    const others = alternatives.slice(0, 3).map((a) => a.product);
+    const html = renderToStaticMarkup(<SimilarComparison product={product} others={others} vendorNames={vendorNames} />);
+    expect(html.match(/<th[^>]*scope="col"/g)).toHaveLength(others.length + 1);
+    expect(text(html)).toContain("Starting price");
+    expect(text(html)).not.toMatch(/null|NaN|undefined/);
+    for (const other of others) {
+      expect(html).toContain(`aria-label="Compare HubSpot CRM vs ${other.name}"`);
+    }
   });
 });
 

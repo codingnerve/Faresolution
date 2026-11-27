@@ -104,11 +104,11 @@ describe("productJsonLd", () => {
   });
 
   it("omits aggregateRating when rating is null and offers when startingPrice is null", async () => {
-    const product = await sample();
+    const sampled = await sample();
+    const product = { ...sampled, pricing: { ...sampled.pricing, startingPrice: null } };
     const ld = productJsonLd({ ...product, rating: null, reviewCount: 0 });
     expect(ld).not.toHaveProperty("aggregateRating");
     expect(ld).not.toHaveProperty("review");
-    expect(product.pricing.startingPrice).toBeNull();
     expect(ld).not.toHaveProperty("offers");
     expect(safeJsonLd(ld)).not.toMatch(/aggregateRating|offers|null|NaN|undefined/);
   });

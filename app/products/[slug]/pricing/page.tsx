@@ -1,7 +1,8 @@
-import { ArrowUpRight, Info } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { notFound } from "next/navigation";
-import { PricingTable } from "@/components/product/PricingTable";
+import { PlanCards, PriceSource } from "@/components/product/PlanCards";
 import { ProfileSection } from "@/components/product/ProfileSection";
+import { SimilarComparison } from "@/components/product/SimilarComparison";
 import { pricingModelLabel } from "@/lib/directory/labels";
 import { productTabMetadata } from "@/lib/products/metadata";
 import { getProductProfile } from "@/lib/products/profile";
@@ -22,7 +23,7 @@ export default async function ProductPricingPage({ params }: PageProps<"/product
   const { slug } = await params;
   const profile = await getProductProfile(slug);
   if (!profile) notFound();
-  const { product } = profile;
+  const { product, alternatives, vendorNames } = profile;
   const { pricing } = product;
   const website = isWebUrl(product.website) ? product.website : null;
 
@@ -52,21 +53,30 @@ export default async function ProductPricingPage({ params }: PageProps<"/product
           ))}
         </dl>
 
-        {pricing.note && (
-          <p className="mt-4 flex items-start gap-2.5 rounded-md border border-line bg-surface-alt px-4 py-3 text-sm leading-6 text-ink">
-            <Info aria-hidden="true" className="mt-1 size-4 shrink-0 text-blue" strokeWidth={2} />
-            <span>{pricing.note}</span>
-          </p>
-        )}
+        <PriceSource pricing={pricing} className="mt-4" />
       </ProfileSection>
 
       {pricing.plans.length > 0 && (
         <ProfileSection
           id="plans"
-          title="Plans"
-          description="Plan names and what each adds, from public product information. Prices appear only once verified."
+          title="Plans and prices"
+          description={`Every ${product.name} plan, its published price and what it adds.`}
         >
-          <PricingTable plans={pricing.plans} website={website} productName={product.name} />
+          <PlanCards pricing={pricing} productName={product.name} website={website} />
+        </ProfileSection>
+      )}
+
+      {alternatives.length > 0 && (
+        <ProfileSection
+          id="compare"
+          title={`${product.name} pricing vs similar products`}
+          description="Entry prices and plan facts beside the closest alternatives."
+        >
+          <SimilarComparison
+            product={product}
+            others={alternatives.slice(0, 3).map((a) => a.product)}
+            vendorNames={vendorNames}
+          />
         </ProfileSection>
       )}
 

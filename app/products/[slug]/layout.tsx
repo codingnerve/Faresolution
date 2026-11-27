@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { categoryHref } from "@/components/layout/navigation";
 import { ProductFacts } from "@/components/product/ProductFacts";
 import { ProductHeader } from "@/components/product/ProductHeader";
+import { PriceGlance } from "@/components/product/PriceGlance";
 import { ProductBreadcrumbs, ProductTabs } from "@/components/product/ProductTabs";
 import type { BreadcrumbItem } from "@/components/ui/Breadcrumbs";
 import { Container } from "@/components/ui/Container";
@@ -52,6 +53,7 @@ export default async function ProductLayout({ children, params }: LayoutProps<"/
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_20rem]">
           <div className="min-w-0">{children}</div>
           <aside aria-label={`${product.name} at a glance`} className="space-y-4 lg:self-start">
+            <PriceGlance product={product} />
             <ProductFacts product={product} categories={categories} industries={industries} />
             <DemoDataNotice />
           </aside>
